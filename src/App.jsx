@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";`nimport { supabase } from "./supabase.js";`nimport { Auth } from "@supabase/auth-ui-react";`nimport { ThemeSupa } from "@supabase/auth-ui-shared";
 
 /* ================================================================
    STYLES
@@ -1309,3 +1309,4 @@ export default function App() {
     </div>
   );
 }
+
