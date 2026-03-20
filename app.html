@@ -1170,11 +1170,114 @@ function TrackerTab(props) {
 }
 
 /* ================================================================
+   TUTORIAL OVERLAY
+================================================================ */
+const TUTORIAL_STEPS = [
+  {
+    icon: "👋",
+    title: "Welcome to GhostBust",
+    body: "The job market is full of ghost jobs — listings that are never meant to be filled. GhostBust gives you three tools to fight back. Here's how to use them in order.",
+    tab: null,
+  },
+  {
+    icon: "🔍",
+    title: "Step 1 — Find Jobs",
+    body: "Start here. Pick your industry, specialisation, city, and distance. GhostBust opens pre-filtered, date-sorted links to all six major US job boards at once — no re-entering the same search six times.",
+    tab: "search",
+  },
+  {
+    icon: "👻",
+    title: "Step 2 — Ghost Detector",
+    body: "Found a listing that looks interesting? Before you spend time applying, paste the full text into the Ghost Detector. The AI reads the language and returns a Ghost Score from 0–100, a breakdown of specific signals, and concrete next steps. High score = proceed with caution.",
+    tab: "verify",
+  },
+  {
+    icon: "📋",
+    title: "Step 3 — Application Tracker",
+    body: "Every listing you analyse gets saved here automatically as Researching. Update the status as you go — Applied, Interviewing, Ghosted, Rejected, Offer. Set follow-up dates. Export to CSV anytime. Generate your Ghost Report once you have data.",
+    tab: "tracker",
+  },
+  {
+    icon: "🏁",
+    title: "You're Ready",
+    body: "That's everything. Start with Find Jobs, paste any interesting listing into the Ghost Detector before applying, and track your progress in the Tracker. Good luck out there.",
+    tab: null,
+  },
+];
+
+function TutorialOverlay(props) {
+  var onClose = props.onClose;
+  var onTabSwitch = props.onTabSwitch;
+  var [step, setStep] = useState(0);
+  var current = TUTORIAL_STEPS[step];
+  var isLast = step === TUTORIAL_STEPS.length - 1;
+
+  function next() {
+    if (isLast) {
+      onClose();
+    } else {
+      if (TUTORIAL_STEPS[step+1].tab) onTabSwitch(TUTORIAL_STEPS[step+1].tab);
+      setStep(step + 1);
+    }
+  }
+
+  function prev() {
+    if (step > 0) {
+      if (TUTORIAL_STEPS[step-1].tab) onTabSwitch(TUTORIAL_STEPS[step-1].tab);
+      setStep(step - 1);
+    }
+  }
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:8000,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
+      <div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:480,width:"100%",padding:36,position:"relative"}}>
+        
+        {/* Close */}
+        <button onClick={onClose} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer",fontFamily:"'Space Mono',monospace"}}>✕</button>
+
+        {/* Progress dots */}
+        <div style={{display:"flex",gap:6,marginBottom:24}}>
+          {TUTORIAL_STEPS.map(function(_,i){
+            return <div key={i} style={{width:i===step?24:6,height:6,background:i===step?"var(--blood)":"rgba(255,255,255,0.1)",transition:"width 0.3s"}} />;
+          })}
+        </div>
+
+        {/* Icon + title */}
+        <div style={{fontSize:40,marginBottom:12}}>{current.icon}</div>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:32,letterSpacing:"0.03em",color:"var(--paper)",marginBottom:14,lineHeight:1.1}}>{current.title}</div>
+        <p style={{fontFamily:"'Space Mono',monospace",fontSize:12,color:"rgba(255,255,255,0.75)",lineHeight:1.85,marginBottom:32}}>{current.body}</p>
+
+        {/* Buttons */}
+        <div style={{display:"flex",gap:12,alignItems:"center"}}>
+          {step > 0 && (
+            <button onClick={prev} style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.12em",background:"none",border:"1px solid var(--border)",color:"var(--muted)",padding:"10px 18px",cursor:"pointer"}}>← BACK</button>
+          )}
+          <button onClick={next} style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:"0.08em",background:"var(--blood)",color:"var(--paper)",border:"none",padding:"12px 28px",cursor:"pointer",flex:1}}>
+            {isLast ? "LET'S GO →" : "NEXT →"}
+          </button>
+        </div>
+
+        {/* Step counter */}
+        <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:"var(--ghost)",marginTop:16,letterSpacing:"0.1em"}}>{step+1} of {TUTORIAL_STEPS.length}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ================================================================
    ROOT
 ================================================================ */
 function App() {
   var [tab,setTab] = useState("search");
   var storage = useApplications();
+  var [showTutorial, setShowTutorial] = useState(function() {
+    try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
+  });
+
+  function closeTutorial() {
+    try { localStorage.setItem("gb_tutorial_done", "1"); } catch(e) {}
+    setShowTutorial(false);
+  }
 
   function handleClearAll() {
     if (window.confirm("Delete all applications? This cannot be undone.")) {
@@ -1188,6 +1291,7 @@ function App() {
   return (
     <div>
       <style>{STYLE}</style>
+      {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       <div className="scanlines" />
       <div className="ticker-wrap">
         <div className="ticker-track">
@@ -1215,6 +1319,9 @@ function App() {
           <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setTab("tracker");}}>
             📋 Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
+          </button>
+          <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{marginLeft:"auto",fontSize:13,opacity:0.5}} title="How to use GhostBust">
+            ? Help
           </button>
         </nav>
 
