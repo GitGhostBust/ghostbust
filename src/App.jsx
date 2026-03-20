@@ -1272,6 +1272,7 @@ export default function App() {
   return (
     <div>
       <style>{STYLE}</style>
+      {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><Auth supabaseClient={supabase} appearance={{theme:ThemeSupa,variables:{default:{colors:{brand:"#d42200",brandAccent:"#e52600"}}}}} providers={[]} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       <div className="scanlines" />
       <div className="ticker-wrap">
