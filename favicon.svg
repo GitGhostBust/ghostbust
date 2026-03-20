@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Dark background -->
+  <rect width="32" height="32" fill="#070709" rx="6"/>
+  <!-- Ghost shape -->
+  <path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.9"/>
+  <!-- Eyes -->
+  <circle cx="13" cy="14" r="2" fill="#d42200"/>
+  <circle cx="19" cy="14" r="2" fill="#d42200"/>
+</svg>
