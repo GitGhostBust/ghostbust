@@ -1,4 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";`nimport { supabase } from "./supabase.js";`nimport { Auth } from "@supabase/auth-ui-react";`nimport { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { supabase } from "./supabase.js";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 /* ================================================================
    STYLES
