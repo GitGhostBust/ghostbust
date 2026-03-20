@@ -1252,7 +1252,10 @@ function AuthForm({supabase,onClose}){
     setLoading(true);setError(null);
     var res=mode==="signin"?await supabase.auth.signInWithPassword({email,password}):await supabase.auth.signUp({email,password});
     if(res.error){setError(res.error.message);setLoading(false);return;}
-    if(mode==="signup"){setDone(true);setLoading(false);return;}
+    if(mode==="signup"){
+      if(res.data&&res.data.user&&res.data.user.identities&&res.data.user.identities.length===0){setError("An account with this email already exists. Please sign in instead.");setLoading(false);return;}
+      setDone(true);setLoading(false);return;
+    }
     onClose();setLoading(false);
   }
   if(done)return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:40,marginBottom:12}}>📬</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Check Your Email</div><p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7}}>Confirmation link sent to <strong style={{color:"var(--paper)"}}>{email}</strong>. Click it to activate your account, then sign in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setDone(false);setMode("signin");}}>Back to Sign In</button></div>);
