@@ -6,16 +6,13 @@
   <title>GhostBust — Ghost Detector & Job Search</title>
   <style>
     body { background: #070709; margin: 0; }
-    #loading {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      height: 100vh; color: #eeeae0; font-family: Georgia, serif;
-    }
-    .loading-logo { font-size: 48px; font-weight: 900; margin-bottom: 20px; }
-    .loading-logo em { color: #d42200; font-style: normal; }
-    .loading-bar-track { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-bottom: 16px; }
-    .loading-bar-fill { height: 2px; background: #d42200; animation: load 1.5s ease-in-out forwards; }
-    @keyframes load { from { width: 0% } to { width: 100% } }
-    .loading-text { font-family: monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    #loading { display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;color:#eeeae0;font-family:Georgia,serif; }
+    .loading-logo { font-size:48px;font-weight:900;margin-bottom:20px; }
+    .loading-logo em { color:#d42200;font-style:normal; }
+    .loading-bar-track { width:200px;height:2px;background:rgba(255,255,255,0.1);margin-bottom:16px; }
+    .loading-bar-fill { height:2px;background:#d42200;animation:load 1.5s ease-in-out forwards; }
+    @keyframes load { from{width:0%} to{width:100%} }
+    .loading-text { font-family:monospace;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.3); }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -241,7 +238,7 @@ const STYLE = `
   .notes-input:focus { border-color: var(--border-hi); }
   .notes-input::placeholder { color: var(--ghost); }
 
-  .footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.12); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.55); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
   /* MANUAL ADD */
   .add-form { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ice); padding: 22px; margin-bottom: 28px; }
@@ -1149,7 +1146,8 @@ function App() {
       <div className="app">
         <header className="header">
           <div>
-            <div className="logo-eyebrow">AI-powered job intelligence · <a href="/" style={{color:"var(--paper)",background:"var(--blood)",textDecoration:"none",fontFamily:"'Space Mono',monospace",fontSize:9,letterSpacing:"0.2em",padding:"3px 10px"}}>← HOME</a></div>
+            <div className="logo-eyebrow">AI-powered job intelligence</div>
+            <a href="/" style={{display:"inline-block",marginTop:8,marginBottom:4,fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.15em",color:"var(--paper)",background:"var(--blood)",padding:"6px 14px",textDecoration:"none",cursor:"pointer"}}>← BACK TO GHOSTBUST.US</a>
             <h1 className="logo-title">Ghost<em>Bust</em></h1>
             <p className="logo-sub">Find real jobs. Expose ghost listings. Track every application. The only job search tool built to fight back against a broken market.</p>
           </div>
