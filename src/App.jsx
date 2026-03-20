@@ -1243,21 +1243,22 @@ function TutorialOverlay(props) {
 ================================================================ */
 function AuthForm({supabase,onClose}){
   var [done,setDone]=useState(false);
+  var [mode,setMode]=useState("signin");
   var [email,setEmail]=useState("");
   var [password,setPassword]=useState("");
-  var [mode,setMode]=useState("signin");
   var [error,setError]=useState(null);
   var [loading,setLoading]=useState(false);
   async function handle(){
     setLoading(true);setError(null);
     var res=mode==="signin"?await supabase.auth.signInWithPassword({email,password}):await supabase.auth.signUp({email,password});
     if(res.error){setError(res.error.message);setLoading(false);return;}
-    if(mode==="signup"){setDone("check");setLoading(false);return;}
+    if(mode==="signup"){setDone(true);setLoading(false);return;}
     onClose();setLoading(false);
   }
-  if(done==="check")return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:32,marginBottom:12}}>📬</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:22,marginBottom:8}}>Check Your Email</div><p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7}}>We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.</p></div>);
-  return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}} /><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="Password" value={password} onChange={function(e){setPassword(e.target.value);}} />{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handle} disabled={loading}>{loading?"...":mode==="signin"?"SIGN IN":"CREATE ACCOUNT"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12,color:"var(--muted)"}}>{mode==="signin"?<span>No account? <button onClick={function(){setMode("signup");}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign up free</button></span>:<span>Have an account? <button onClick={function(){setMode("signin");}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign in</button></span>}</div></div>);
+  if(done)return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:40,marginBottom:12}}>📬</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Check Your Email</div><p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7}}>Confirmation link sent to <strong style={{color:"var(--paper)"}}>{email}</strong>. Click it to activate your account, then sign in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setDone(false);setMode("signin");}}>Back to Sign In</button></div>);
+  return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}}/><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="Password" value={password} onChange={function(e){setPassword(e.target.value);}}/>{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handle} disabled={loading}>{loading?"...":mode==="signin"?"SIGN IN":"CREATE ACCOUNT"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12,color:"var(--muted)"}}>{mode==="signin"?<span>No account? <button onClick={function(){setMode("signup");setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign up free</button></span>:<span>Have an account? <button onClick={function(){setMode("signin");setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign in</button></span>}</div></div>);
 }
+
 export default function App() {
   var [session, setSession] = useState(null);
   var [showAuth, setShowAuth] = useState(false);
