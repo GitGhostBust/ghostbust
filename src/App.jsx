@@ -1243,6 +1243,8 @@ function TutorialOverlay(props) {
 ================================================================ */
 function AuthForm({supabase,onClose}){
   var [done,setDone]=useState(false);
+  var [forgotMode,setForgotMode]=useState(false);
+  var [forgotSent,setForgotSent]=useState(false);
   var [mode,setMode]=useState("signin");
   var [email,setEmail]=useState("");
   var [password,setPassword]=useState("");
@@ -1258,8 +1260,16 @@ function AuthForm({supabase,onClose}){
     }
     onClose();setLoading(false);
   }
+  async function handleForgot(){
+    setLoading(true);setError(null);
+    var res=await supabase.auth.resetPasswordForEmail(email,{redirectTo:"https://ghostbust.us/app.html"});
+    if(res.error){setError(res.error.message);setLoading(false);return;}
+    setForgotSent(true);setLoading(false);
+  }
   if(done)return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:40,marginBottom:12}}>📬</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Check Your Email</div><p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7}}>Confirmation link sent to <strong style={{color:"var(--paper)"}}>{email}</strong>. Click it to activate your account, then sign in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setDone(false);setMode("signin");}}>Back to Sign In</button></div>);
-  return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}}/><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="Password" value={password} onChange={function(e){setPassword(e.target.value);}}/>{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handle} disabled={loading}>{loading?"...":mode==="signin"?"SIGN IN":"CREATE ACCOUNT"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12,color:"var(--muted)"}}>{mode==="signin"?<span>No account? <button onClick={function(){setMode("signup");setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign up free</button></span>:<span>Have an account? <button onClick={function(){setMode("signin");setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign in</button></span>}</div></div>);
+  if(forgotSent)return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:40,marginBottom:12}}>📬</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Check Your Email</div><p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7}}>Password reset link sent to <strong style={{color:"var(--paper)"}}>{email}</strong>.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setForgotSent(false);setForgotMode(false);}}>Back to Sign In</button></div>);
+  if(forgotMode)return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}}/>{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handleForgot} disabled={loading}>{loading?"...":"SEND RESET LINK"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12}}><button onClick={function(){setForgotMode(false);setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Back to Sign In</button></div></div>);
+  return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}}/><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="Password" value={password} onChange={function(e){setPassword(e.target.value);}}/>{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handle} disabled={loading}>{loading?"...":mode==="signin"?"SIGN IN":"CREATE ACCOUNT"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12,color:"var(--muted)"}}>{mode==="signin"&&<button onClick={function(){setForgotMode(true);setError(null);}} style={{background:"none",border:"none",color:"rgba(238,234,224,0.4)",cursor:"pointer",fontSize:11,display:"block",margin:"0 auto 8px"}}>Forgot password?</button>}{mode==="signin"?<span>No account? <button onClick={function(){setMode("signup");setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign up free</button></span>:<span>Have an account? <button onClick={function(){setMode("signin");setError(null);}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign in</button></span>}</div></div>);
 }
 
 export default function App() {
