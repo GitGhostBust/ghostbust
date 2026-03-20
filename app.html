@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>GhostBust — Ghost Detector & Job Search</title>
   <style>
     body { background: #070709; margin: 0; }
@@ -300,10 +300,21 @@ const STYLE = `
     .ghost-float { display: none; }
     .app-card { grid-template-columns: 1fr; }
     .app-controls { flex-direction: row; align-items: center; }
+    .logo-title { font-size: clamp(42px, 12vw, 72px); }
+    .tab-btn { font-size: 14px; padding: 10px 14px 12px; }
+    .panel { padding: 24px 0; }
+    .form-box { padding: 18px; }
   }
   @media (max-width: 480px) {
     .board-grid, .tracker-stats { grid-template-columns: 1fr 1fr; }
-    .tabs { overflow-x: auto; }
+    .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .app { padding: 0 16px 100px; }
+    .tab-btn { font-size: 13px; padding: 10px 12px; }
+    .score-row { grid-template-columns: 1fr 1fr; }
+    .tracker-stats { grid-template-columns: repeat(3,1fr); }
+    .stat-num { font-size: 22px; }
+    .verdict-title { font-size: 24px; }
+    .logo-title { font-size: clamp(38px, 11vw, 60px); }
   }
 `;
 
