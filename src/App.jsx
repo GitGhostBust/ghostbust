@@ -1241,7 +1241,8 @@ function TutorialOverlay(props) {
 /* ================================================================
    ROOT
 ================================================================ */
-function AuthForm({supabase}){
+function AuthForm({supabase,onClose}){
+  var [done,setDone]=useState(false);
   var [email,setEmail]=useState("");
   var [password,setPassword]=useState("");
   var [mode,setMode]=useState("signin");
@@ -1250,17 +1251,20 @@ function AuthForm({supabase}){
   async function handle(){
     setLoading(true);setError(null);
     var res=mode==="signin"?await supabase.auth.signInWithPassword({email,password}):await supabase.auth.signUp({email,password});
-    if(res.error)setError(res.error.message);
-    setLoading(false);
+    if(res.error){setError(res.error.message);setLoading(false);return;}
+    if(mode==="signup"){setDone("check");setLoading(false);return;}
+    onClose();setLoading(false);
   }
+  if(done==="check")return(<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:32,marginBottom:12}}>📬</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:22,marginBottom:8}}>Check Your Email</div><p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7}}>We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.</p></div>);
   return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}} /><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="Password" value={password} onChange={function(e){setPassword(e.target.value);}} />{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handle} disabled={loading}>{loading?"...":mode==="signin"?"SIGN IN":"CREATE ACCOUNT"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12,color:"var(--muted)"}}>{mode==="signin"?<span>No account? <button onClick={function(){setMode("signup");}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign up free</button></span>:<span>Have an account? <button onClick={function(){setMode("signin");}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign in</button></span>}</div></div>);
 }
 export default function App() {
   var [session, setSession] = useState(null);
   var [showAuth, setShowAuth] = useState(false);
+  var [toast, setToast] = useState(null);
   useEffect(function(){
     supabase.auth.getSession().then(function(d){ setSession(d.data.session); });
-    var sub = supabase.auth.onAuthStateChange(function(_e,s){ setSession(s); });
+    var sub = supabase.auth.onAuthStateChange(function(event,s){ setSession(s); if(event==="SIGNED_IN"){setToast("Signed in as "+s.user.email);setTimeout(function(){setToast(null);},4000);} if(event==="SIGNED_OUT"){setToast("Signed out");setTimeout(function(){setToast(null);},2000);} });
     return function(){ sub.data.subscription.unsubscribe(); };
   },[]);
   var [tab,setTab] = useState("search");
@@ -1286,7 +1290,8 @@ export default function App() {
   return (
     <div>
       <style>{STYLE}</style>
-      {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} /></div></div>)}
+        {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>SIGNED IN</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
+{showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} onClose={function(){setShowAuth(false);}} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       <div className="scanlines" />
       <div className="ticker-wrap">
