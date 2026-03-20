@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "./supabase.js";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+// auth-ui-react removed
+// auth-ui-shared removed
 
 /* ================================================================
    STYLES
@@ -1241,6 +1241,20 @@ function TutorialOverlay(props) {
 /* ================================================================
    ROOT
 ================================================================ */
+function AuthForm({supabase}){
+  var [email,setEmail]=useState("");
+  var [password,setPassword]=useState("");
+  var [mode,setMode]=useState("signin");
+  var [error,setError]=useState(null);
+  var [loading,setLoading]=useState(false);
+  async function handle(){
+    setLoading(true);setError(null);
+    var res=mode==="signin"?await supabase.auth.signInWithPassword({email,password}):await supabase.auth.signUp({email,password});
+    if(res.error)setError(res.error.message);
+    setLoading(false);
+  }
+  return(<div><input className="f-input" style={{marginBottom:10,width:"100%"}} placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}} /><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="Password" value={password} onChange={function(e){setPassword(e.target.value);}} />{error&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{error}</div>}<button className="run-btn red" onClick={handle} disabled={loading}>{loading?"...":mode==="signin"?"SIGN IN":"CREATE ACCOUNT"}</button><div style={{marginTop:12,textAlign:"center",fontSize:12,color:"var(--muted)"}}>{mode==="signin"?<span>No account? <button onClick={function(){setMode("signup");}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign up free</button></span>:<span>Have an account? <button onClick={function(){setMode("signin");}} style={{background:"none",border:"none",color:"var(--blood)",cursor:"pointer",fontSize:12}}>Sign in</button></span>}</div></div>);
+}
 export default function App() {
   var [session, setSession] = useState(null);
   var [showAuth, setShowAuth] = useState(false);
@@ -1272,7 +1286,7 @@ export default function App() {
   return (
     <div>
       <style>{STYLE}</style>
-      {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><Auth supabaseClient={supabase} appearance={{theme:ThemeSupa,variables:{default:{colors:{brand:"#d42200",brandAccent:"#e52600"}}}}} providers={[]} /></div></div>)}
+      {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       <div className="scanlines" />
       <div className="ticker-wrap">
