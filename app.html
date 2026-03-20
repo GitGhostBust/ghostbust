@@ -185,11 +185,15 @@ const STYLE = `
   .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1; }
   .stat-lbl { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); margin-top: 3px; }
   .stat-saved { color: var(--paper); }
+  .stat-researching { color: var(--bile); }
   .stat-applied { color: var(--ice); }
   .stat-interviewing { color: var(--signal); }
   .stat-ghosted { color: var(--ghost); }
   .stat-rejected { color: var(--blood); }
   .stat-offer { color: var(--bile); }
+  .app-card.status-researching { border-left-color: var(--bile); }
+  .app-card.status-saved { border-left-color: rgba(238,234,224,0.3); }
+  .status-select.status-researching { color: var(--bile); }
 
   .tracker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .tracker-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); }
@@ -360,10 +364,10 @@ const INDUSTRY_MAP = {
   "Science and Research": ["Biology and Life Sciences","Chemistry","Physics","Neuroscience","Environmental Science","Clinical Research","Epidemiology","Geology and Earth Science","Astronomy","Materials Science","Biotechnology","Pharmaceuticals","Food Science","Agricultural Science","Marine Science"],
 };
 
-const STATUSES = ["Saved","Applied","Interviewing","Ghosted","Rejected","Offer"];
+const STATUSES = ["Researching","Saved","Applied","Interviewing","Ghosted","Rejected","Offer"];
 
 const STATUS_EMOJI = {
-  Saved: "📌", Applied: "📤", Interviewing: "🎯", Ghosted: "👻", Rejected: "✗", Offer: "🏆"
+  Researching: "🔎", Saved: "📌", Applied: "📤", Interviewing: "🎯", Ghosted: "👻", Rejected: "✗", Offer: "🏆"
 };
 
 const BOARDS = [
@@ -678,6 +682,7 @@ function VerifyTab(props) {
   var [company,setCompany] = useState("");
   var [jobTitle,setJobTitle] = useState("");
   var [age,setAge] = useState("");
+  var [sourceBoard,setSourceBoard] = useState("");
   var [loading,setLoading] = useState(false);
   var [step,setStep] = useState(-1);
   var [result,setResult] = useState(null);
@@ -717,8 +722,9 @@ function VerifyTab(props) {
       company: company||"Unknown Company",
       ghostScore: result.ghostScore||0,
       verdict: result.verdict,
-      status: "Saved",
+      status: "Researching",
       notes: "",
+      sourceBoard: sourceBoard||"",
       savedAt: Date.now(),
       listingText: text.slice(0,500),
     };
@@ -752,9 +758,25 @@ function VerifyTab(props) {
             <input className="f-input" placeholder="e.g. Acme Corp" value={company} onChange={function(e){setCompany(e.target.value);}} />
           </div>
         </div>
-        <div style={{marginTop:12}}>
-          <label className="field-label red">Posting Age (optional)</label>
-          <input className="f-input" placeholder="e.g. posted 3 months ago" value={age} onChange={function(e){setAge(e.target.value);}} />
+        <div className="two-col" style={{marginTop:12}}>
+          <div>
+            <label className="field-label red">Posting Age (optional)</label>
+            <input className="f-input" placeholder="e.g. posted 3 months ago" value={age} onChange={function(e){setAge(e.target.value);}} />
+          </div>
+          <div>
+            <label className="field-label red">Source Job Board (optional)</label>
+            <select className="f-input" value={sourceBoard} onChange={function(e){setSourceBoard(e.target.value);}}>
+              <option value="">Select board...</option>
+              <option>Indeed</option>
+              <option>LinkedIn</option>
+              <option>Wellfound</option>
+              <option>ZipRecruiter</option>
+              <option>Monster</option>
+              <option>SimplyHired</option>
+              <option>Company Website</option>
+              <option>Other</option>
+            </select>
+          </div>
         </div>
         <button className="run-btn red" onClick={analyze} disabled={text.trim().length<50||loading}>
           {loading?"ANALYSING...":"DETECT GHOST JOB"}
@@ -768,7 +790,7 @@ function VerifyTab(props) {
         <div ref={resultRef}>
           <VerdictCard result={result} />
           <div className="save-bar">
-            <div className="save-bar-title">📌 Save to Application Tracker</div>
+            <div className="save-bar-title">📌 Save to Tracker — starts as <span style={{color:"var(--ice)"}}>Researching</span></div>
             {!saved?(
               <>
                 <input className="f-input" style={{flex:1,minWidth:160}} placeholder="Job title (e.g. Product Designer)" value={jobTitle} onChange={function(e){setJobTitle(e.target.value);}} />
@@ -778,7 +800,7 @@ function VerifyTab(props) {
                 </button>
               </>
             ):(
-              <div className="save-success">✓ Saved to your tracker. Switch to the Tracker tab to manage it.</div>
+              <div className="save-success">✓ Saved to tracker as <strong>Researching</strong>. Switch to the Tracker tab to update status.</div>
             )}
           </div>
         </div>
@@ -838,6 +860,7 @@ function AppCard(props) {
           <span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>
           <span className="app-chip">{app.verdict}</span>
           <span className="app-chip">{STATUS_EMOJI[app.status]} {app.status}</span>
+          {app.sourceBoard&&<span className="app-chip" style={{color:"var(--ice)"}}>📍 {app.sourceBoard}</span>}
           <span className="app-date">{formatDate(app.savedAt)}</span>
         </div>
         <div className="followup-row">
@@ -968,10 +991,11 @@ function TrackerTab(props) {
   var [showReport,setShowReport] = useState(false);
   var [addTitle,setAddTitle] = useState("");
   var [addCompany,setAddCompany] = useState("");
-  var [addStatus,setAddStatus] = useState("Saved");
+  var [addStatus,setAddStatus] = useState("Researching");
   var [addNotes,setAddNotes] = useState("");
   var [addUrl,setAddUrl] = useState("");
   var [addFollowup,setAddFollowup] = useState("");
+  var [addSourceBoard,setAddSourceBoard] = useState("");
 
   var counts = {};
   STATUSES.forEach(function(s){ counts[s]=apps.filter(function(a){return a.status===s;}).length; });
@@ -986,19 +1010,20 @@ function TrackerTab(props) {
       id:uid(), title:addTitle.trim(), company:addCompany.trim()||"Unknown",
       ghostScore:0, verdict:"UNKNOWN", status:addStatus,
       notes:addNotes.trim(), url:addUrl.trim(), followupDate:addFollowup,
-      savedAt:Date.now(), manual:true,
+      sourceBoard:addSourceBoard, savedAt:Date.now(), manual:true,
     });
-    setAddTitle(""); setAddCompany(""); setAddNotes(""); setAddUrl(""); setAddFollowup(""); setAddStatus("Saved");
+    setAddTitle(""); setAddCompany(""); setAddNotes(""); setAddUrl(""); setAddFollowup(""); setAddStatus("Researching"); setAddSourceBoard("");
     setShowAdd(false);
   }
 
   function exportCSV() {
-    var headers = ["Title","Company","Status","Ghost Score","Verdict","Notes","Follow-up Date","Saved Date","URL"];
+    var headers = ["Title","Company","Status","Source Board","Ghost Score","Verdict","Notes","Follow-up Date","Saved Date","URL"];
     var rows = apps.map(function(a){
       return [
         '"'+(a.title||"").replace(/"/g,'""')+'"',
         '"'+(a.company||"").replace(/"/g,'""')+'"',
         a.status||"",
+        a.sourceBoard||"",
         a.ghostScore||0,
         a.verdict||"",
         '"'+(a.notes||"").replace(/"/g,'""')+'"',
@@ -1024,6 +1049,7 @@ function TrackerTab(props) {
       <div className="tracker-stats">
         {[
           ["All","stat-saved",counts["All"]||0],
+          ["Researching","stat-researching",counts["Researching"]||0],
           ["Applied","stat-applied",counts["Applied"]||0],
           ["Interviewing","stat-interviewing",counts["Interviewing"]||0],
           ["Ghosted","stat-ghosted",counts["Ghosted"]||0],
@@ -1081,6 +1107,20 @@ function TrackerTab(props) {
               <label className="field-label" style={{color:"var(--ice)"}}>Status</label>
               <select className="f-input" value={addStatus} onChange={function(e){setAddStatus(e.target.value);}}>
                 {STATUSES.map(function(s){return <option key={s}>{s}</option>;})}
+              </select>
+            </div>
+            <div>
+              <label className="field-label" style={{color:"var(--ice)"}}>Source Job Board</label>
+              <select className="f-input" value={addSourceBoard} onChange={function(e){setAddSourceBoard(e.target.value);}}>
+                <option value="">Select board...</option>
+                <option>Indeed</option>
+                <option>LinkedIn</option>
+                <option>Wellfound</option>
+                <option>ZipRecruiter</option>
+                <option>Monster</option>
+                <option>SimplyHired</option>
+                <option>Company Website</option>
+                <option>Other</option>
               </select>
             </div>
           </div>
@@ -1143,7 +1183,7 @@ function App() {
   }
 
   var trackerCount = storage.apps.length;
-  var activeCount = storage.apps.filter(function(a){return a.status==="Applied"||a.status==="Interviewing";}).length;
+  var activeCount = storage.apps.filter(function(a){return a.status==="Researching"||a.status==="Applied"||a.status==="Interviewing";}).length;
 
   return (
     <div>
