@@ -30,16 +30,18 @@ const STYLE = `
     --shadow: 0 4px 24px rgba(0,0,0,0.4);
   }
 
+  html, body { width: 100%; max-width: 100%; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
     color: var(--paper);
     font-family: "Libre Baskerville", Georgia, serif;
     min-height: 100vh;
+    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  .sticky-header { position: sticky; top: 0; z-index: 200; }
+  .sticky-header { position: sticky; top: 0; z-index: 200; width: 100%; max-width: 100%; }
   .ticker-wrap { background: var(--blood); overflow: hidden; padding: 6px 0; }
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 40s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
@@ -75,7 +77,7 @@ const STYLE = `
   .gate-back { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; text-decoration: none; }
   .gate-back:hover { color: var(--paper); }
 
-  .page { padding: 0 24px 100px; }
+  .page { width: 100%; max-width: 100%; margin: 0; padding: 0 24px 100px; box-sizing: border-box; }
 
   .banner-area { width: 100%; height: 220px; position: relative; background: var(--surface); overflow: hidden; cursor: default; }
   .banner-area.editable { cursor: pointer; }

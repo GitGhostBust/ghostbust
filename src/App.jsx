@@ -20,10 +20,12 @@ const STYLE = `
     --ice: #00c8e6; --ice-dim: rgba(0,200,230,0.1);
     --border: rgba(255,255,255,0.07); --border-hi: rgba(255,255,255,0.14);
   }
+  html, body { width: 100%; max-width: 100%; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--void); color: var(--paper); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+  .app-root { width: 100vw; max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; overflow-x: hidden; }
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
-  .app { padding: 0 24px 120px; }
+  .app { width: 100%; max-width: 100%; margin: 0; padding: 0 24px 120px; box-sizing: border-box; }
 
   /* TICKER */
   .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; }
@@ -1324,7 +1326,7 @@ export default function App() {
   var activeCount = storage.apps.filter(function(a){return a.status==="Researching"||a.status==="Applied"||a.status==="Interviewing";}).length;
 
   return (
-    <div>
+    <div className="app-root">
       <style>{STYLE}</style>
           {resetMode&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36}}>{resetDone?(<div style={{textAlign:"center"}}><div style={{fontSize:40,marginBottom:12}}>✓</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Password Updated</div><p style={{fontSize:13,color:"var(--muted)"}}>Your password has been changed. You are now signed in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setResetMode(false);setResetDone(false);}}>Continue</button></div>):(<div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>SET NEW PASSWORD</div><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="New password (min 6 characters)" value={newPassword} onChange={function(e){setNewPassword(e.target.value);}}/>{resetError&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{resetError}</div>}<button className="run-btn red" onClick={async function(){if(newPassword.length<6){setResetError("Password must be at least 6 characters.");return;}setResetError(null);var res=await supabase.auth.updateUser({password:newPassword});if(res.error){setResetError(res.error.message);return;}setResetDone(true);}} disabled={!newPassword}>SET PASSWORD</button></div>)}</div></div>)}
   {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>SIGNED IN</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
