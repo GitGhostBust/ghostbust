@@ -314,7 +314,7 @@ export default function RegionModal({ userId, onClose }) {
                 <input
                   type="checkbox"
                   checked={openRegion}
-                  onChange={e => handleOpenRegion(e.target.checked)}
+                  onChange={e => setOpenRegion(e.target.checked)}
                 />
                 <span>I'm open to multiple regions / remote — don't lock me to one metro</span>
               </label>
