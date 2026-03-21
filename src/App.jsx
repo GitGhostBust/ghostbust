@@ -69,7 +69,7 @@ const STYLE = `
   .field-label.red { color: var(--blood); }
   .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
   .f-input:focus { border-color: var(--border-hi); }
-  .f-input::placeholder { color: rgba(255,255,255,0.4); }
+  .f-input::placeholder { color: rgba(255,255,255,0.4); font-family: 'Space Mono', monospace; font-size: 11px; }
   select.f-input { appearance: none; cursor: pointer; }
   select.f-input option { background: #13131a; color: var(--paper); }
   .paste-area { width: 100%; min-height: 160px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
