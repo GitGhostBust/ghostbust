@@ -310,20 +310,27 @@ export default function Profile() {
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  function handleAvatarFile(e) {
+  async function handleAvatarFile(e) {
     const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => { setAvatarUrl(ev.target.result); setShowAvatarPicker(false); };
-    reader.readAsDataURL(file);
+    if (!file || !session) return;
+    const ext = file.name.split('.').pop();
+    const path = `${session.user.id}/avatar.${ext}`;
+    const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
+    if (error) { console.error('Avatar upload error:', error.message); return; }
+    const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+    setAvatarUrl(data.publicUrl + '?t=' + Date.now());
+    setShowAvatarPicker(false);
   }
 
-  function handleBannerFile(e) {
+  async function handleBannerFile(e) {
     const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => setBannerUrl(ev.target.result);
-    reader.readAsDataURL(file);
+    if (!file || !session) return;
+    const ext = file.name.split('.').pop();
+    const path = `${session.user.id}/banner.${ext}`;
+    const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
+    if (error) { console.error('Banner upload error:', error.message); return; }
+    const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+    setBannerUrl(data.publicUrl + '?t=' + Date.now());
   }
 
   async function saveProfile() {
