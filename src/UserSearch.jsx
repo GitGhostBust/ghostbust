@@ -7,14 +7,14 @@ const STYLE = `
   /* Desktop: always visible input */
   .us-input-wrap { position: relative; display: flex; align-items: center; }
   .us-icon {
-    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
     color: rgba(255,255,255,0.35); pointer-events: none; display: flex; align-items: center;
     transition: color 0.2s;
   }
   .us-input {
     width: 200px; background: var(--surface2, #13131a); border: 1px solid rgba(255,255,255,0.18);
     color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 13px;
-    padding: 7px 12px 7px 32px; outline: none; border-radius: 2px;
+    padding: 7px 32px 7px 12px; outline: none; border-radius: 2px;
     transition: border-color 0.2s, width 0.25s ease;
   }
   .us-input:focus { border-color: rgba(255,255,255,0.38); width: 240px; }
@@ -228,7 +228,7 @@ export default function UserSearch() {
           placeholder="Search users…"
           value={query}
           autoComplete="off"
-          style={{background:"#13131a",border:"1px solid rgba(255,255,255,0.25)",color:"#ffffff",minWidth:180,borderRadius:6,padding:"6px 12px"}}
+          style={{background:"#13131a",border:"1px solid rgba(255,255,255,0.25)",color:"#ffffff",minWidth:180,borderRadius:6,padding:"6px 32px 6px 12px"}}
           onChange={e => search(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={() => setTimeout(clearSearch, 150)}
