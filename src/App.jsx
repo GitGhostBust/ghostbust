@@ -30,6 +30,13 @@ const STYLE = `
   @keyframes ticker { to { transform: translateX(-50%); } }
   .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
 
+  /* APP NAV */
+  .app-nav { position: sticky; top: 0; z-index: 200; background: var(--surface); border-bottom: 1px solid var(--border-hi); display: flex; align-items: center; gap: 10px; padding: 0 24px; height: 50px; }
+  .app-nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); text-decoration: none; flex-shrink: 0; }
+  .app-nav-logo em { color: var(--blood); font-style: normal; }
+  .app-nav-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--paper); border: 1px solid var(--border-hi); padding: 6px 14px; background: rgba(255,255,255,0.05); cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+  .app-nav-btn:hover { background: rgba(255,255,255,0.08); }
+
   /* HEADER */
   .header { padding: 40px 0 36px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 16px; }
   .logo-eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 6px; }
@@ -1319,6 +1326,12 @@ export default function App() {
           {TICKER_ITEMS.concat(TICKER_ITEMS).map(function(t,i){return <span key={i} className="ticker-item">{t} ◆ </span>;})}
         </div>
       </div>
+      <nav className="app-nav">
+        <a href="/" className="app-nav-logo">Ghost<em>Bust</em></a>
+        <span style={{flex:1, display:"flex", justifyContent:"center"}}><UserSearch /></span>
+        <button onClick={function(){window.location.href="/profile.html";}} className="app-nav-btn">My Profile</button>
+        <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} className="app-nav-btn" style={{color:session?"var(--signal)":"var(--paper)"}}>{session?"Sign Out":"Sign In"}</button>
+      </nav>
       <div className="app">
         <header className="header">
           <div>
@@ -1341,9 +1354,6 @@ export default function App() {
             📋 Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
-          <span style={{marginLeft:"auto",display:"flex",alignItems:"center"}}><UserSearch /></span>
-          <button onClick={function(){window.location.href="/profile.html";}} style={{fontFamily:"Space Mono,monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}}>My Profile</button>
-          <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} style={{fontFamily:"Space Mono,monospace",fontSize:11,letterSpacing:"0.12em",color:session?"var(--signal)":"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}}>{session?"Sign Out":"Sign In / Sign Up"}</button>
           <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{marginLeft:"auto",fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
             ? HELP
           </button>

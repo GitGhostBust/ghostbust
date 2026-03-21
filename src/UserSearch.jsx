@@ -228,6 +228,7 @@ export default function UserSearch() {
           placeholder="Search users…"
           value={query}
           autoComplete="off"
+          style={{background:"#13131a",border:"1px solid rgba(255,255,255,0.18)",minWidth:200,color:"#eeeae0"}}
           onChange={e => search(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={() => setTimeout(clearSearch, 150)}

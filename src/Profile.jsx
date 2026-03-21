@@ -509,7 +509,7 @@ export default function Profile() {
 
       <nav className="nav">
         <a href="/" className="nav-logo">Ghost<em>Bust</em></a>
-        <UserSearch />
+        <div style={{flex:1, display:"flex", justifyContent:"center", minWidth:0}}><UserSearch /></div>
         <div className="nav-links">
           <a href="/" className="nav-btn">Home</a>
           <a href="/app.html" className="nav-btn">App</a>
