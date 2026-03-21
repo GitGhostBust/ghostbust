@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "./supabase.js";
 import InboxDrawer from "./InboxDrawer.jsx";
+import UserSearch from "./UserSearch.jsx";
 
 const STYLE = `
   @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
@@ -203,6 +204,34 @@ const STYLE = `
   .err-msg { font-family: "Space Mono", monospace; font-size: 11px; color: #ff4422; margin-bottom: 12px; letter-spacing: 0.05em; }
   .ok-msg { font-family: "Space Mono", monospace; font-size: 11px; color: var(--signal); letter-spacing: 0.08em; }
   .loading { color: var(--ghost); font-family: "Space Mono", monospace; font-size: 11px; text-align: center; margin-top: 120px; letter-spacing: 0.2em; }
+
+  /* ---- follow system ---- */
+  .follow-row { display: flex; align-items: center; gap: 20px; margin: 4px 0 10px; }
+  .follow-stat { display: flex; flex-direction: column; align-items: flex-start; background: none; border: none; cursor: pointer; padding: 0; }
+  .follow-stat-num { font-family: "Bebas Neue", sans-serif; font-size: 22px; line-height: 1.1; color: var(--paper); transition: color 0.15s; }
+  .follow-stat-lbl { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
+  .follow-stat:hover .follow-stat-num { color: var(--ice); }
+  .btn-follow { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 18px; border: 1px solid var(--ice); color: var(--ice); background: none; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; }
+  .btn-follow:hover { background: var(--ice); color: var(--void); }
+  .btn-follow.following { border-color: var(--border-md); color: var(--ghost); }
+  .btn-follow.following:hover { border-color: #ff4422; color: #ff4422; }
+
+  /* ---- follow modal ---- */
+  .fmodal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(3px); }
+  .fmodal { background: var(--surface); border: 1px solid var(--border-md); width: 360px; max-width: 100%; max-height: 76vh; display: flex; flex-direction: column; box-shadow: 0 12px 48px rgba(0,0,0,0.55); }
+  .fmodal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .fmodal-title { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper); }
+  .fmodal-close { background: none; border: none; color: var(--ghost); font-size: 16px; cursor: pointer; padding: 0; line-height: 1; transition: color 0.15s; }
+  .fmodal-close:hover { color: #ff4422; }
+  .fmodal-list { overflow-y: auto; flex: 1; }
+  .fmodal-list::-webkit-scrollbar { width: 4px; }
+  .fmodal-list::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+  .fmodal-user { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); text-decoration: none; transition: background 0.12s; }
+  .fmodal-user:hover { background: rgba(255,255,255,0.04); }
+  .fmodal-user:last-child { border-bottom: none; }
+  .fmodal-username { font-family: "Space Mono", monospace; font-size: 11px; color: var(--paper); letter-spacing: 0.04em; }
+  .fmodal-fullname { font-size: 12px; color: var(--ghost); margin-top: 2px; }
+  .fmodal-empty { padding: 32px 18px; font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; text-align: center; }
 `;
 
 const TICKER_ITEMS = [
@@ -273,6 +302,14 @@ export default function Profile() {
   const [avatarColor, setAvatarColor] = useState(AVATAR_COLORS[0]);
   const [ghostColor, setGhostColor] = useState(GHOST_COLORS[0]);
 
+  // follow system
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [showFollowModal, setShowFollowModal] = useState(null); // null | "followers" | "following"
+  const [followModalUsers, setFollowModalUsers] = useState([]);
+  const [followModalLoading, setFollowModalLoading] = useState(false);
+
   const avatarFileRef = useRef(null);
   const bannerFileRef = useRef(null);
 
@@ -284,16 +321,25 @@ export default function Profile() {
   });
 
   useEffect(() => {
+    const urlUser = new URLSearchParams(window.location.search).get("user");
     supabase.auth.getSession().then(({ data }) => {
       const s = data.session;
       setSession(s);
-      if (s) { loadProfile(s.user.id); loadStats(s.user.id); }
-      else { setShowGate(true); setLoading(false); }
+      if (urlUser) {
+        // viewing someone else's public profile (or own via ?user=)
+        loadProfileByUsername(urlUser, s?.user?.id);
+      } else {
+        // own profile page — gate if not signed in
+        if (s) { loadProfile(s.user.id); loadStats(s.user.id); }
+        else { setShowGate(true); setLoading(false); }
+      }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
-      if (s) { setShowGate(false); loadProfile(s.user.id); loadStats(s.user.id); }
-      else { setShowGate(true); setLoading(false); }
+      if (!urlUser) {
+        if (s) { setShowGate(false); loadProfile(s.user.id); loadStats(s.user.id); }
+        else { setShowGate(true); setLoading(false); }
+      }
     });
     return () => sub.subscription.unsubscribe();
   }, []);
@@ -320,10 +366,70 @@ export default function Profile() {
       if (data.ghost_color) setGhostColor(data.ghost_color);
       if (data.avatar_url) setAvatarUrl(data.avatar_url);
       if (data.banner_url) setBannerUrl(data.banner_url);
+      await loadFollowData(uid, uid); // own profile: viewer = owner
     } else {
       setEditing(true);
     }
     setLoading(false);
+  }
+
+  async function loadProfileByUsername(username, currentUserId) {
+    const { data: p } = await supabase.from("profiles").select("*").eq("username", username).maybeSingle();
+    if (p) {
+      setProfile(p);
+      if (p.avatar_color) setAvatarColor(p.avatar_color);
+      if (p.ghost_color) setGhostColor(p.ghost_color);
+      if (p.avatar_url) setAvatarUrl(p.avatar_url);
+      if (p.banner_url) setBannerUrl(p.banner_url);
+      await loadFollowData(p.id, currentUserId);
+    }
+    setLoading(false);
+  }
+
+  async function loadFollowData(targetId, viewerId) {
+    const [fc, fg] = await Promise.all([
+      supabase.from("follows").select("id", { count: "exact", head: true }).eq("following_id", targetId),
+      supabase.from("follows").select("id", { count: "exact", head: true }).eq("follower_id", targetId),
+    ]);
+    setFollowerCount(fc.count || 0);
+    setFollowingCount(fg.count || 0);
+    if (viewerId && viewerId !== targetId) {
+      const { data } = await supabase.from("follows")
+        .select("id").eq("follower_id", viewerId).eq("following_id", targetId).maybeSingle();
+      setIsFollowing(!!data);
+    }
+  }
+
+  async function toggleFollow() {
+    if (!session || !profile) return;
+    const targetId = profile.id;
+    if (isFollowing) {
+      setIsFollowing(false);
+      setFollowerCount(c => c - 1);
+      await supabase.from("follows").delete().eq("follower_id", session.user.id).eq("following_id", targetId);
+    } else {
+      setIsFollowing(true);
+      setFollowerCount(c => c + 1);
+      await supabase.from("follows").insert({ follower_id: session.user.id, following_id: targetId });
+    }
+  }
+
+  async function openFollowModal(type) {
+    setShowFollowModal(type);
+    setFollowModalLoading(true);
+    setFollowModalUsers([]);
+    if (!profile) { setFollowModalLoading(false); return; }
+
+    const col = type === "followers" ? "follower_id" : "following_id";
+    const filter = type === "followers" ? "following_id" : "follower_id";
+    const { data: rows } = await supabase.from("follows").select(col).eq(filter, profile.id);
+    const ids = (rows || []).map(r => r[col]);
+    if (ids.length === 0) { setFollowModalLoading(false); return; }
+
+    const { data: users } = await supabase.from("profiles")
+      .select("id, username, full_name, avatar_url, avatar_color, ghost_color").in("id", ids);
+    setFollowModalUsers(users || []);
+    setFollowModalLoading(false);
   }
 
   async function loadStats(uid) {
@@ -385,6 +491,7 @@ export default function Profile() {
 
   const scoreColor = stats.avgScore > 60 ? "#ff4422" : stats.avgScore > 35 ? "#c49500" : "#00e07a";
   const displayName = profile?.show_full_name && profile?.full_name ? profile.full_name : null;
+  const isOwnProfile = !profile || !session || profile.id === session.user.id;
 
   if (loading) return <><style>{STYLE}</style><div className="loading">LOADING...</div></>;
 
@@ -402,6 +509,7 @@ export default function Profile() {
 
       <nav className="nav">
         <a href="/" className="nav-logo">Ghost<em>Bust</em></a>
+        <UserSearch />
         <div className="nav-links">
           <a href="/" className="nav-btn">Home</a>
           <a href="/app.html" className="nav-btn">App</a>
@@ -431,7 +539,7 @@ export default function Profile() {
         onUnreadChange={setInboxUnread}
       />
 
-      {showGate && (
+      {showGate && !new URLSearchParams(window.location.search).get("user") && (
         <div className="gate">
           <div className="gate-card">
             <div className="gate-logo">Ghost<em>Bust</em></div>
@@ -487,7 +595,15 @@ export default function Profile() {
             </div>
             <div className="header-actions">
               {saved && <span className="ok-msg">✓ Saved</span>}
-              {profile && !editing && (
+              {profile && !isOwnProfile && session && (
+                <button
+                  className={`btn-follow${isFollowing ? " following" : ""}`}
+                  onClick={toggleFollow}
+                >
+                  {isFollowing ? "Following" : "Follow"}
+                </button>
+              )}
+              {profile && !editing && isOwnProfile && (
                 <button className="btn-secondary" onClick={() => setEditing(true)}>Edit Profile</button>
               )}
             </div>
@@ -538,7 +654,17 @@ export default function Profile() {
                 {displayName && <span className="profile-displayname">{displayName}</span>}
                 <span className="profile-username">@{profile.username}</span>
               </div>
-              <div className="profile-email">{session?.user?.email}</div>
+              <div className="follow-row">
+                <button className="follow-stat" onClick={() => openFollowModal("followers")}>
+                  <span className="follow-stat-num">{followerCount}</span>
+                  <span className="follow-stat-lbl">Followers</span>
+                </button>
+                <button className="follow-stat" onClick={() => openFollowModal("following")}>
+                  <span className="follow-stat-num">{followingCount}</span>
+                  <span className="follow-stat-lbl">Following</span>
+                </button>
+              </div>
+              {isOwnProfile && <div className="profile-email">{session?.user?.email}</div>}
               {profile.bio
                 ? <p className="profile-bio">{profile.bio}</p>
                 : <p className="profile-bio empty">No bio yet — click Edit Profile to add one.</p>
@@ -555,7 +681,7 @@ export default function Profile() {
                     <span className="tag yellow">{profile.education}</span>}
                 </div>
               )}
-              <div className="member-since">
+              {isOwnProfile && <div className="member-since">
                 Member since {session && new Date(session.user.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
               </div>
             </>
@@ -670,7 +796,7 @@ export default function Profile() {
 
           {/* SIDEBAR */}
           <div className="side-col">
-            <div className="card">
+            {isOwnProfile && <div className="card">
               <div className="card-title">Activity</div>
               <div className="stat-list">
                 <div className="stat-row">
@@ -697,7 +823,7 @@ export default function Profile() {
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
 
             <div className="card">
               <div className="card-title">Tools</div>
@@ -716,6 +842,50 @@ export default function Profile() {
 
         </div>
       </div>
+
+      {/* FOLLOW MODAL */}
+      {showFollowModal && (
+        <div className="fmodal-backdrop" onClick={() => setShowFollowModal(null)}>
+          <div className="fmodal" onClick={e => e.stopPropagation()}>
+            <div className="fmodal-header">
+              <span className="fmodal-title">
+                {showFollowModal === "followers" ? "Followers" : "Following"}
+              </span>
+              <button className="fmodal-close" onClick={() => setShowFollowModal(null)}>✕</button>
+            </div>
+            <div className="fmodal-list">
+              {followModalLoading && (
+                <div className="fmodal-empty">Loading…</div>
+              )}
+              {!followModalLoading && followModalUsers.length === 0 && (
+                <div className="fmodal-empty">No users yet.</div>
+              )}
+              {!followModalLoading && followModalUsers.map(u => (
+                <a
+                  key={u.id}
+                  href={`/profile.html?user=${encodeURIComponent(u.username)}`}
+                  className="fmodal-user"
+                >
+                  <div style={{
+                    width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+                    background: u.avatar_url ? "transparent" : (u.avatar_color || "#1c1c22"),
+                    overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    {u.avatar_url
+                      ? <img src={u.avatar_url} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="" />
+                      : <GhostIcon size={24} color={u.ghost_color || "#e8e4da"} />
+                    }
+                  </div>
+                  <div>
+                    <div className="fmodal-username">@{u.username}</div>
+                    {u.full_name && <div className="fmodal-fullname">{u.full_name}</div>}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
