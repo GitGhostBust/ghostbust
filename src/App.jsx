@@ -202,7 +202,7 @@ const STYLE = `
   .gs-mid { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.2); color: var(--bile); }
   .gs-high { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.2); color: var(--blood); }
   .app-notes { font-size: 12px; color: var(--muted); margin-top: 8px; font-style: italic; line-height: 1.5; }
-  .app-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--ghost); }
+  .app-date { font-family: 'Libre Baskerville', Georgia, serif; font-size: 9px; color: var(--ghost); }
 
   .app-controls { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .status-select { background: var(--surface2); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 5px 8px; outline: none; cursor: pointer; appearance: none; text-align: center; }
@@ -245,9 +245,9 @@ const STYLE = `
   /* FOLLOW-UP DATE */
   .followup-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
   .followup-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
-  .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 8px; outline: none; cursor: pointer; }
+  .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 10px; padding: 3px 8px; outline: none; cursor: pointer; }
   .followup-date:focus { border-color: var(--border-hi); }
-  .followup-due { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--bile); }
+  .followup-due { font-family: 'Libre Baskerville', Georgia, serif; font-size: 11px; color: var(--bile); }
   .followup-overdue { color: var(--blood); }
 
   /* EXPORT */
@@ -262,7 +262,7 @@ const STYLE = `
   .report-top { background: var(--blood); padding: 22px 24px 18px; }
   .report-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 6px; }
   .report-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 0.9; letter-spacing: 0.02em; color: var(--paper); }
-  .report-date { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(238,234,224,0.6); margin-top: 8px; }
+  .report-date { font-family: 'Libre Baskerville', Georgia, serif; font-size: 11px; color: rgba(238,234,224,0.6); margin-top: 8px; }
   .report-body { padding: 22px 24px; }
   .report-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
   .report-stat { text-align: center; padding: 14px 8px; background: var(--surface); border: 1px solid var(--border); }
@@ -539,7 +539,7 @@ function VerdictCard(props) {
         </div>
       )}
       <div style={{marginTop:16,padding:"10px 14px",background:"rgba(255,255,255,0.03)",borderLeft:"2px solid rgba(255,255,255,0.08)"}}>
-        <p style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:"rgba(255,255,255,0.5)",lineHeight:1.7,letterSpacing:"0.04em"}}>
+        <p style={{fontFamily:"'Libre Baskerville',Georgia,serif",fontSize:9,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
           DISCLAIMER: GhostBust scores are algorithmic estimates based on patterns in listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. A low score does not guarantee a role is unfilled, and a high score does not guarantee a hire. Always conduct your own research.
         </p>
       </div>

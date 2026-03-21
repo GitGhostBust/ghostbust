@@ -122,7 +122,7 @@ const STYLE = `
     border-radius: 2px; margin-top: 6px; width: fit-content;
   }
   .founding-badge-icon { font-size: 11px; line-height: 1; }
-  .profile-email { font-family: "Space Mono", monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.04em; margin-bottom: 12px; }
+  .profile-email { font-family: "Libre Baskerville", Georgia, serif; font-size: 11px; color: var(--ghost); letter-spacing: 0.04em; margin-bottom: 12px; }
   .profile-bio { font-size: 14px; color: var(--paper2); line-height: 1.75; max-width: 600px; margin-bottom: 14px; }
   .profile-bio.empty { color: var(--ghost); font-style: italic; font-size: 13px; }
 
@@ -132,7 +132,7 @@ const STYLE = `
   .tag.blue { border-color: rgba(0,184,217,0.25); color: var(--ice); background: rgba(0,184,217,0.05); }
   .tag.yellow { border-color: rgba(196,149,0,0.25); color: var(--bile); background: rgba(196,149,0,0.05); }
 
-  .member-since { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.06em; }
+  .member-since { font-family: "Libre Baskerville", Georgia, serif; font-size: 10px; color: var(--ghost); letter-spacing: 0.06em; }
 
   .body-grid { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-top: 16px; align-items: start; }
   @media (max-width: 720px) {
