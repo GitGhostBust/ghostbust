@@ -62,14 +62,14 @@ const STYLE = `
   .form-box.red-top { border-top: 3px solid var(--blood); }
   .form-box.ice-top { border-top: 3px solid var(--ice); }
   .form-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px; display: block; }
-  .form-label.green { color: var(--signal); }
+  .form-label.green { color: var(--paper); }
   .form-label.red { color: var(--blood); }
   .form-label.ice { color: var(--ice); }
-  .field-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--signal); margin-bottom: 8px; display: block; }
+  .field-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 8px; display: block; }
   .field-label.red { color: var(--blood); }
   .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
   .f-input:focus { border-color: var(--border-hi); }
-  .f-input::placeholder { color: var(--ghost); }
+  .f-input::placeholder { color: rgba(255,255,255,0.4); }
   select.f-input { appearance: none; cursor: pointer; }
   select.f-input option { background: #13131a; color: var(--paper); }
   .paste-area { width: 100%; min-height: 160px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
@@ -118,10 +118,10 @@ const STYLE = `
   .board-desc { font-size: 11px; color: var(--muted); line-height: 1.6; flex: 1; }
   .board-link { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); text-decoration: none; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 9px; transition: background 0.15s; }
   .board-link:hover { background: rgba(255,255,255,0.1); }
-  .search-tips { margin-top: 24px; background: var(--signal-dim); border: 1px solid rgba(0,230,122,0.12); padding: 18px; }
-  .search-tips-title { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--signal); margin-bottom: 12px; }
+  .search-tips { margin-top: 24px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 18px; }
+  .search-tips-title { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--paper); margin-bottom: 12px; }
   .tip-row { display: flex; gap: 10px; font-size: 13px; color: rgba(238,234,224,0.7); padding: 4px 0; line-height: 1.6; }
-  .tip-n { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--signal); flex-shrink: 0; margin-top: 2px; }
+  .tip-n { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
 
   /* VERDICT */
   .verdict-card { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); padding: 26px; margin-top: 24px; }
@@ -148,8 +148,8 @@ const STYLE = `
   .sev-high { background: var(--blood-dim); color: var(--blood); }
   .sev-med { background: var(--bile-dim); color: var(--bile); }
   .sev-low { background: rgba(255,255,255,0.05); color: var(--ghost); }
-  .action-tips { background: var(--signal-dim); border: 1px solid rgba(0,230,122,0.15); padding: 16px; margin-top: 18px; }
-  .action-tips-title { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--signal); margin-bottom: 10px; }
+  .action-tips { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 16px; margin-top: 18px; }
+  .action-tips-title { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 10px; }
 
   /* SAVE TO TRACKER */
   .save-bar { margin-top: 20px; background: var(--surface2); border: 1px solid var(--border-hi); padding: 18px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
@@ -158,7 +158,7 @@ const STYLE = `
   .save-btn { background: var(--ice); color: #050a09; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
   .save-btn:hover { background: #00e8ff; }
   .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .save-success { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--signal); padding: 10px 0; width: 100%; }
+  .save-success { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--paper); padding: 10px 0; width: 100%; }
 
   /* TRACKER */
   .tracker-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 28px; }
@@ -251,8 +251,8 @@ const STYLE = `
   .followup-overdue { color: var(--blood); }
 
   /* EXPORT */
-  .export-btn { background: none; border: 1px solid var(--signal); color: var(--signal); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; cursor: pointer; transition: background 0.15s; }
-  .export-btn:hover { background: var(--signal-dim); }
+  .export-btn { background: none; border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; cursor: pointer; transition: background 0.15s; }
+  .export-btn:hover { background: rgba(255,255,255,0.05); }
 
   /* GHOST REPORT CARD */
   .report-btn { background: none; border: 1px solid var(--bile); color: var(--bile); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s; }
@@ -272,9 +272,9 @@ const STYLE = `
   .report-share-row { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
   .report-brand { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--ghost); letter-spacing: 0.05em; }
   .report-brand em { color: var(--blood); font-style: normal; }
-  .copy-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border: 1px solid var(--signal); color: var(--signal); background: none; cursor: pointer; transition: background 0.15s; }
-  .copy-btn:hover { background: var(--signal-dim); }
-  .copy-btn.copied { color: var(--signal); border-color: var(--signal); }
+  .copy-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border: 1px solid var(--border-hi); color: var(--paper); background: none; cursor: pointer; transition: background 0.15s; }
+  .copy-btn:hover { background: rgba(255,255,255,0.05); }
+  .copy-btn.copied { color: var(--paper); border-color: var(--border-hi); }
   .report-close { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); color: rgba(238,234,224,0.6); width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.15s; }
   .report-close:hover { color: var(--paper); }
 
@@ -588,7 +588,7 @@ function SearchTab() {
             </select>
           </div>
           <div>
-            <label className="field-label" style={{color:subfields.length>0?"var(--signal)":"var(--ghost)"}}>
+            <label className="field-label" style={{color:subfields.length>0?"var(--paper)":"var(--ghost)"}}>
               Specialisation {subfields.length===0?"— select an industry first":""}
             </label>
             <select className="f-input" value={subfield} onChange={function(e){setSubfield(e.target.value);}} disabled={subfields.length===0}>
@@ -1340,7 +1340,7 @@ export default function App() {
       <nav className="app-nav">
         <a href="/" className="app-nav-logo">Ghost<em>Bust</em></a>
         <button onClick={function(){window.location.href="/profile.html";}} className="app-nav-btn">My Profile</button>
-        <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} className="app-nav-btn" style={{color:session?"var(--signal)":"var(--paper)"}}>{session?"Sign Out":"Sign In"}</button>
+        <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} className="app-nav-btn">{session?"Sign Out":"Sign In"}</button>
       </nav>
       <div className="app">
         <header className="header">
@@ -1379,7 +1379,7 @@ export default function App() {
         <footer className="footer">
           <span>GHOSTBUST · 2026</span>
           <span>POWERED BY CLAUDE AI</span>
-          <span>CONTACT: <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer" style={{color:"var(--signal)",textDecoration:"none"}}>ghostbustofficial@gmail.com</a></span>
+          <span>CONTACT: <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer" style={{color:"var(--paper)",textDecoration:"none"}}>ghostbustofficial@gmail.com</a></span>
         </footer>
       </div>
     </div>
