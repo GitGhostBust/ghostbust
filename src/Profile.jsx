@@ -423,7 +423,7 @@ export default function Profile() {
             <div className="avatar-wrap">
               <div
                 className={`avatar${editing ? " editable" : ""}`}
-                style={{ background: avatarUrl ? "transparent" : "#070709" }}
+                style={{ background: avatarUrl ? "transparent" : avatarColor }}
                 onClick={() => editing && setShowAvatarPicker(p => !p)}
               >
                 {avatarUrl
