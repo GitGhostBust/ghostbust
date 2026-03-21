@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "./supabase.js";
 import InboxDrawer from "./InboxDrawer.jsx";
 import UserSearch from "./UserSearch.jsx";
+import RegionModal from "./RegionModal.jsx";
 
 const STYLE = `
   @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
@@ -295,6 +296,7 @@ export default function Profile() {
   const [showGate, setShowGate] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [showInbox, setShowInbox] = useState(false);
+  const [showRegionModal, setShowRegionModal] = useState(false);
   const [inboxUnread, setInboxUnread] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [bannerUrl, setBannerUrl] = useState(null);
@@ -347,6 +349,9 @@ export default function Profile() {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).single();
     if (data) {
       setProfile(data);
+      try {
+        if (!data.region_set && !sessionStorage.getItem("gb_region_skipped")) setShowRegionModal(true);
+      } catch(e) {};
       setForm({
         username: data.username || "",
         full_name: data.full_name || "",
@@ -531,6 +536,8 @@ export default function Profile() {
           )}
         </div>
       </nav>
+
+      {showRegionModal && session && <RegionModal userId={session.user.id} onClose={() => setShowRegionModal(false)} />}
 
       <InboxDrawer
         session={session}

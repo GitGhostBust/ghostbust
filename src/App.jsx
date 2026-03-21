@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "./supabase.js";
 import UserSearch from "./UserSearch.jsx";
+import RegionModal from "./RegionModal.jsx";
 // auth-ui-react removed
 // auth-ui-shared removed
 
@@ -1288,11 +1289,20 @@ export default function App() {
   var [resetDone, setResetDone] = useState(false);
   var [showAuth, setShowAuth] = useState(false);
   var [toast, setToast] = useState(null);
+  var [showRegionModal, setShowRegionModal] = useState(false);
   useEffect(function(){
     supabase.auth.getSession().then(function(d){ setSession(d.data.session); });
     var sub = supabase.auth.onAuthStateChange(function(event,s){ setSession(s); if(event==="PASSWORD_RECOVERY"){setResetMode(true);return;} if(event==="SIGNED_IN"&&!resetMode){setToast("Signed in as "+s.user.email);setTimeout(function(){setToast(null);},4000);} if(event==="SIGNED_OUT"){setToast("Signed out");setTimeout(function(){setToast(null);},2000);} });
     return function(){ sub.data.subscription.unsubscribe(); };
   },[]);
+  useEffect(function(){
+    if (!session) return;
+    try { if (sessionStorage.getItem("gb_region_skipped")) return; } catch(e) {}
+    supabase.from("profiles").select("region_set").eq("id", session.user.id).single()
+      .then(function(res){
+        if (res.data && !res.data.region_set) setShowRegionModal(true);
+      });
+  },[session]);
   var [tab,setTab] = useState("search");
   var storage = useApplications();
   var [showTutorial, setShowTutorial] = useState(function() {
@@ -1320,6 +1330,7 @@ export default function App() {
   {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>SIGNED IN</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
 {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} onClose={function(){setShowAuth(false);}} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
+      {showRegionModal && session && <RegionModal userId={session.user.id} onClose={function(){setShowRegionModal(false);}} />}
       <div className="scanlines" />
       <div className="ticker-wrap">
         <div className="ticker-track">
