@@ -687,7 +687,7 @@ export default function Profile() {
               )}
               {isOwnProfile && <div className="member-since">
                 Member since {session && new Date(session.user.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-              </div>
+              </div>}
             </>
           ) : (
             <div style={{ paddingTop: 4 }}>
