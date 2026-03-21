@@ -513,7 +513,9 @@ export default function Profile() {
           <a href="/" className="nav-btn">Home</a>
           <a href="/app.html" className="nav-btn">App</a>
           <span className="nav-btn active">Profile</span>
-          <UserSearch />
+        </div>
+        <UserSearch />
+        <div style={{display:"flex",alignItems:"center",gap:4}}>
           {session && (
             <button className="nav-inbox-btn" title="Inbox" onClick={() => setShowInbox(v => !v)}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
