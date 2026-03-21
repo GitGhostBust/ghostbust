@@ -230,9 +230,22 @@ const AVATAR_COLORS = [
   "#e8e4da", // white
 ];
 
-const GhostIcon = ({ size = 64 }) => (
+const GHOST_COLORS = [
+  "#e8e4da", // cream (default)
+  "#ff6600", // orange
+  "#f5c400", // yellow
+  "#1a9e1a", // green
+  "#0066cc", // blue
+  "#4b0acd", // indigo
+  "#8b00cc", // violet
+  "#111111", // black
+  "#666666", // grey
+  "#ffffff", // white
+];
+
+const GhostIcon = ({ size = 64, color = "#eeeae0" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 32">
-    <path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.85"/>
+    <path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill={color} opacity="0.9"/>
     <circle cx="13" cy="14" r="2" fill="#d42200"/>
     <circle cx="19" cy="14" r="2" fill="#d42200"/>
   </svg>
@@ -252,6 +265,7 @@ export default function Profile() {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [bannerUrl, setBannerUrl] = useState(null);
   const [avatarColor, setAvatarColor] = useState(AVATAR_COLORS[0]);
+  const [ghostColor, setGhostColor] = useState(GHOST_COLORS[0]);
 
   const avatarFileRef = useRef(null);
   const bannerFileRef = useRef(null);
@@ -297,6 +311,7 @@ export default function Profile() {
         show_tracked_jobs: data.show_tracked_jobs || false,
       });
       if (data.avatar_color) setAvatarColor(data.avatar_color);
+      if (data.ghost_color) setGhostColor(data.ghost_color);
       if (data.avatar_url) setAvatarUrl(data.avatar_url);
       if (data.banner_url) setBannerUrl(data.banner_url);
     } else {
@@ -348,6 +363,7 @@ export default function Profile() {
       ...form,
       username: form.username.trim(),
       avatar_color: avatarColor,
+      ghost_color: ghostColor,
       avatar_url: avatarUrl || null,
       banner_url: bannerUrl || null,
     });
@@ -355,7 +371,7 @@ export default function Profile() {
       setError(res.error.message.includes("unique") ? "That username is already taken." : res.error.message);
       setSaving(false); return;
     }
-    setProfile({ ...form, id: session.user.id, avatar_color: avatarColor, avatar_url: avatarUrl, banner_url: bannerUrl });
+    setProfile({ ...form, id: session.user.id, avatar_color: avatarColor, ghost_color: ghostColor, avatar_url: avatarUrl, banner_url: bannerUrl });
     setEditing(false); setSaving(false); setSaved(true);
     setShowAvatarPicker(false);
     setTimeout(() => setSaved(false), 3000);
@@ -435,7 +451,7 @@ export default function Profile() {
               >
                 {avatarUrl
                   ? <img src={avatarUrl} alt="avatar" />
-                  : <GhostIcon size={56} />
+                  : <GhostIcon size={56} color={ghostColor} />
                 }
                 {editing && (
                   <div className="avatar-hover">
@@ -465,13 +481,24 @@ export default function Profile() {
                 </button>
               </div>
               <div className="f-label" style={{ marginBottom: 10 }}>Background Color</div>
-              <div className="color-swatches">
+              <div className="color-swatches" style={{ marginBottom: 16 }}>
                 {AVATAR_COLORS.map(c => (
                   <div
                     key={c}
                     className={`color-swatch${avatarColor === c ? " active" : ""}`}
                     style={{ background: c }}
                     onClick={() => { setAvatarColor(c); setAvatarUrl(null); }}
+                  />
+                ))}
+              </div>
+              <div className="f-label" style={{ marginBottom: 10 }}>Ghost Color</div>
+              <div className="color-swatches">
+                {GHOST_COLORS.map(c => (
+                  <div
+                    key={c}
+                    className={`color-swatch${ghostColor === c ? " active" : ""}`}
+                    style={{ background: c, border: c === "#ffffff" ? "1px solid rgba(255,255,255,0.2)" : undefined }}
+                    onClick={() => { setGhostColor(c); setAvatarUrl(null); }}
                   />
                 ))}
               </div>
