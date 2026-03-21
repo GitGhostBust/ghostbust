@@ -23,7 +23,7 @@ const STYLE = `
   html { scroll-behavior: smooth; }
   body { background: var(--void); color: var(--paper); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
-  .app { max-width: 980px; margin: 0 auto; padding: 0 24px 120px; }
+  .app { padding: 0 24px 120px; }
 
   /* TICKER */
   .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; }

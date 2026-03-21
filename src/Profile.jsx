@@ -75,7 +75,7 @@ const STYLE = `
   .gate-back { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; text-decoration: none; }
   .gate-back:hover { color: var(--paper); }
 
-  .page { max-width: 1080px; margin: 0 auto; padding: 0 24px 100px; }
+  .page { padding: 0 24px 100px; }
 
   .banner-area { width: 100%; height: 220px; position: relative; background: var(--surface); overflow: hidden; cursor: default; }
   .banner-area.editable { cursor: pointer; }
