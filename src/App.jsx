@@ -1340,6 +1340,7 @@ export default function App() {
             📋 Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
+          <button onClick={function(){window.location.href="/profile.html";}} style={{marginLeft:"auto",fontFamily:"Space Mono,monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}}>My Profile</button>
           <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} style={{marginLeft:"auto",fontFamily:"Space Mono,monospace",fontSize:11,letterSpacing:"0.12em",color:session?"var(--signal)":"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}}>{session?"Sign Out":"Sign In / Sign Up"}</button>
           <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{marginLeft:"auto",fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
             ? HELP
