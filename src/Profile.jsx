@@ -134,14 +134,12 @@ const STYLE = `
 
   .member-since { font-family: "Libre Baskerville", Georgia, serif; font-size: 10px; color: var(--ghost); letter-spacing: 0.06em; }
 
-  .body-grid { display: grid; grid-template-columns: 1fr 300px; gap: 16px; margin-top: 16px; align-items: start; }
+  .body-grid { margin-top: 16px; }
   @media (max-width: 720px) {
-    .body-grid { grid-template-columns: 1fr; }
     .profile-header { padding: 0 16px 20px; }
   }
 
   .main-col { display: flex; flex-direction: column; gap: 12px; }
-  .side-col { display: flex; flex-direction: column; gap: 12px; }
 
   .card { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
   .card-title { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -151,23 +149,6 @@ const STYLE = `
   .detail-value { font-size: 14px; color: var(--paper); }
   .detail-value.empty { color: var(--ghost); font-size: 13px; font-style: italic; }
 
-  .stat-list { display: flex; flex-direction: column; }
-  .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
-  .stat-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .stat-label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); }
-  .stat-value { font-family: "Bebas Neue", sans-serif; font-size: 30px; line-height: 1; }
-
-  .score-bar-section { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
-  .score-bar-head { display: flex; justify-content: space-between; margin-bottom: 8px; }
-  .score-bar-lbl { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
-  .score-bar-track { height: 3px; background: var(--surface3); }
-  .score-bar-fill { height: 3px; transition: width 1s ease; }
-
-  .quick-link { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--paper2); text-decoration: none; transition: color 0.15s, padding-left 0.15s; }
-  .quick-link:last-child { border-bottom: none; padding-bottom: 0; }
-  .quick-link:hover { color: var(--paper); padding-left: 4px; }
-  .quick-link-arrow { font-size: 11px; color: var(--ghost); transition: color 0.15s; flex-shrink: 0; }
-  .quick-link:hover .quick-link-arrow { color: var(--blood); }
 
   .btn-primary { background: var(--blood); color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 13px; font-weight: 600; border: none; padding: 9px 22px; cursor: pointer; transition: background 0.15s; letter-spacing: 0.02em; border-radius: 2px; }
   .btn-primary:hover:not(:disabled) { background: #e02600; }
@@ -502,7 +483,6 @@ export default function Profile() {
     setTimeout(() => setSaved(false), 3000);
   }
 
-  const scoreColor = stats.avgScore > 60 ? "#ff4422" : stats.avgScore > 35 ? "#c49500" : "#00e07a";
   const displayName = profile?.show_full_name && profile?.full_name ? profile.full_name : null;
   const isOwnProfile = !profile || !session || profile.id === session.user.id;
 
@@ -817,52 +797,6 @@ export default function Profile() {
                 </div>
               </div>
             )}
-          </div>
-
-          {/* SIDEBAR */}
-          <div className="side-col">
-            {isOwnProfile && <div className="card">
-              <div className="card-title">Activity</div>
-              <div className="stat-list">
-                <div className="stat-row">
-                  <span className="stat-label">Scans Run</span>
-                  <span className="stat-value" style={{ color: "var(--paper)" }}>{stats.scans}</span>
-                </div>
-                <div className="stat-row">
-                  <span className="stat-label">Jobs Tracked</span>
-                  <span className="stat-value" style={{ color: "var(--paper)" }}>{stats.apps}</span>
-                </div>
-                <div className="stat-row">
-                  <span className="stat-label">Avg Ghost Score</span>
-                  <span className="stat-value" style={{ color: scoreColor }}>{stats.avgScore || "—"}</span>
-                </div>
-              </div>
-              {stats.scans > 0 && (
-                <div className="score-bar-section">
-                  <div className="score-bar-head">
-                    <span className="score-bar-lbl">Ghost Risk Level</span>
-                    <span className="score-bar-lbl" style={{ color: scoreColor }}>{stats.avgScore}/100</span>
-                  </div>
-                  <div className="score-bar-track">
-                    <div className="score-bar-fill" style={{ width: `${stats.avgScore}%`, background: scoreColor }} />
-                  </div>
-                </div>
-              )}
-            </div>}
-
-            <div className="card">
-              <div className="card-title">Tools</div>
-              {[
-                ["/app.html", "Ghost Detector"],
-                ["/app.html", "Application Tracker"],
-                ["/app.html", "Job Search"],
-              ].map(([href, label]) => (
-                <a key={label} href={href} className="quick-link">
-                  <span className="quick-link-arrow">→</span>
-                  {label}
-                </a>
-              ))}
-            </div>
           </div>
 
         </div>
