@@ -513,10 +513,7 @@ export default function Profile() {
           <a href="/app.html" className="nav-btn">App</a>
           <span className="nav-btn active">Profile</span>
         </div>
-        <input
-          placeholder="Search users..."
-          style={{background:"#ff0000", color:"#ffffff", border:"2px solid #ffffff", padding:"8px 12px", borderRadius:"6px", width:"200px", flexShrink:0}}
-        />
+        <UserSearch />
         <div style={{display:"flex",alignItems:"center",gap:4}}>
           {session && (
             <button className="nav-inbox-btn" title="Inbox" onClick={() => setShowInbox(v => !v)}>
