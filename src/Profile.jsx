@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "./supabase.js";
+import InboxDrawer from "./InboxDrawer.jsx";
 
 const STYLE = `
   @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
@@ -56,6 +57,9 @@ const STYLE = `
   .nav-btn.active { color: var(--paper); border-color: var(--border-md); }
   .nav-signout { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s; }
   .nav-signout:hover { color: #ff4422; }
+  .nav-inbox-btn { position: relative; background: none; border: 1px solid transparent; color: var(--ghost); padding: 6px 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 2px; transition: color 0.15s, border-color 0.15s; }
+  .nav-inbox-btn:hover { color: var(--paper); border-color: var(--border); }
+  .nav-inbox-dot { position: absolute; top: 2px; right: 2px; min-width: 14px; height: 14px; border-radius: 7px; background: var(--blood); font-family: "Space Mono", monospace; font-size: 8px; font-weight: 700; color: var(--paper); display: flex; align-items: center; justify-content: center; padding: 0 3px; pointer-events: none; }
 
   .gate { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
   .gate-card { background: var(--surface); border: 1px solid var(--border-md); max-width: 400px; width: 100%; padding: 48px 40px; text-align: center; box-shadow: var(--shadow); }
@@ -262,6 +266,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [showGate, setShowGate] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [showInbox, setShowInbox] = useState(false);
+  const [inboxUnread, setInboxUnread] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [bannerUrl, setBannerUrl] = useState(null);
   const [avatarColor, setAvatarColor] = useState(AVATAR_COLORS[0]);
@@ -401,10 +407,29 @@ export default function Profile() {
           <a href="/app.html" className="nav-btn">App</a>
           <span className="nav-btn active">Profile</span>
           {session && (
+            <button className="nav-inbox-btn" title="Inbox" onClick={() => setShowInbox(v => !v)}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.25"/>
+                <path d="M1.5 4L8 9.5L14.5 4" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+              </svg>
+              {inboxUnread > 0 && (
+                <span className="nav-inbox-dot">{inboxUnread > 9 ? "9+" : inboxUnread}</span>
+              )}
+            </button>
+          )}
+          {session && (
             <button className="nav-signout" onClick={() => supabase.auth.signOut()}>Sign Out</button>
           )}
         </div>
       </nav>
+
+      <InboxDrawer
+        session={session}
+        myProfile={profile}
+        open={showInbox}
+        onClose={() => setShowInbox(false)}
+        onUnreadChange={setInboxUnread}
+      />
 
       {showGate && (
         <div className="gate">
