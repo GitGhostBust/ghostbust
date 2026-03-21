@@ -1228,7 +1228,7 @@ function TutorialOverlay(props) {
         {/* Icon + title */}
         <div style={{fontSize:40,marginBottom:12}}>{current.icon}</div>
         <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:32,letterSpacing:"0.03em",color:"var(--paper)",marginBottom:14,lineHeight:1.1}}>{current.title}</div>
-        <p style={{fontFamily:"'Space Mono',monospace",fontSize:12,color:"rgba(255,255,255,0.75)",lineHeight:1.85,marginBottom:32}}>{current.body}</p>
+        <p style={{fontFamily:"'Libre Baskerville',Georgia,serif",fontSize:13,color:"rgba(255,255,255,0.75)",lineHeight:1.85,marginBottom:32}}>{current.body}</p>
 
         {/* Buttons */}
         <div style={{display:"flex",gap:12,alignItems:"center"}}>
