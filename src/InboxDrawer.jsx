@@ -51,6 +51,7 @@ const STYLE = `
     background: var(--surface2);
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    position: relative;
   }
   .inbox-new-bar-label {
     font-family: "Space Mono", monospace; font-size: 9px;
@@ -69,6 +70,41 @@ const STYLE = `
     font-family: "Space Mono", monospace; font-size: 10px;
     color: #ff4422; margin-top: 6px; letter-spacing: 0.05em;
   }
+
+  /* ---- typeahead dropdown ---- */
+  .inbox-search-wrap { flex: 1; position: relative; }
+  .inbox-dropdown {
+    position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface2); border: 1px solid var(--border-md);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    z-index: 10; max-height: 220px; overflow-y: auto;
+  }
+  .inbox-dropdown::-webkit-scrollbar { width: 4px; }
+  .inbox-dropdown::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 2px; }
+  .inbox-dropdown-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; cursor: pointer; width: 100%; background: none; border: none;
+    text-align: left; transition: background 0.12s; border-bottom: 1px solid var(--border);
+  }
+  .inbox-dropdown-item:last-child { border-bottom: none; }
+  .inbox-dropdown-item:hover, .inbox-dropdown-item.focused { background: rgba(255,255,255,0.05); }
+  .inbox-dropdown-username {
+    font-family: "Space Mono", monospace; font-size: 11px;
+    color: var(--paper); letter-spacing: 0.04em;
+  }
+  .inbox-dropdown-name {
+    font-size: 11px; color: var(--ghost); margin-top: 1px;
+  }
+  .inbox-dropdown-empty {
+    padding: 12px; font-family: "Space Mono", monospace; font-size: 10px;
+    color: var(--ghost); letter-spacing: 0.1em; text-align: center;
+  }
+  .inbox-dropdown-searching {
+    padding: 12px; font-family: "Space Mono", monospace; font-size: 10px;
+    color: var(--ghost); letter-spacing: 0.1em; text-align: center;
+    animation: ib-pulse 1s ease-in-out infinite;
+  }
+  @keyframes ib-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
   /* ---- main body (list + thread side by side) ---- */
   .inbox-body {
@@ -317,8 +353,12 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   const [expandedThreads, setExpandedThreads] = useState({});
   const [sending, setSending] = useState(false);
   const [newMsgMode, setNewMsgMode] = useState(false);
-  const [newMsgUsername, setNewMsgUsername] = useState("");
-  const [newMsgError, setNewMsgError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchState, setSearchState] = useState("idle"); // "idle" | "searching" | "done"
+  const [focusedIdx, setFocusedIdx] = useState(-1);
+
+  const searchTimerRef = useRef(null);
 
   const messagesEndRef = useRef(null);
   const mainInputRef = useRef(null);
@@ -376,7 +416,7 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   // ── open / close ────────────────────────────────────────────────────────
   useEffect(() => {
     if (open && uid) loadConversations();
-    if (!open) { setSelectedConvId(null); setNewMsgMode(false); }
+    if (!open) { setSelectedConvId(null); closeNewMsg(); }
   }, [open, uid]);
 
   // ── initial unread count (badge even when drawer is closed) ─────────────
@@ -494,22 +534,61 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
     mainInputRef.current?.focus();
   }
 
-  // ── start new conversation ──────────────────────────────────────────────
-  async function startNewConversation() {
-    const uname = newMsgUsername.trim();
-    if (!uname) return;
-    setNewMsgError("");
+  // ── typeahead search ────────────────────────────────────────────────────
+  function handleSearchInput(e) {
+    const q = e.target.value;
+    setSearchQuery(q);
+    setFocusedIdx(-1);
 
-    const { data: target } = await supabase
-      .from("profiles")
-      .select("id, username, avatar_url, avatar_color, ghost_color")
-      .eq("username", uname)
-      .maybeSingle();
+    clearTimeout(searchTimerRef.current);
 
-    if (!target) { setNewMsgError("User not found."); return; }
-    if (target.id === uid) { setNewMsgError("You cannot message yourself."); return; }
+    if (!q.trim()) {
+      setSearchResults([]);
+      setSearchState("idle");
+      return;
+    }
 
-    // check existing
+    setSearchState("searching");
+    searchTimerRef.current = setTimeout(async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, username, full_name, avatar_url, avatar_color, ghost_color")
+        .ilike("username", `${q.trim()}%`)
+        .neq("id", uid)
+        .limit(8);
+      setSearchResults(data || []);
+      setSearchState("done");
+    }, 220);
+  }
+
+  function handleSearchKeyDown(e) {
+    if (!searchResults.length) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setFocusedIdx(i => Math.min(i + 1, searchResults.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setFocusedIdx(i => Math.max(i - 1, 0));
+    } else if (e.key === "Enter" && focusedIdx >= 0) {
+      e.preventDefault();
+      openConversationWith(searchResults[focusedIdx]);
+    }
+  }
+
+  function closeNewMsg() {
+    setNewMsgMode(false);
+    setSearchQuery("");
+    setSearchResults([]);
+    setSearchState("idle");
+    setFocusedIdx(-1);
+    clearTimeout(searchTimerRef.current);
+  }
+
+  // ── open or create conversation with a profile ──────────────────────────
+  async function openConversationWith(target) {
+    closeNewMsg();
+    setProfiles(prev => ({ ...prev, [target.id]: target }));
+
     const lo = [uid, target.id].sort()[0];
     const hi = [uid, target.id].sort()[1];
     const { data: existing } = await supabase
@@ -526,13 +605,10 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
         .insert({ participant_1: uid, participant_2: target.id })
         .select().single();
       if (conv) {
-        setProfiles(prev => ({ ...prev, [target.id]: target }));
         await loadConversations();
         setSelectedConvId(conv.id);
       }
     }
-    setNewMsgMode(false);
-    setNewMsgUsername("");
   }
 
   // ── helpers ─────────────────────────────────────────────────────────────
@@ -584,20 +660,43 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
           <div className="inbox-new-bar">
             <div className="inbox-new-bar-label">New Conversation</div>
             <div className="inbox-new-row">
-              <input
-                className="inbox-new-input"
-                placeholder="Enter username…"
-                value={newMsgUsername}
-                autoFocus
-                onChange={e => setNewMsgUsername(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && startNewConversation()}
-              />
-              <button className="inbox-start-btn" onClick={startNewConversation}>Start</button>
-              <button className="inbox-cancel-btn" onClick={() => {
-                setNewMsgMode(false); setNewMsgUsername(""); setNewMsgError("");
-              }}>✕</button>
+              <div className="inbox-search-wrap">
+                <input
+                  className="inbox-new-input"
+                  placeholder="Search by username…"
+                  value={searchQuery}
+                  autoFocus
+                  autoComplete="off"
+                  onChange={handleSearchInput}
+                  onKeyDown={handleSearchKeyDown}
+                />
+                {(searchState === "searching" || searchState === "done") && (
+                  <div className="inbox-dropdown">
+                    {searchState === "searching" && (
+                      <div className="inbox-dropdown-searching">Searching…</div>
+                    )}
+                    {searchState === "done" && searchResults.length === 0 && (
+                      <div className="inbox-dropdown-empty">No users found</div>
+                    )}
+                    {searchState === "done" && searchResults.map((r, i) => (
+                      <button
+                        key={r.id}
+                        className={`inbox-dropdown-item${i === focusedIdx ? " focused" : ""}`}
+                        onMouseDown={() => openConversationWith(r)}
+                        onMouseEnter={() => setFocusedIdx(i)}
+                      >
+                        <Avatar profile={r} size={30} />
+                        <div>
+                          <div className="inbox-dropdown-username">@{r.username}</div>
+                          {r.full_name && <div className="inbox-dropdown-name">{r.full_name}</div>}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button className="inbox-cancel-btn" onClick={closeNewMsg}>✕</button>
             </div>
-            {newMsgError && <div className="inbox-new-err">{newMsgError}</div>}
           </div>
         )}
 
