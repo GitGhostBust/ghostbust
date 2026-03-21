@@ -108,21 +108,86 @@ const STYLE = `
 `;
 
 const METRO_REGIONS = [
-  { metro: "New York Metro",       state: "New York" },
-  { metro: "Los Angeles Metro",    state: "California" },
-  { metro: "Chicago Metro",        state: "Illinois" },
-  { metro: "Dallas Metro",         state: "Texas" },
-  { metro: "Houston Metro",        state: "Texas" },
-  { metro: "Washington DC Metro",  state: "District of Columbia" },
-  { metro: "Miami Metro",          state: "Florida" },
-  { metro: "Atlanta Metro",        state: "Georgia" },
-  { metro: "Boston Metro",         state: "Massachusetts" },
-  { metro: "San Francisco Metro",  state: "California" },
-  { metro: "Seattle Metro",        state: "Washington" },
-  { metro: "Austin Metro",         state: "Texas" },
-  { metro: "Denver Metro",         state: "Colorado" },
-  { metro: "Phoenix Metro",        state: "Arizona" },
-  { metro: "Philadelphia Metro",   state: "Pennsylvania" },
+  // Northeast
+  { metro: "New York Metro",         state: "New York" },
+  { metro: "Boston Metro",           state: "Massachusetts" },
+  { metro: "Philadelphia Metro",     state: "Pennsylvania" },
+  { metro: "Providence Metro",       state: "Rhode Island" },
+  { metro: "Hartford Metro",         state: "Connecticut" },
+  { metro: "Buffalo Metro",          state: "New York" },
+  { metro: "Albany Metro",           state: "New York" },
+  { metro: "Pittsburgh Metro",       state: "Pennsylvania" },
+  // Mid-Atlantic
+  { metro: "Washington DC Metro",    state: "District of Columbia" },
+  { metro: "Baltimore Metro",        state: "Maryland" },
+  { metro: "Richmond Metro",         state: "Virginia" },
+  // Southeast
+  { metro: "Miami Metro",            state: "Florida" },
+  { metro: "Orlando Metro",          state: "Florida" },
+  { metro: "Tampa Metro",            state: "Florida" },
+  { metro: "Jacksonville Metro",     state: "Florida" },
+  { metro: "Atlanta Metro",          state: "Georgia" },
+  { metro: "Charlotte Metro",        state: "North Carolina" },
+  { metro: "Raleigh-Durham Metro",   state: "North Carolina" },
+  { metro: "Nashville Metro",        state: "Tennessee" },
+  { metro: "Memphis Metro",          state: "Tennessee" },
+  { metro: "New Orleans Metro",      state: "Louisiana" },
+  { metro: "Birmingham Metro",       state: "Alabama" },
+  { metro: "Louisville Metro",       state: "Kentucky" },
+  // Midwest
+  { metro: "Chicago Metro",          state: "Illinois" },
+  { metro: "Detroit Metro",          state: "Michigan" },
+  { metro: "Minneapolis Metro",      state: "Minnesota" },
+  { metro: "Cleveland Metro",        state: "Ohio" },
+  { metro: "Columbus Metro",         state: "Ohio" },
+  { metro: "Cincinnati Metro",       state: "Ohio" },
+  { metro: "Indianapolis Metro",     state: "Indiana" },
+  { metro: "Milwaukee Metro",        state: "Wisconsin" },
+  { metro: "Kansas City Metro",      state: "Missouri" },
+  { metro: "St. Louis Metro",        state: "Missouri" },
+  { metro: "Omaha Metro",            state: "Nebraska" },
+  // Texas
+  { metro: "Dallas Metro",           state: "Texas" },
+  { metro: "Houston Metro",          state: "Texas" },
+  { metro: "Austin Metro",           state: "Texas" },
+  { metro: "San Antonio Metro",      state: "Texas" },
+  { metro: "El Paso Metro",          state: "Texas" },
+  // Mountain / Southwest
+  { metro: "Denver Metro",           state: "Colorado" },
+  { metro: "Phoenix Metro",          state: "Arizona" },
+  { metro: "Las Vegas Metro",        state: "Nevada" },
+  { metro: "Salt Lake City Metro",   state: "Utah" },
+  { metro: "Albuquerque Metro",      state: "New Mexico" },
+  { metro: "Tucson Metro",           state: "Arizona" },
+  // California
+  { metro: "Los Angeles Metro",      state: "California" },
+  { metro: "San Francisco Metro",    state: "California" },
+  { metro: "San Diego Metro",        state: "California" },
+  { metro: "Sacramento Metro",       state: "California" },
+  { metro: "San Jose Metro",         state: "California" },
+  { metro: "Fresno Metro",           state: "California" },
+  { metro: "Riverside Metro",        state: "California" },
+  { metro: "Bakersfield Metro",      state: "California" },
+  // Pacific Northwest
+  { metro: "Seattle Metro",          state: "Washington" },
+  { metro: "Portland Metro",         state: "Oregon" },
+  // Other US
+  { metro: "Honolulu Metro",         state: "Hawaii" },
+  { metro: "Anchorage Metro",        state: "Alaska" },
+  { metro: "Boise Metro",            state: "Idaho" },
+  // Canada
+  { metro: "Toronto Metro",          state: "Ontario" },
+  { metro: "Vancouver Metro",        state: "British Columbia" },
+  { metro: "Montreal Metro",         state: "Quebec" },
+  { metro: "Calgary Metro",          state: "Alberta" },
+  { metro: "Ottawa Metro",           state: "Ontario" },
+  { metro: "Edmonton Metro",         state: "Alberta" },
+  // UK
+  { metro: "London Metro",           state: "England" },
+  { metro: "Manchester Metro",       state: "England" },
+  { metro: "Birmingham Metro (UK)",  state: "England" },
+  { metro: "Leeds Metro",            state: "England" },
+  { metro: "Glasgow Metro",          state: "Scotland" },
 ];
 
 const COUNTRIES = [
@@ -164,21 +229,11 @@ export default function RegionModal({ userId, onClose }) {
     setShowDropdown(false);
   }
 
-  function handleOpenRegion(checked) {
-    setOpenRegion(checked);
-    if (checked) {
-      setMetroSearch("");
-      setMetro("");
-      setState("");
-      setShowDropdown(false);
-    }
-  }
-
   async function handleSave() {
     setSaving(true);
     await supabase.from("profiles").update({
-      job_market_region:  openRegion ? null : (metro || null),
-      job_market_state:   openRegion ? null : (state || null),
+      job_market_region:  metro || null,
+      job_market_state:   state || null,
       job_market_country: country,
       job_market_open:    openRegion,
       region_set:         true,
@@ -193,7 +248,7 @@ export default function RegionModal({ userId, onClose }) {
     onClose();
   }
 
-  const canSave = openRegion || metro;
+  const canSave = openRegion || metro || state;
 
   return (
     <>
@@ -218,13 +273,12 @@ export default function RegionModal({ userId, onClose }) {
                     className="rm-input"
                     placeholder="Search metro areas…"
                     value={metroSearch}
-                    disabled={openRegion}
                     onChange={e => handleMetroInput(e.target.value)}
                     onFocus={() => setShowDropdown(true)}
                     onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
                     autoComplete="off"
                   />
-                  {showDropdown && metroSearch && !openRegion && (
+                  {showDropdown && metroSearch && (
                     <div className="rm-dropdown">
                       {filtered.length > 0 ? filtered.map(r => (
                         <button key={r.metro} className="rm-dropdown-item" onMouseDown={() => handleMetroSelect(r)}>
@@ -245,7 +299,6 @@ export default function RegionModal({ userId, onClose }) {
                   className="rm-input"
                   placeholder="Auto-filled from metro, or type manually"
                   value={state}
-                  disabled={openRegion}
                   onChange={e => setState(e.target.value)}
                 />
               </div>
