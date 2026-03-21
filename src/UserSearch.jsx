@@ -13,7 +13,7 @@ const STYLE = `
   }
   .us-input {
     width: 200px; background: var(--surface2, #13131a); border: 1px solid rgba(255,255,255,0.18);
-    color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 13px;
+    color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 13px;
     padding: 7px 32px 7px 12px; outline: none; border-radius: 2px;
     transition: border-color 0.2s, width 0.25s ease;
   }
@@ -40,7 +40,7 @@ const STYLE = `
   .us-mobile-overlay.open { display: flex; }
   .us-mobile-input {
     flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border-md);
-    color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 14px;
+    color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 14px;
     padding: 9px 14px; outline: none; border-radius: 2px;
   }
   .us-mobile-input::placeholder { color: var(--ghost); }

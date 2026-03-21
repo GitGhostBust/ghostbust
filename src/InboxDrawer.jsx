@@ -60,7 +60,7 @@ const STYLE = `
   .inbox-new-row { display: flex; gap: 8px; align-items: center; }
   .inbox-new-input {
     flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 13px;
+    color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 13px;
     padding: 8px 12px; outline: none; border-radius: 2px;
     transition: border-color 0.2s;
   }
@@ -250,7 +250,7 @@ const STYLE = `
   }
   .inbox-reply-input {
     flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border-md);
-    color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 13px;
+    color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 13px;
     padding: 6px 10px; outline: none; border-radius: 2px;
     transition: border-color 0.2s;
   }
@@ -265,7 +265,7 @@ const STYLE = `
   }
   .inbox-main-input {
     flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 14px;
+    color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 14px;
     padding: 9px 14px; outline: none; border-radius: 2px;
     transition: border-color 0.2s;
   }

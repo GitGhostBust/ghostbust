@@ -5,7 +5,7 @@ import UserSearch from "./UserSearch.jsx";
 import RegionModal from "./RegionModal.jsx";
 
 const STYLE = `
-  @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap");
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -34,7 +34,7 @@ const STYLE = `
   body {
     background: var(--bg);
     color: var(--paper);
-    font-family: "DM Sans", sans-serif;
+    font-family: "Libre Baskerville", Georgia, serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
@@ -169,19 +169,19 @@ const STYLE = `
   .quick-link-arrow { font-size: 11px; color: var(--ghost); transition: color 0.15s; flex-shrink: 0; }
   .quick-link:hover .quick-link-arrow { color: var(--blood); }
 
-  .btn-primary { background: var(--blood); color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600; border: none; padding: 9px 22px; cursor: pointer; transition: background 0.15s; letter-spacing: 0.02em; border-radius: 2px; }
+  .btn-primary { background: var(--blood); color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 13px; font-weight: 600; border: none; padding: 9px 22px; cursor: pointer; transition: background 0.15s; letter-spacing: 0.02em; border-radius: 2px; }
   .btn-primary:hover:not(:disabled) { background: #e02600; }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-secondary { background: none; border: 1px solid var(--border-md); color: var(--paper2); font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 500; padding: 8px 18px; cursor: pointer; transition: border-color 0.15s, color 0.15s; border-radius: 2px; }
+  .btn-secondary { background: none; border: 1px solid var(--border-md); color: var(--paper2); font-family: "Libre Baskerville", Georgia, serif; font-size: 13px; font-weight: 500; padding: 8px 18px; cursor: pointer; transition: border-color 0.15s, color 0.15s; border-radius: 2px; }
   .btn-secondary:hover { border-color: var(--border-hi); color: var(--paper); }
 
   .edit-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; }
   .f-group { margin-bottom: 16px; }
   .f-label { display: block; font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); margin-bottom: 7px; }
-  .f-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 2px; color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+  .f-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 2px; color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
   .f-input:focus { border-color: var(--border-md); }
   .f-input::placeholder { color: var(--ghost); }
-  .f-textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 2px; color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 14px; padding: 10px 14px; outline: none; resize: vertical; min-height: 90px; line-height: 1.65; transition: border-color 0.2s; }
+  .f-textarea { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 2px; color: var(--paper); font-family: "Libre Baskerville", Georgia, serif; font-size: 14px; padding: 10px 14px; outline: none; resize: vertical; min-height: 90px; line-height: 1.65; transition: border-color 0.2s; }
   .f-textarea:focus { border-color: var(--border-md); }
   .f-textarea::placeholder { color: var(--ghost); }
   select.f-input { appearance: none; cursor: pointer; }

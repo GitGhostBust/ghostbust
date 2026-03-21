@@ -9,7 +9,7 @@ import RegionModal from "./RegionModal.jsx";
    STYLES
 ================================================================ */
 const STYLE = `
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --void: #070709; --surface: #0e0e12; --surface2: #13131a; --surface3: #181820;
@@ -21,7 +21,7 @@ const STYLE = `
     --border: rgba(255,255,255,0.07); --border-hi: rgba(255,255,255,0.14);
   }
   html { scroll-behavior: smooth; }
-  body { background: var(--void); color: var(--paper); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body { background: var(--void); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; min-height: 100vh; overflow-x: hidden; }
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
   .app { max-width: 980px; margin: 0 auto; padding: 0 24px 120px; }
 
@@ -67,7 +67,7 @@ const STYLE = `
   .form-label.ice { color: var(--ice); }
   .field-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--signal); margin-bottom: 8px; display: block; }
   .field-label.red { color: var(--blood); }
-  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
+  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
   .f-input:focus { border-color: var(--border-hi); }
   .f-input::placeholder { color: var(--ghost); }
   select.f-input { appearance: none; cursor: pointer; }
@@ -221,7 +221,7 @@ const STYLE = `
   .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--ghost); margin-bottom: 8px; }
   .empty-sub { font-size: 13px; color: var(--ghost); line-height: 1.6; max-width: 340px; margin: 0 auto; }
 
-  .notes-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 6px 10px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
+  .notes-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; padding: 6px 10px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
   .notes-input:focus { border-color: var(--border-hi); }
   .notes-input::placeholder { color: var(--ghost); }
 
@@ -239,7 +239,7 @@ const STYLE = `
 
   /* EDIT MODE ON CARD */
   .edit-inline { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
-  .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 4px 8px; outline: none; flex: 1; }
+  .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; padding: 4px 8px; outline: none; flex: 1; }
   .edit-save-btn { background: var(--signal); color: #050a07; font-family: 'Space Mono', monospace; font-size: 9px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
 
   /* FOLLOW-UP DATE */

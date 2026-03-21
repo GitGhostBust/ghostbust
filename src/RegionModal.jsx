@@ -31,7 +31,7 @@ const STYLE = `
   }
   .rm-input {
     width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
-    color: #eeeae0; font-family: 'DM Sans', sans-serif; font-size: 14px;
+    color: #eeeae0; font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px;
     padding: 10px 14px; outline: none; transition: border-color 0.2s;
   }
   .rm-input:focus { border-color: rgba(255,255,255,0.3); }
@@ -51,7 +51,7 @@ const STYLE = `
   .rm-dropdown-item {
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 14px; cursor: pointer; background: none; border: none;
-    width: 100%; text-align: left; color: #eeeae0; font-family: 'DM Sans', sans-serif;
+    width: 100%; text-align: left; color: #eeeae0; font-family: 'Libre Baskerville', Georgia, serif;
     font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05);
     transition: background 0.1s;
   }
