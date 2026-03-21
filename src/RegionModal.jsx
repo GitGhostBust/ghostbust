@@ -319,6 +319,19 @@ export default function RegionModal({ userId, onClose }) {
                 <span>I'm open to multiple regions / remote — don't lock me to one metro</span>
               </label>
 
+              <div style={{
+                background:"rgba(196,152,0,0.07)", border:"1px solid rgba(196,152,0,0.25)",
+                padding:"16px 18px", marginBottom:20, marginTop:8,
+              }}>
+                <div style={{display:"flex", alignItems:"center", gap:8, marginBottom:8}}>
+                  <span style={{fontSize:16}}>👻</span>
+                  <span style={{fontFamily:"'Space Mono',monospace", fontSize:9, letterSpacing:"0.2em", textTransform:"uppercase", color:"#c49800"}}>Founding Member</span>
+                </div>
+                <p style={{fontSize:12, color:"rgba(238,234,224,0.8)", lineHeight:1.75}}>
+                  You're joining GhostBust at the ground floor. Every scan you run, every application outcome you log, and every ghost job you flag trains the GhostBust AI — making it smarter for every job seeker who comes after you. Early contributors like you are the reason this works. As a Founding Member, you'll have Pro access free for life when we launch paid tiers.
+                </p>
+              </div>
+
               <button className="rm-save-btn" onClick={handleSave} disabled={saving || !canSave}>
                 {saving ? "Saving…" : "Save My Region →"}
               </button>
