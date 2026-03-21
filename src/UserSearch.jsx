@@ -8,18 +8,18 @@ const STYLE = `
   .us-input-wrap { position: relative; display: flex; align-items: center; }
   .us-icon {
     position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-    color: var(--ghost); pointer-events: none; display: flex; align-items: center;
+    color: rgba(255,255,255,0.35); pointer-events: none; display: flex; align-items: center;
     transition: color 0.2s;
   }
   .us-input {
-    width: 200px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    width: 200px; background: var(--surface2, #13131a); border: 1px solid rgba(255,255,255,0.18);
     color: var(--paper); font-family: "DM Sans", sans-serif; font-size: 13px;
     padding: 7px 12px 7px 32px; outline: none; border-radius: 2px;
-    transition: border-color 0.2s, width 0.25s ease, background 0.2s;
+    transition: border-color 0.2s, width 0.25s ease;
   }
-  .us-input:focus { border-color: var(--border-md); background: rgba(255,255,255,0.06); width: 240px; }
-  .us-input::placeholder { color: var(--ghost); }
-  .us-input:focus ~ .us-icon, .us-input-wrap:focus-within .us-icon { color: var(--muted); }
+  .us-input:focus { border-color: rgba(255,255,255,0.38); width: 240px; }
+  .us-input::placeholder { color: rgba(255,255,255,0.35); }
+  .us-input:focus ~ .us-icon, .us-input-wrap:focus-within .us-icon { color: rgba(255,255,255,0.55); }
 
   /* Mobile toggle button (hidden on desktop) */
   .us-toggle-btn {
@@ -125,8 +125,6 @@ function UserAvatar({ profile, size = 28 }) {
   );
 }
 
-let styleInjected = false;
-
 export default function UserSearch() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -137,15 +135,6 @@ export default function UserSearch() {
   const timerRef = useRef(null);
   const desktopInputRef = useRef(null);
   const mobileInputRef = useRef(null);
-
-  // Inject shared stylesheet once per page
-  useEffect(() => {
-    if (styleInjected) return;
-    const el = document.createElement("style");
-    el.textContent = STYLE;
-    document.head.appendChild(el);
-    styleInjected = true;
-  }, []);
 
   // Close mobile overlay on Escape
   useEffect(() => {
@@ -228,6 +217,8 @@ export default function UserSearch() {
   );
 
   return (
+    <>
+    <style>{STYLE}</style>
     <div className="us-wrap">
       {/* Desktop: inline input */}
       <div className="us-input-wrap">
@@ -275,5 +266,6 @@ export default function UserSearch() {
         </div>
       )}
     </div>
+    </>
   );
 }
