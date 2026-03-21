@@ -359,9 +359,13 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   const [focusedIdx, setFocusedIdx] = useState(-1);
 
   const searchTimerRef = useRef(null);
+  const selectedConvIdRef = useRef(null); // ref so realtime callback always sees current value
 
   const messagesEndRef = useRef(null);
   const mainInputRef = useRef(null);
+
+  // keep ref in sync with state
+  useEffect(() => { selectedConvIdRef.current = selectedConvId; }, [selectedConvId]);
 
   // ── load conversations ──────────────────────────────────────────────────
   const loadConversations = useCallback(async () => {
@@ -481,27 +485,35 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
     })();
   }, [selectedConvId, uid]);
 
-  // ── realtime: messages in selected conversation ─────────────────────────
+  // ── realtime: all messages for this user ────────────────────────────────
+  // One stable channel per uid — no server-side filter, no per-conversation
+  // churn. RLS ensures only messages the user can read arrive.
+  // selectedConvIdRef lets the callback see the current conversation without
+  // being stale from the closure captured at subscription time.
   useEffect(() => {
-    if (!selectedConvId || !uid) return;
-    const ch = supabase.channel(`gb-msgs-${selectedConvId}`)
+    if (!uid) return;
+    const ch = supabase.channel(`gb-msgs-${uid}`)
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "messages",
-        filter: `conversation_id=eq.${selectedConvId}`,
       }, (payload) => {
         const msg = payload.new;
-        setMessages(prev => {
-          if (prev.find(m => m.id === msg.id)) return prev;
-          return [...prev, msg];
-        });
-        if (msg.sender_id !== uid) {
-          supabase.from("messages").update({ is_read: true }).eq("id", msg.id);
+        // Update the open thread only if this message belongs to it
+        if (msg.conversation_id === selectedConvIdRef.current) {
+          setMessages(prev => {
+            if (prev.find(m => m.id === msg.id)) return prev;
+            return [...prev, msg];
+          });
+          if (msg.sender_id !== uid) {
+            supabase.from("messages").update({ is_read: true }).eq("id", msg.id);
+          }
+          scrollToBottom();
         }
-        scrollToBottom();
+        // Always refresh the conversation list so previews + unread counts update
+        loadConversations();
       })
       .subscribe();
     return () => supabase.removeChannel(ch);
-  }, [selectedConvId, uid]);
+  }, [uid, loadConversations]);
 
   function scrollToBottom() {
     setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 60);
