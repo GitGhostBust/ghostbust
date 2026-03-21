@@ -44,8 +44,7 @@ const STYLE = `
   .ticker-item { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 0 32px; opacity: 0.9; }
 
   .nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px; height: 56px;
+    display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px;
     background: var(--void);
     border-bottom: 1px solid var(--border);
     position: sticky; top: 27px; z-index: 100;
@@ -514,7 +513,7 @@ export default function Profile() {
           <a href="/app.html" className="nav-btn">App</a>
           <span className="nav-btn active">Profile</span>
         </div>
-        <UserSearch />
+        <div style={{flexGrow:1, maxWidth:"240px"}}><UserSearch /></div>
         <div style={{display:"flex",alignItems:"center",gap:4}}>
           {session && (
             <button className="nav-inbox-btn" title="Inbox" onClick={() => setShowInbox(v => !v)}>

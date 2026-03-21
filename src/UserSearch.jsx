@@ -219,7 +219,7 @@ export default function UserSearch() {
   return (
     <>
     <style>{STYLE}</style>
-    <div className="us-wrap">
+    <div className="us-wrap" style={{flexGrow:1, maxWidth:"240px"}}>
       {/* Desktop: inline input */}
       <div className="us-input-wrap">
         <input
