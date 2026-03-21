@@ -1328,7 +1328,6 @@ export default function App() {
       </div>
       <nav className="app-nav">
         <a href="/" className="app-nav-logo">Ghost<em>Bust</em></a>
-        <span style={{flex:1, display:"flex", justifyContent:"center"}}><UserSearch /></span>
         <button onClick={function(){window.location.href="/profile.html";}} className="app-nav-btn">My Profile</button>
         <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} className="app-nav-btn" style={{color:session?"var(--signal)":"var(--paper)"}}>{session?"Sign Out":"Sign In"}</button>
       </nav>
@@ -1354,9 +1353,12 @@ export default function App() {
             📋 Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
-          <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{marginLeft:"auto",fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
-            ? HELP
-          </button>
+          <span style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
+            <UserSearch />
+            <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
+              ? HELP
+            </button>
+          </span>
         </nav>
 
         {tab==="search"&&<SearchTab />}
