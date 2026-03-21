@@ -218,9 +218,16 @@ const EMPLOYMENT_OPTIONS = [
 ];
 
 const AVATAR_COLORS = [
-  "#863bff","#cc2200","#0077b6","#2d6a4f",
-  "#9b2226","#1b4332","#023e8a","#6a0572",
-  "#ae2012","#344e41",
+  "#e02200", // red
+  "#ff6600", // orange
+  "#f5c400", // yellow
+  "#1a9e1a", // green
+  "#0066cc", // blue
+  "#4b0acd", // indigo
+  "#8b00cc", // violet
+  "#111111", // black
+  "#666666", // grey
+  "#e8e4da", // white
 ];
 
 const GhostIcon = ({ size = 64 }) => (
