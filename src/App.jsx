@@ -21,7 +21,7 @@ const STYLE = `
     --border: rgba(255,255,255,0.07); --border-hi: rgba(255,255,255,0.14);
   }
   html { scroll-behavior: smooth; }
-  body { background: var(--void); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; min-height: 100vh; overflow-x: hidden; }
+  body { background: var(--void); color: var(--paper); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
   .app { max-width: 980px; margin: 0 auto; padding: 0 24px 120px; }
 
@@ -67,7 +67,7 @@ const STYLE = `
   .form-label.ice { color: var(--ice); }
   .field-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 8px; display: block; }
   .field-label.red { color: var(--blood); }
-  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
+  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
   .f-input:focus { border-color: var(--border-hi); }
   .f-input::placeholder { color: rgba(255,255,255,0.4); font-family: 'Space Mono', monospace; font-size: 11px; }
   select.f-input { appearance: none; cursor: pointer; }
@@ -202,7 +202,7 @@ const STYLE = `
   .gs-mid { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.2); color: var(--bile); }
   .gs-high { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.2); color: var(--blood); }
   .app-notes { font-size: 12px; color: var(--muted); margin-top: 8px; font-style: italic; line-height: 1.5; }
-  .app-date { font-family: 'Libre Baskerville', Georgia, serif; font-size: 9px; color: var(--ghost); }
+  .app-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--ghost); }
 
   .app-controls { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .status-select { background: var(--surface2); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 5px 8px; outline: none; cursor: pointer; appearance: none; text-align: center; }
@@ -221,7 +221,7 @@ const STYLE = `
   .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--ghost); margin-bottom: 8px; }
   .empty-sub { font-size: 13px; color: var(--ghost); line-height: 1.6; max-width: 340px; margin: 0 auto; }
 
-  .notes-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; padding: 6px 10px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
+  .notes-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 6px 10px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
   .notes-input:focus { border-color: var(--border-hi); }
   .notes-input::placeholder { color: var(--ghost); }
 
@@ -239,15 +239,15 @@ const STYLE = `
 
   /* EDIT MODE ON CARD */
   .edit-inline { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
-  .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; padding: 4px 8px; outline: none; flex: 1; }
+  .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 8px; outline: none; flex: 1; }
   .edit-save-btn { background: var(--signal); color: #050a07; font-family: 'Space Mono', monospace; font-size: 9px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
 
   /* FOLLOW-UP DATE */
   .followup-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
   .followup-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
-  .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; font-size: 10px; padding: 3px 8px; outline: none; cursor: pointer; }
+  .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 8px; outline: none; cursor: pointer; }
   .followup-date:focus { border-color: var(--border-hi); }
-  .followup-due { font-family: 'Libre Baskerville', Georgia, serif; font-size: 11px; color: var(--bile); }
+  .followup-due { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--bile); }
   .followup-overdue { color: var(--blood); }
 
   /* EXPORT */
@@ -262,7 +262,7 @@ const STYLE = `
   .report-top { background: var(--blood); padding: 22px 24px 18px; }
   .report-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 6px; }
   .report-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 0.9; letter-spacing: 0.02em; color: var(--paper); }
-  .report-date { font-family: 'Libre Baskerville', Georgia, serif; font-size: 11px; color: rgba(238,234,224,0.6); margin-top: 8px; }
+  .report-date { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(238,234,224,0.6); margin-top: 8px; }
   .report-body { padding: 22px 24px; }
   .report-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
   .report-stat { text-align: center; padding: 14px 8px; background: var(--surface); border: 1px solid var(--border); }
@@ -539,7 +539,7 @@ function VerdictCard(props) {
         </div>
       )}
       <div style={{marginTop:16,padding:"10px 14px",background:"rgba(255,255,255,0.03)",borderLeft:"2px solid rgba(255,255,255,0.08)"}}>
-        <p style={{fontFamily:"'Libre Baskerville',Georgia,serif",fontSize:9,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
+        <p style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
           DISCLAIMER: GhostBust scores are algorithmic estimates based on patterns in listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. A low score does not guarantee a role is unfilled, and a high score does not guarantee a hire. Always conduct your own research.
         </p>
       </div>
