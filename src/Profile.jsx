@@ -39,7 +39,8 @@ const STYLE = `
     -webkit-font-smoothing: antialiased;
   }
 
-  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 6px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 300; }
+  .sticky-header { position: sticky; top: 0; z-index: 200; }
+  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 6px 0; }
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 40s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
   .ticker-item { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 0 32px; opacity: 0.9; }
@@ -48,7 +49,7 @@ const STYLE = `
     display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px;
     background: var(--void);
     border-bottom: 1px solid var(--border);
-    position: fixed; top: 27px; left: 0; right: 0; z-index: 200;
+    position: static;
   }
   .nav-logo { font-family: "Bebas Neue", sans-serif; font-size: 24px; color: var(--paper); text-decoration: none; letter-spacing: 0.02em; }
   .nav-logo em { color: var(--blood); font-style: normal; }
@@ -74,7 +75,7 @@ const STYLE = `
   .gate-back { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; text-decoration: none; }
   .gate-back:hover { color: var(--paper); }
 
-  .page { max-width: 1080px; margin: 0 auto; padding: 83px 24px 100px; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 0 24px 100px; }
 
   .banner-area { width: 100%; height: 220px; position: relative; background: var(--surface); overflow: hidden; cursor: default; }
   .banner-area.editable { cursor: pointer; }
@@ -503,15 +504,16 @@ export default function Profile() {
     <>
       <style>{STYLE}</style>
 
-      <div className="ticker-wrap">
-        <div className="ticker-track">
-          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
-            <span key={i} className="ticker-item">{t} &nbsp;◆&nbsp; </span>
-          ))}
+      <div className="sticky-header">
+        <div className="ticker-wrap">
+          <div className="ticker-track">
+            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((t, i) => (
+              <span key={i} className="ticker-item">{t} &nbsp;◆&nbsp; </span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <nav className="nav">
+        <nav className="nav">
         <a href="/" className="nav-logo">Ghost<em>Bust</em></a>
         <div className="nav-links">
           <a href="/" className="nav-btn">Home</a>
@@ -536,6 +538,7 @@ export default function Profile() {
           )}
         </div>
       </nav>
+      </div>
 
       {showRegionModal && session && <RegionModal userId={session.user.id} onClose={() => setShowRegionModal(false)} />}
 
