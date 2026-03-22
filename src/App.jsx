@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "./supabase.js";
 import UserSearch from "./UserSearch.jsx";
 import RegionModal from "./RegionModal.jsx";
+import ResumeAdvisor from "./ResumeAdvisor.jsx";
 // auth-ui-react removed
 // auth-ui-shared removed
 
@@ -1380,6 +1381,9 @@ export default function App() {
             📋 Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
+          <button className={"tab-btn"+(tab==="resume"?" active":"")} onClick={function(){setTab("resume");}}>
+            📄 Resume
+          </button>
           <span style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <UserSearch />
             <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
@@ -1391,6 +1395,7 @@ export default function App() {
         {tab==="search"&&<SearchTab />}
         {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} />}
         {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} />}
+        {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
         <footer className="footer">
           <span>GHOSTBUST · 2026</span>
           <span>POWERED BY CLAUDE AI</span>
