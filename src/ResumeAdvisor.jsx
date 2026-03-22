@@ -181,6 +181,20 @@ const STYLE = `
   .ra-cl-input::placeholder { color: var(--ghost); }
   .ra-cl-result-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 16px; }
 
+  /* ANALYZING: doc selector (AI Advisor tab) */
+  .ra-doc-selector { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 16px 20px; margin-bottom: 24px; }
+  .ra-doc-selector-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.18em; color: var(--ghost); margin-bottom: 10px; }
+  .ra-doc-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ra-doc-name { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper); font-weight: 700; }
+  .ra-doc-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
+  .ra-analysis-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; }
+  .ra-analysis-badge.first { background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: rgba(238,234,224,0.4); }
+  .ra-analysis-badge.followup { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.35); color: var(--bile); }
+  .ra-resume-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .ra-resume-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 6px 12px; border: 1px solid var(--border-hi); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; white-space: nowrap; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+  .ra-resume-btn:hover { color: var(--paper); border-color: rgba(255,255,255,0.2); }
+  .ra-resume-btn.active { color: var(--paper); border-color: var(--blood); background: var(--blood-dim); }
+
   /* HISTORY badge */
   .ra-mode-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; border-radius: 0; margin-right: 8px; }
   .ra-mode-badge.general { background: rgba(0,200,230,0.12); border: 1px solid rgba(0,200,230,0.25); color: var(--ice); }
@@ -239,6 +253,13 @@ function parseJSON(text) {
 function formatDate(ts) {
   if (!ts) return "";
   return new Date(ts).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+function formatDateTime(ts) {
+  if (!ts) return "";
+  var d = new Date(ts);
+  var date = d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  var time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+  return date + " at " + time;
 }
 
 function fitScoreClass(n) {
@@ -622,6 +643,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [generatingCL, setGeneratingCL] = useState(false);
   var [clResult, setCLResult] = useState(null);
   var [copiedCL, setCopiedCL] = useState(false);
+  var [advisorResume, setAdvisorResume] = useState(null); // resume selected for AI analysis (may differ from manager tab selection)
   var fileRef = useRef(null);
   var canvasRef = useRef(null);
 
@@ -732,13 +754,18 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         // Keep selected resume in sync; default to most recent
         if (list.length > 0) {
           setResume(function (prev) {
-            // If previously selected resume still exists, keep it
+            var still = list.find(function (r) { return prev && r.id === prev.id; });
+            return still || list[0];
+          });
+          // Keep advisor resume in sync; default to most recent
+          setAdvisorResume(function (prev) {
             var still = list.find(function (r) { return prev && r.id === prev.id; });
             return still || list[0];
           });
           setExpandedId(function (prev) { return prev || list[0].id; });
         } else {
           setResume(null);
+          setAdvisorResume(null);
           setExpandedId(null);
           setPreviewContent(null);
         }
@@ -766,6 +793,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         setPreviewContent(null);
       }
       if (resume && resume.id === r.id) setResume(null);
+      if (advisorResume && advisorResume.id === r.id) setAdvisorResume(null);
       loadResumes();
     } catch (err) {
       setUploadError("Delete failed: " + err.message);
@@ -802,6 +830,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       if (dbError) throw dbError;
 
       setResume(newResume);
+      setAdvisorResume(newResume);
       setExpandedId(newResume.id);
       loadResumes();
       buildPreviewFromFile(file, path);
@@ -911,7 +940,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   }
 
   async function handleAnalyze() {
-    if (!resume || !resume.extracted_text) return;
+    if (!advisorResume || !advisorResume.extracted_text) return;
     if (advisorMode === "job_specific" && jobText.trim().length < 50) return;
     setAnalyzing(true);
     setAnalysisError(null);
@@ -935,11 +964,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           "red_flags (string, 2-3 sentences on what a recruiter would pause at — gaps/job hopping/vague titles/inconsistencies — write None identified. if none), " +
           "next_steps (array of exactly 3 strings, the highest-impact improvements ranked by importance — if LAST RECOMMENDED NEXT STEPS are in USER CONTEXT, note whether they were addressed).\n" +
           "Return only valid JSON, no markdown, no code blocks.";
-        var genMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + resume.extracted_text;
+        var genMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + advisorResume.extracted_text;
         var raw = await apiCall([{ role: "user", content: genPrompt + "\n\n" + genMsg }]);
         parsed = parseJSON(raw);
         dbPayload = {
-          user_id: session.user.id, resume_id: resume.id,
+          user_id: session.user.id, resume_id: advisorResume.id,
           mode: "general", job_listing_text: "", fit_score: 0,
           strength_score: parsed.strength_score || 0,
           strength_justification: parsed.strength_justification || "",
@@ -971,11 +1000,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           "cover_letter (string, complete tailored cover letter in 3-4 paragraphs — incorporate the user's background and any relevant details from USER CONTEXT to personalize the opening).\n" +
           "If a USER CONTEXT block is present in the user message, use it to personalize all feedback. Reference specific prior scores, companies scanned, or unaddressed action items where relevant.\n" +
           "Return only valid JSON, no markdown, no code blocks.";
-        var jobMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + resume.extracted_text + "\n\nJOB LISTING:\n" + jobText;
+        var jobMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + advisorResume.extracted_text + "\n\nJOB LISTING:\n" + jobText;
         var raw2 = await apiCall([{ role: "user", content: jobPrompt + "\n\n" + jobMsg }]);
         parsed = parseJSON(raw2);
         dbPayload = {
-          user_id: session.user.id, resume_id: resume.id,
+          user_id: session.user.id, resume_id: advisorResume.id,
           mode: "job_specific", job_listing_text: jobText.slice(0, 8000),
           fit_score: parsed.fit_score || 0,
           strength_score: parsed.strength_score || 0,
@@ -1197,14 +1226,14 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       {/* ── ADVISOR TAB ── */}
       {innerTab === "advisor" && (
         <div>
-          {!resume ? (
+          {!advisorResume ? (
             <div className="ra-no-resume">
               <div className="ra-no-resume-icon">📄</div>
               <div className="ra-no-resume-title">Upload Your Resume First</div>
               <div className="ra-no-resume-sub" style={{ marginTop: 6 }}>Go to the My Resume tab to upload your resume before running an analysis.</div>
               <button className="run-btn red" style={{ maxWidth: 240, margin: "20px auto 0", display: "block" }} onClick={function () { setInnerTab("manager"); }}>Go to My Resume →</button>
             </div>
-          ) : !resume.extracted_text ? (
+          ) : !advisorResume.extracted_text ? (
             <div className="ra-no-resume">
               <div className="ra-no-resume-icon">⚠️</div>
               <div className="ra-no-resume-title">No Text Extracted</div>
@@ -1213,6 +1242,44 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
             </div>
           ) : (
             <div>
+              {/* ANALYZING: doc selector */}
+              {(function () {
+                var priorForResume = analyses.filter(function (a) { return a.resume_id === advisorResume.id; });
+                var isFirst = priorForResume.length === 0;
+                var lastDate = !isFirst ? priorForResume[0].created_at : null;
+                return (
+                  <div className="ra-doc-selector">
+                    <div className="ra-doc-selector-label">Analyzing</div>
+                    <div className="ra-doc-info">
+                      <span className="ra-doc-name">
+                        {advisorResume.file_name.toLowerCase().endsWith(".pdf") ? "📕" : "📘"} {advisorResume.file_name}
+                      </span>
+                      <span className="ra-doc-date">Uploaded {formatDate(advisorResume.uploaded_at)}</span>
+                      {isFirst
+                        ? <span className="ra-analysis-badge first">First Analysis</span>
+                        : <span className="ra-analysis-badge followup">Follow-Up · {formatDate(lastDate)}</span>
+                      }
+                    </div>
+                    {resumes.length > 1 && (
+                      <div className="ra-resume-btns">
+                        {resumes.map(function (r) {
+                          return (
+                            <button
+                              key={r.id}
+                              className={"ra-resume-btn" + (advisorResume.id === r.id ? " active" : "")}
+                              onClick={function () { setAdvisorResume(r); setResult(null); setAnalysisError(null); }}
+                              title={r.file_name}
+                            >
+                              {r.file_name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
               {/* Mode toggle */}
               <div className="ra-mode-toggle">
                 <button className={"ra-mode-btn" + (advisorMode === "general" ? " active" : "")} onClick={function () { setAdvisorMode("general"); setResult(null); setAnalysisError(null); }}>
@@ -1302,7 +1369,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               <button className="ra-history-back" onClick={function () { setSelectedAnalysis(null); setCopied(false); }}>← Back to History</button>
               <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--ghost)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
                 <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : "job")}>{selectedAnalysis.mode === "general" ? "General Review" : "Job-Specific"}</span>
-                {formatDate(selectedAnalysis.created_at)}
+                {formatDateTime(selectedAnalysis.created_at)}
                 {selectedAnalysis.job_title && <span>· {selectedAnalysis.job_title}</span>}
                 {selectedAnalysis.fit_score > 0 && <span>· Fit: {selectedAnalysis.fit_score}</span>}
                 {selectedAnalysis.strength_score > 0 && <span>· Strength: {selectedAnalysis.strength_score}</span>}
@@ -1345,7 +1412,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                           {a.job_title && <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--paper)", letterSpacing: "0.06em" }}>{a.job_title}</span>}
                         </div>
                         <div className="ra-history-snippet">{snippet}</div>
-                        <div className="ra-history-date">{formatDate(a.created_at)}</div>
+                        <div className="ra-history-date">{formatDateTime(a.created_at)}</div>
                       </div>
                       <div className="ra-history-arrow">›</div>
                     </div>
