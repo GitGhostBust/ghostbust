@@ -122,9 +122,9 @@ const STYLE = `
   /* PREVIEW */
   .ra-preview-container { margin-top: 24px; }
   .ra-preview-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 10px; }
-  .ra-preview-box { background: #08080c; border: 1px solid rgba(212,34,0,0.3); overflow: hidden; height: 800px; position: relative; z-index: 9001; }
-  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
-  .ra-preview-docx { padding: 28px 32px; overflow-y: auto; height: 100%; }
+  .ra-preview-box { background: #111; border: 1px solid rgba(212,34,0,0.3); overflow-y: auto; overflow-x: hidden; height: 800px; position: relative; z-index: 9001; }
+  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 800px; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
+  .ra-preview-docx { padding: 28px 32px; background: #111; border: none; outline: none; }
   .ra-preview-docx h1, .ra-preview-docx h2, .ra-preview-docx h3 { font-family: 'Bebas Neue', sans-serif; color: var(--paper); margin: 18px 0 8px; letter-spacing: 0.04em; line-height: 1.1; }
   .ra-preview-docx h1 { font-size: 28px; } .ra-preview-docx h2 { font-size: 22px; } .ra-preview-docx h3 { font-size: 18px; }
   .ra-preview-docx p { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.82); line-height: 1.75; margin-bottom: 8px; }
@@ -352,6 +352,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [previewContent, setPreviewContent] = useState(null); // { type:"pdf", url } | { type:"docx", html }
   var [previewLoading, setPreviewLoading] = useState(false);
   var fileRef = useRef(null);
+  var canvasRef = useRef(null);
 
   // Load Pro status + admin check
   useEffect(function () {
@@ -378,6 +379,34 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     if (!session) return;
     loadAnalyses();
   }, [session]);
+
+  // Render PDF page 1 to canvas whenever previewContent changes to a PDF
+  useEffect(function () {
+    if (!previewContent || previewContent.type !== "pdf") return;
+    var cancelled = false;
+    (async function () {
+      try {
+        var pdfjsLib = await import("pdfjs-dist");
+        pdfjsLib.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).href;
+        var pdf = await pdfjsLib.getDocument(previewContent.url).promise;
+        if (cancelled) return;
+        var page = await pdf.getPage(1);
+        if (cancelled) return;
+        var canvas = canvasRef.current;
+        if (!canvas) return;
+        var containerWidth = (canvas.parentElement ? canvas.parentElement.clientWidth : 0) || 800;
+        var baseViewport = page.getViewport({ scale: 1 });
+        var scale = containerWidth / baseViewport.width;
+        var viewport = page.getViewport({ scale: scale });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise;
+      } catch (e) {
+        console.warn("PDF canvas render failed:", e);
+      }
+    })();
+    return function () { cancelled = true; };
+  }, [previewContent]);
 
   async function buildPreviewFromFile(file, storagePath) {
     var name = file.name.toLowerCase();
@@ -708,7 +737,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                           <span>Loading preview...</span>
                         </div>
                       ) : previewContent?.type === "pdf" ? (
-                        <embed src={previewContent.url} type="application/pdf" width="100%" height="800px" style={{ display: "block" }} />
+                        <canvas ref={canvasRef} style={{ display: "block", width: "100%" }} />
                       ) : previewContent?.type === "docx" ? (
                         <div className="ra-preview-docx" dangerouslySetInnerHTML={{ __html: previewContent.html }} />
                       ) : (
