@@ -115,10 +115,14 @@ const STYLE = `
   /* Error */
   .ra-error { padding: 14px 18px; background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); margin-top: 16px; }
 
+  /* Delete button */
+  .ra-delete-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid rgba(212,34,0,0.35); background: none; color: var(--blood); cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .ra-delete-btn:hover { background: var(--blood-dim); }
+
   /* PREVIEW */
   .ra-preview-container { margin-top: 24px; }
   .ra-preview-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 10px; }
-  .ra-preview-box { background: #08080c; border: 1px solid rgba(212,34,0,0.3); overflow: hidden; height: 800px; position: relative; }
+  .ra-preview-box { background: #08080c; border: 1px solid rgba(212,34,0,0.3); overflow: hidden; height: 800px; position: relative; z-index: 9001; }
   .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
   .ra-preview-docx { padding: 28px 32px; overflow-y: auto; height: 100%; }
   .ra-preview-docx h1, .ra-preview-docx h2, .ra-preview-docx h3 { font-family: 'Bebas Neue', sans-serif; color: var(--paper); margin: 18px 0 8px; letter-spacing: 0.04em; line-height: 1.1; }
@@ -330,7 +334,10 @@ function AnalysisResults({ data, onCopy, copied }) {
 ================================================================ */
 export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [isPro, setIsPro] = useState(null);
-  var [resume, setResume] = useState(null);
+  var [isAdmin, setIsAdmin] = useState(false);
+  var [resumes, setResumes] = useState([]);
+  var [resume, setResume] = useState(null); // selected/active resume for advisor
+  var [expandedId, setExpandedId] = useState(null); // which card is showing preview
   var [uploading, setUploading] = useState(false);
   var [uploadError, setUploadError] = useState(null);
   var [innerTab, setInnerTab] = useState("manager");
@@ -346,17 +353,29 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [previewLoading, setPreviewLoading] = useState(false);
   var fileRef = useRef(null);
 
-  // Load Pro status
+  // Load Pro status + admin check
   useEffect(function () {
     if (!session) return;
-    supabase.from("profiles").select("founding_member").eq("id", session.user.id).single()
-      .then(function (res) { setIsPro(res.data ? (res.data.founding_member === true) : false); });
+    supabase.from("profiles").select("founding_member, username").eq("id", session.user.id).single()
+      .then(function (res) {
+        if (res.data) {
+          setIsPro(res.data.founding_member === true);
+          setIsAdmin(res.data.username === "GhostBustOfficial");
+        } else {
+          setIsPro(false);
+        }
+      });
   }, [session]);
 
-  // Load resume and analyses
+  // Reload resumes every time My Resume tab is opened
+  useEffect(function () {
+    if (!session || innerTab !== "manager") return;
+    loadResumes();
+  }, [session, innerTab]);
+
+  // Load analyses on session change
   useEffect(function () {
     if (!session) return;
-    loadResume();
     loadAnalyses();
   }, [session]);
 
@@ -399,13 +418,24 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     finally { setPreviewLoading(false); }
   }
 
-  function loadResume() {
+  function loadResumes() {
     supabase.from("resumes").select("*").eq("user_id", session.user.id)
-      .order("created_at", { ascending: false }).limit(1)
+      .order("created_at", { ascending: false })
       .then(function (res) {
-        if (res.data && res.data.length > 0) {
-          setResume(res.data[0]);
-          buildPreviewFromDb(res.data[0]);
+        var list = (res.data && res.data.length > 0) ? res.data : [];
+        setResumes(list);
+        // Keep selected resume in sync; default to most recent
+        if (list.length > 0) {
+          setResume(function (prev) {
+            // If previously selected resume still exists, keep it
+            var still = list.find(function (r) { return prev && r.id === prev.id; });
+            return still || list[0];
+          });
+          setExpandedId(function (prev) { return prev || list[0].id; });
+        } else {
+          setResume(null);
+          setExpandedId(null);
+          setPreviewContent(null);
         }
       });
   }
@@ -416,6 +446,25 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       .then(function (res) {
         if (res.data) setAnalyses(res.data);
       });
+  }
+
+  async function handleDelete(r) {
+    if (!session) return;
+    if (session.user.id !== r.user_id && !isAdmin) return;
+    try {
+      var path = storagePathFromUrl(r.file_url);
+      if (path) await supabase.storage.from("resumes").remove([path]);
+      await supabase.from("resumes").delete().eq("id", r.id);
+      // If this was the expanded/selected resume, clear preview
+      if (expandedId === r.id) {
+        setExpandedId(null);
+        setPreviewContent(null);
+      }
+      if (resume && resume.id === r.id) setResume(null);
+      loadResumes();
+    } catch (err) {
+      setUploadError("Delete failed: " + err.message);
+    }
   }
 
   async function handleFile(file) {
@@ -441,12 +490,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       var { data: urlData } = supabase.storage.from("resumes").getPublicUrl(path);
       var fileUrl = urlData ? urlData.publicUrl : path;
 
-      // Delete old resume records
-      if (resume) {
-        await supabase.from("resumes").delete().eq("user_id", session.user.id);
-      }
-
-      // Save to DB
+      // Save to DB (no auto-delete of old resumes — user can delete manually)
       var { data: newResume, error: dbError } = await supabase.from("resumes").insert({
         user_id: session.user.id,
         file_url: fileUrl,
@@ -456,6 +500,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       if (dbError) throw dbError;
 
       setResume(newResume);
+      setExpandedId(newResume.id);
+      loadResumes();
       buildPreviewFromFile(file, path);
     } catch (err) {
       setUploadError("Upload failed: " + err.message);
@@ -579,75 +625,94 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       {/* ── MANAGER TAB ── */}
       {innerTab === "manager" && (
         <div>
-          {resume ? (
-            <div>
-              <div className="ra-resume-card">
-                <div className="ra-resume-icon">{resume.file_name.endsWith(".pdf") ? "📕" : "📘"}</div>
-                <div>
-                  <div className="ra-resume-name">{resume.file_name}</div>
-                  <div className="ra-resume-date">Uploaded {formatDate(resume.created_at)}</div>
-                </div>
-                <div className="ra-resume-actions">
-                  <button className="ra-replace-btn" onClick={function () { fileRef.current && fileRef.current.click(); }} disabled={uploading}>
-                    {uploading ? "Uploading..." : "↑ Replace"}
-                  </button>
-                </div>
-              </div>
+          {/* Upload zone — always visible */}
+          <div
+            className={"ra-upload-zone" + (dragOver ? " drag-over" : "")}
+            style={{ marginBottom: 24 }}
+            onClick={function () { !uploading && fileRef.current && fileRef.current.click(); }}
+            onDragOver={function (e) { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={function () { setDragOver(false); }}
+            onDrop={handleDrop}
+          >
+            {uploading ? (
+              <>
+                <div className="ra-spin" style={{ margin: "0 auto 14px" }} />
+                <div className="ra-upload-title">Uploading & Extracting Text...</div>
+              </>
+            ) : (
+              <>
+                <div className="ra-upload-icon">📤</div>
+                <div className="ra-upload-title">{resumes.length > 0 ? "Upload Another Resume" : "Upload Your Resume"}</div>
+                <div className="ra-upload-sub">PDF or DOCX · Click or drag & drop · Max 10 MB</div>
+              </>
+            )}
+          </div>
 
-              <div className="ra-preview-container">
-                <div className="ra-preview-label">Preview</div>
-                <div className="ra-preview-box">
-                  {previewLoading ? (
-                    <div className="ra-preview-loading">
-                      <div className="ra-spin" />
-                      <span>Loading preview...</span>
-                    </div>
-                  ) : previewContent?.type === "pdf" ? (
-                    <embed src={previewContent.url} type="application/pdf" width="100%" height="800px" style={{ display: "block" }} />
-                  ) : previewContent?.type === "docx" ? (
-                    <div className="ra-preview-docx" dangerouslySetInnerHTML={{ __html: previewContent.html }} />
-                  ) : (
-                    <div className="ra-preview-loading">No preview available</div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div
-                className={"ra-upload-zone" + (dragOver ? " drag-over" : "")}
-                onClick={function () { !uploading && fileRef.current && fileRef.current.click(); }}
-                onDragOver={function (e) { e.preventDefault(); setDragOver(true); }}
-                onDragLeave={function () { setDragOver(false); }}
-                onDrop={handleDrop}
-              >
-                {uploading ? (
-                  <>
-                    <div className="ra-spin" style={{ margin: "0 auto 14px" }} />
-                    <div className="ra-upload-title">Uploading & Extracting Text...</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="ra-upload-icon">📤</div>
-                    <div className="ra-upload-title">Upload Your Resume</div>
-                    <div className="ra-upload-sub">PDF or DOCX · Click or drag & drop</div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {uploadError && <div className="ra-error">{uploadError}</div>}
+          {uploadError && <div className="ra-error" style={{ marginBottom: 16 }}>{uploadError}</div>}
 
           <input ref={fileRef} type="file" accept=".pdf,.docx,.doc" style={{ display: "none" }} onChange={handleInputChange} />
 
-          {!resume && !uploading && (
-            <div style={{ marginTop: 20, fontFamily: "'Space Mono',monospace", fontSize: 10, color: "var(--ghost)", lineHeight: 1.8 }}>
+          {/* Resume list */}
+          {resumes.length === 0 && !uploading && (
+            <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "var(--ghost)", lineHeight: 1.8 }}>
               <div style={{ marginBottom: 6 }}>• DOCX files give the most accurate text extraction</div>
-              <div style={{ marginBottom: 6 }}>• Max file size: 10 MB</div>
               <div>• Your resume is stored privately — only you can access it</div>
             </div>
           )}
+
+          {resumes.map(function (r) {
+            var isExpanded = expandedId === r.id;
+            var canDelete = session && (session.user.id === r.user_id || isAdmin);
+            return (
+              <div key={r.id} style={{ marginBottom: 16 }}>
+                <div className="ra-resume-card" style={{ cursor: "pointer" }} onClick={function () {
+                  if (isExpanded) {
+                    setExpandedId(null);
+                  } else {
+                    setExpandedId(r.id);
+                    setResume(r);
+                    setPreviewContent(null);
+                    buildPreviewFromDb(r);
+                  }
+                }}>
+                  <div className="ra-resume-icon">{r.file_name.toLowerCase().endsWith(".pdf") ? "📕" : "📘"}</div>
+                  <div>
+                    <div className="ra-resume-name">{r.file_name}</div>
+                    <div className="ra-resume-date">Uploaded {formatDate(r.created_at)}</div>
+                  </div>
+                  <div className="ra-resume-actions">
+                    <button className="ra-replace-btn" style={{ pointerEvents: "none" }}>
+                      {isExpanded ? "▲ Collapse" : "▼ Preview"}
+                    </button>
+                    {canDelete && (
+                      <button className="ra-delete-btn" onClick={function (e) { e.stopPropagation(); handleDelete(r); }}>
+                        ✕ Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {isExpanded && (
+                  <div className="ra-preview-container" style={{ marginTop: 0 }}>
+                    <div className="ra-preview-box">
+                      {previewLoading ? (
+                        <div className="ra-preview-loading">
+                          <div className="ra-spin" />
+                          <span>Loading preview...</span>
+                        </div>
+                      ) : previewContent?.type === "pdf" ? (
+                        <embed src={previewContent.url} type="application/pdf" width="100%" height="800px" style={{ display: "block" }} />
+                      ) : previewContent?.type === "docx" ? (
+                        <div className="ra-preview-docx" dangerouslySetInnerHTML={{ __html: previewContent.html }} />
+                      ) : (
+                        <div className="ra-preview-loading">No preview available</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
