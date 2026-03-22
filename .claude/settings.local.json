@@ -4,7 +4,12 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(npx supabase:*)",
+      "Bash(npm install:*)",
+      "Bash(grep -n \"^  @media\\\\|^  \\\\}$\" C:/Users/gabri/ghostbust-app/src/Profile.jsx)",
+      "Bash(grep -n \"^\\\\`;\" C:/Users/gabri/ghostbust-app/src/Profile.jsx)",
+      "Bash(ls -la C:/Users/gabri/ghostbust-app/.env*)"
     ]
   }
 }
