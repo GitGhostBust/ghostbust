@@ -1408,10 +1408,12 @@ export default function App() {
           </span>
         </nav>
 
-        {tab==="search"&&<SearchTab />}
-        {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} />}
-        {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} />}
-        {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
+        <div style={{maxWidth:1280,margin:"0 auto",width:"100%"}}>
+          {tab==="search"&&<SearchTab />}
+          {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} />}
+          {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} />}
+          {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
+        </div>
         <footer className="footer">
           <span>GHOSTBUST · 2026</span>
           <span>POWERED BY CLAUDE AI</span>
