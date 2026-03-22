@@ -115,6 +115,22 @@ const STYLE = `
   /* Error */
   .ra-error { padding: 14px 18px; background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); margin-top: 16px; }
 
+  /* PREVIEW */
+  .ra-preview-container { margin-top: 24px; }
+  .ra-preview-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 10px; }
+  .ra-preview-box { background: #08080c; border: 1px solid rgba(212,34,0,0.3); overflow: hidden; height: 800px; position: relative; }
+  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
+  .ra-preview-docx { padding: 28px 32px; overflow-y: auto; height: 100%; }
+  .ra-preview-docx h1, .ra-preview-docx h2, .ra-preview-docx h3 { font-family: 'Bebas Neue', sans-serif; color: var(--paper); margin: 18px 0 8px; letter-spacing: 0.04em; line-height: 1.1; }
+  .ra-preview-docx h1 { font-size: 28px; } .ra-preview-docx h2 { font-size: 22px; } .ra-preview-docx h3 { font-size: 18px; }
+  .ra-preview-docx p { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.82); line-height: 1.75; margin-bottom: 8px; }
+  .ra-preview-docx ul, .ra-preview-docx ol { padding-left: 20px; margin-bottom: 10px; }
+  .ra-preview-docx li { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.82); line-height: 1.7; margin-bottom: 3px; }
+  .ra-preview-docx strong, .ra-preview-docx b { color: var(--paper); }
+  .ra-preview-docx a { color: var(--ice); text-decoration: none; }
+  .ra-preview-docx table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  .ra-preview-docx td, .ra-preview-docx th { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.75); padding: 5px 8px; border: 1px solid var(--border); vertical-align: top; }
+
   @media (max-width: 720px) {
     .ra-bullet-pair { grid-template-columns: 1fr; }
     .ra-fit-score-display { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -162,6 +178,12 @@ function fitScoreLabel(n) {
   if (n >= 70) return "Strong Match";
   if (n >= 40) return "Partial Match";
   return "Weak Match";
+}
+
+function storagePathFromUrl(url) {
+  if (!url) return null;
+  var match = url.match(/\/storage\/v1\/object\/(?:public|sign)\/resumes\/(.+?)(?:\?|$)/);
+  return match ? match[1] : null;
 }
 
 async function extractTextFromFile(file) {
@@ -320,6 +342,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [selectedAnalysis, setSelectedAnalysis] = useState(null);
   var [copied, setCopied] = useState(false);
   var [dragOver, setDragOver] = useState(false);
+  var [previewContent, setPreviewContent] = useState(null); // { type:"pdf", url } | { type:"docx", html }
+  var [previewLoading, setPreviewLoading] = useState(false);
   var fileRef = useRef(null);
 
   // Load Pro status
@@ -336,11 +360,53 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     loadAnalyses();
   }, [session]);
 
+  async function buildPreviewFromFile(file, storagePath) {
+    var name = file.name.toLowerCase();
+    setPreviewLoading(true);
+    try {
+      if (name.endsWith(".pdf")) {
+        var { data: sd } = await supabase.storage.from("resumes").createSignedUrl(storagePath, 3600);
+        if (sd?.signedUrl) setPreviewContent({ type: "pdf", url: sd.signedUrl });
+      } else if (name.endsWith(".docx") || name.endsWith(".doc")) {
+        var buf = await file.arrayBuffer();
+        var mammoth = await import("mammoth");
+        var res = await mammoth.default.convertToHtml({ arrayBuffer: buf });
+        setPreviewContent({ type: "docx", html: res.value });
+      }
+    } catch (e) { /* silently fail — preview is non-critical */ }
+    finally { setPreviewLoading(false); }
+  }
+
+  async function buildPreviewFromDb(resumeRecord) {
+    var name = resumeRecord.file_name.toLowerCase();
+    var path = storagePathFromUrl(resumeRecord.file_url);
+    if (!path) return;
+    setPreviewLoading(true);
+    try {
+      var { data: sd } = await supabase.storage.from("resumes").createSignedUrl(path, 3600);
+      var signedUrl = sd?.signedUrl;
+      if (!signedUrl) return;
+      if (name.endsWith(".pdf")) {
+        setPreviewContent({ type: "pdf", url: signedUrl });
+      } else if (name.endsWith(".docx") || name.endsWith(".doc")) {
+        var resp = await fetch(signedUrl);
+        var buf2 = await resp.arrayBuffer();
+        var mammoth2 = await import("mammoth");
+        var res2 = await mammoth2.default.convertToHtml({ arrayBuffer: buf2 });
+        setPreviewContent({ type: "docx", html: res2.value });
+      }
+    } catch (e) { /* silently fail */ }
+    finally { setPreviewLoading(false); }
+  }
+
   function loadResume() {
     supabase.from("resumes").select("*").eq("user_id", session.user.id)
       .order("created_at", { ascending: false }).limit(1)
       .then(function (res) {
-        if (res.data && res.data.length > 0) setResume(res.data[0]);
+        if (res.data && res.data.length > 0) {
+          setResume(res.data[0]);
+          buildPreviewFromDb(res.data[0]);
+        }
       });
   }
 
@@ -361,6 +427,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     }
     setUploading(true);
     setUploadError(null);
+    setPreviewContent(null);
     try {
       // Extract text
       var text = await extractTextFromFile(file);
@@ -389,6 +456,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       if (dbError) throw dbError;
 
       setResume(newResume);
+      buildPreviewFromFile(file, path);
     } catch (err) {
       setUploadError("Upload failed: " + err.message);
     } finally {
@@ -526,16 +594,23 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                 </div>
               </div>
 
-              {resume.extracted_text ? (
-                <div className="ra-text-preview">
-                  <div className="ra-text-preview-label">Extracted Text — Used for AI Analysis</div>
-                  <pre>{resume.extracted_text.slice(0, 2000)}{resume.extracted_text.length > 2000 ? "\n\n[...truncated for preview]" : ""}</pre>
+              <div className="ra-preview-container">
+                <div className="ra-preview-label">Preview</div>
+                <div className="ra-preview-box">
+                  {previewLoading ? (
+                    <div className="ra-preview-loading">
+                      <div className="ra-spin" />
+                      <span>Loading preview...</span>
+                    </div>
+                  ) : previewContent?.type === "pdf" ? (
+                    <embed src={previewContent.url} type="application/pdf" width="100%" height="800px" style={{ display: "block" }} />
+                  ) : previewContent?.type === "docx" ? (
+                    <div className="ra-preview-docx" dangerouslySetInnerHTML={{ __html: previewContent.html }} />
+                  ) : (
+                    <div className="ra-preview-loading">No preview available</div>
+                  )}
                 </div>
-              ) : (
-                <div style={{ padding: "16px", background: "rgba(212,34,0,0.06)", border: "1px solid rgba(212,34,0,0.2)", fontFamily: "'Space Mono',monospace", fontSize: 11, color: "var(--blood)", marginTop: 12 }}>
-                  Text extraction was not available for this file. Re-upload as a DOCX for best results.
-                </div>
-              )}
+              </div>
             </div>
           ) : (
             <div>
