@@ -31,17 +31,17 @@ const STYLE = `
   .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; }
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 36s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
-  .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
+  .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
 
   /* APP NAV */
   .app-nav { position: sticky; top: 0; z-index: 200; background: var(--void); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px; }
   .app-nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.02em; color: var(--paper); text-decoration: none; flex-shrink: 0; }
   .app-nav-logo em { color: var(--blood); font-style: normal; }
   .app-nav-links { display: flex; gap: 4px; align-items: center; }
-  .app-nav-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; text-decoration: none; transition: color 0.15s, border-color 0.15s; border-radius: 2px; white-space: nowrap; display: inline-block; }
+  .app-nav-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: #72728a; cursor: pointer; text-decoration: none; transition: color 0.15s, border-color 0.15s; border-radius: 2px; white-space: nowrap; display: inline-block; }
   .app-nav-btn:hover { color: var(--paper); border-color: var(--border); }
   .app-nav-btn.active { color: var(--paper); border-color: var(--border-hi); }
-  .app-nav-signout { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s; margin-left: auto; flex-shrink: 0; }
+  .app-nav-signout { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: #72728a; cursor: pointer; transition: color 0.15s; margin-left: auto; flex-shrink: 0; }
   .app-nav-signout:hover { color: #ff4422; }
 
   /* HEADER */
