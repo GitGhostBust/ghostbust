@@ -22,7 +22,7 @@ const STYLE = `
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
 
   /* TICKER */
-  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; }
+  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; line-height: 1.5; }
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 36s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
   .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
