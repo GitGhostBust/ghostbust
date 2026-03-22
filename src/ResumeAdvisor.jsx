@@ -122,11 +122,14 @@ const STYLE = `
   /* PREVIEW */
   .ra-preview-container { margin-top: 24px; }
   .ra-preview-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 10px; }
-  .ra-preview-box { background: #111; border: 1px solid rgba(212,34,0,0.3); overflow-y: auto; overflow-x: hidden; height: 800px; position: relative; z-index: 9001; }
-  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 800px; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
-  .ra-preview-docx { padding: 28px 32px; background: #111; border: none; outline: none; }
-  .ra-preview-docx h1, .ra-preview-docx h2, .ra-preview-docx h3 { font-family: 'Bebas Neue', sans-serif; color: var(--paper); margin: 18px 0 8px; letter-spacing: 0.04em; line-height: 1.1; }
-  .ra-preview-docx h1 { font-size: 28px; } .ra-preview-docx h2 { font-size: 22px; } .ra-preview-docx h3 { font-size: 18px; }
+  .ra-preview-box { background: #111; border: 1px solid rgba(212,34,0,0.3); overflow: hidden; height: 800px; position: relative; z-index: 9001; }
+  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
+  .ra-preview-docx { padding: 28px 32px; background: #111; border: none; outline: none; overflow-y: auto; height: 100%; box-sizing: border-box; }
+  /* Hard reset — kill every possible source of horizontal line artifacts */
+  .ra-preview-docx hr { display: none !important; }
+  .ra-preview-docx p, .ra-preview-docx li, .ra-preview-docx div, .ra-preview-docx span, .ra-preview-docx blockquote { border: none !important; border-top: none !important; border-bottom: none !important; background: transparent; }
+  .ra-preview-docx h1, .ra-preview-docx h2, .ra-preview-docx h3, .ra-preview-docx h4 { font-family: 'Bebas Neue', sans-serif; color: var(--paper); margin: 18px 0 8px; letter-spacing: 0.04em; line-height: 1.1; border: none !important; border-bottom: none !important; }
+  .ra-preview-docx h1 { font-size: 28px; } .ra-preview-docx h2 { font-size: 22px; } .ra-preview-docx h3 { font-size: 18px; } .ra-preview-docx h4 { font-size: 15px; }
   .ra-preview-docx p { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.82); line-height: 1.75; margin-bottom: 8px; }
   .ra-preview-docx ul, .ra-preview-docx ol { padding-left: 20px; margin-bottom: 10px; }
   .ra-preview-docx li { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.82); line-height: 1.7; margin-bottom: 3px; }
