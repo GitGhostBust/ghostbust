@@ -871,7 +871,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         parsed = parseJSON(raw);
         dbPayload = {
           user_id: session.user.id, resume_id: resume.id,
-          mode: "general", job_listing_text: null, fit_score: 0,
+          mode: "general", job_listing_text: "", fit_score: 0,
           strength_score: parsed.strength_score || 0,
           strength_justification: parsed.strength_justification || "",
           formatting_feedback: parsed.formatting_feedback || "",
