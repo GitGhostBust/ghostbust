@@ -528,7 +528,7 @@ export default function Profile() {
         <div className="nav-links">
           <a href="/" className="nav-btn">Home</a>
           <a href="/app.html" className="nav-btn">App</a>
-          <a href="/community.html" className="nav-btn">🗣️ Community</a>
+          <a href="/community.html" className="nav-btn">Community</a>
           <span className="nav-btn active">Profile</span>
         </div>
         <UserSearch />

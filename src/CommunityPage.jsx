@@ -28,14 +28,16 @@ const STYLE = `
   .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
 
   /* NAV */
-  .cp-nav { position: sticky; top: 0; z-index: 200; background: var(--surface); border-bottom: 1px solid var(--border-hi); display: flex; align-items: center; gap: 10px; padding: 0 24px; height: 50px; }
-  .cp-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); text-decoration: none; flex-shrink: 0; }
+  .cp-nav { position: sticky; top: 0; z-index: 200; background: var(--void); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px; }
+  .cp-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.02em; color: var(--paper); text-decoration: none; flex-shrink: 0; }
   .cp-logo em { color: var(--blood); font-style: normal; }
-  .cp-nav-links { display: flex; align-items: center; gap: 6px; }
-  .cp-nav-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--paper); border: 1px solid var(--border-hi); padding: 6px 14px; background: rgba(255,255,255,0.05); cursor: pointer; white-space: nowrap; flex-shrink: 0; text-decoration: none; display: inline-block; }
-  .cp-nav-btn:hover { background: rgba(255,255,255,0.08); }
-  .cp-nav-btn.active { border-color: var(--blood); color: var(--blood); background: var(--blood-dim); }
+  .cp-nav-links { display: flex; gap: 4px; align-items: center; }
+  .cp-nav-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; text-decoration: none; transition: color 0.15s, border-color 0.15s; border-radius: 2px; white-space: nowrap; display: inline-block; }
+  .cp-nav-btn:hover { color: var(--paper); border-color: var(--border); }
+  .cp-nav-btn.active { color: var(--paper); border-color: var(--border-hi); }
   .cp-nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .cp-nav-signout { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s; }
+  .cp-nav-signout:hover { color: #ff4422; }
 
   /* BODY */
   .cp-body { width: 100%; padding: 0 24px 120px; box-sizing: border-box; }
@@ -158,16 +160,14 @@ export default function CommunityPage() {
       <nav className="cp-nav">
         <a href="/" className="cp-logo">Ghost<em>Bust</em></a>
         <div className="cp-nav-links">
+          <a href="/" className="cp-nav-btn">Home</a>
           <a href="/app.html" className="cp-nav-btn">App</a>
-          <a href="/profile.html" className="cp-nav-btn">My Profile</a>
           <span className="cp-nav-btn active">Community</span>
+          <a href="/profile.html" className="cp-nav-btn">Profile</a>
         </div>
         <div className="cp-nav-right">
           <UserSearch />
-          <button
-            className="cp-nav-btn"
-            onClick={function(){ if(session){ supabase.auth.signOut(); } else { setShowAuth(true); } }}
-          >
+          <button className="cp-nav-signout" onClick={function(){ if(session){ supabase.auth.signOut(); } else { setShowAuth(true); } }}>
             {session ? "Sign Out" : "Sign In"}
           </button>
         </div>

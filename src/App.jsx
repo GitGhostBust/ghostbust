@@ -34,11 +34,15 @@ const STYLE = `
   .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
 
   /* APP NAV */
-  .app-nav { position: sticky; top: 0; z-index: 200; background: var(--surface); border-bottom: 1px solid var(--border-hi); display: flex; align-items: center; gap: 10px; padding: 0 24px; height: 50px; }
-  .app-nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); text-decoration: none; flex-shrink: 0; }
+  .app-nav { position: sticky; top: 0; z-index: 200; background: var(--void); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px; }
+  .app-nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.02em; color: var(--paper); text-decoration: none; flex-shrink: 0; }
   .app-nav-logo em { color: var(--blood); font-style: normal; }
-  .app-nav-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--paper); border: 1px solid var(--border-hi); padding: 6px 14px; background: rgba(255,255,255,0.05); cursor: pointer; white-space: nowrap; flex-shrink: 0; }
-  .app-nav-btn:hover { background: rgba(255,255,255,0.08); }
+  .app-nav-links { display: flex; gap: 4px; align-items: center; }
+  .app-nav-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; text-decoration: none; transition: color 0.15s, border-color 0.15s; border-radius: 2px; white-space: nowrap; display: inline-block; }
+  .app-nav-btn:hover { color: var(--paper); border-color: var(--border); }
+  .app-nav-btn.active { color: var(--paper); border-color: var(--border-hi); }
+  .app-nav-signout { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s; margin-left: auto; flex-shrink: 0; }
+  .app-nav-signout:hover { color: #ff4422; }
 
   /* HEADER */
   .header { padding: 40px 0 36px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 16px; }
@@ -1345,9 +1349,13 @@ export default function App() {
       </div>
       <nav className="app-nav">
         <a href="/" className="app-nav-logo">Ghost<em>Bust</em></a>
-        <button onClick={function(){window.location.href="/profile.html";}} className="app-nav-btn">My Profile</button>
-        <button onClick={function(){window.location.href="/community.html";}} className="app-nav-btn">🗣️ Community</button>
-        <button onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}} className="app-nav-btn">{session?"Sign Out":"Sign In"}</button>
+        <div className="app-nav-links">
+          <a href="/" className="app-nav-btn">Home</a>
+          <span className="app-nav-btn active">App</span>
+          <a href="/community.html" className="app-nav-btn">Community</a>
+          <a href="/profile.html" className="app-nav-btn">Profile</a>
+        </div>
+        <button className="app-nav-signout" onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}}>{session?"Sign Out":"Sign In"}</button>
       </nav>
       <div className="app">
         <header className="header">
