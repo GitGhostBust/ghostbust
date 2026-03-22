@@ -833,12 +833,81 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     handleFile(e.dataTransfer.files[0]);
   }
 
-  function profileContext() {
-    if (!userProfile) return "";
-    var parts = [];
-    if (userProfile.job_market_region) parts.push("Job market region: " + userProfile.job_market_region);
-    if (userProfile.job_market_country) parts.push("Country: " + userProfile.job_market_country);
-    return parts.join(" | ");
+  // Fetch user history from all three sources in parallel for AI context enrichment.
+  // Each source is individually try/caught — a failed fetch degrades gracefully.
+  async function buildUserContext() {
+    var lines = [];
+
+    // 1. Full profile
+    try {
+      var { data: profile } = await supabase.from("profiles")
+        .select("display_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country")
+        .eq("id", session.user.id).single();
+      if (profile) {
+        var p = [];
+        if (profile.employment_status) p.push("Employment status: " + profile.employment_status);
+        if (profile.current_job) p.push("Current role: " + profile.current_job);
+        if (profile.industry) p.push("Industry: " + profile.industry);
+        if (profile.job_market_region) p.push("Job market: " + profile.job_market_region + (profile.job_market_country ? ", " + profile.job_market_country : ""));
+        if (profile.bio) p.push("Bio: " + profile.bio.slice(0, 300));
+        if (p.length) lines.push("PROFILE: " + p.join(" | "));
+      }
+    } catch (e) {
+      // Fall back to cached userProfile state
+      if (userProfile) {
+        var fb = [];
+        if (userProfile.job_market_region) fb.push("Job market: " + userProfile.job_market_region);
+        if (userProfile.job_market_country) fb.push("Country: " + userProfile.job_market_country);
+        if (fb.length) lines.push("PROFILE: " + fb.join(" | "));
+      }
+    }
+
+    // 2. Last 5 resume analyses — track score trajectory
+    try {
+      var { data: prevAnalyses } = await supabase.from("resume_analyses")
+        .select("strength_score, fit_score, mode, job_title, next_steps, created_at")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (prevAnalyses && prevAnalyses.length > 0) {
+        var scoreHistory = prevAnalyses.map(function (a) {
+          return a.mode === "general"
+            ? "strength " + (a.strength_score || 0)
+            : "fit " + (a.fit_score || 0) + (a.job_title ? " for " + a.job_title : "");
+        }).join(", ");
+        lines.push("PREVIOUS ANALYSES (" + prevAnalyses.length + "): " + scoreHistory);
+        // Surface the last recommended next steps so the AI can check for follow-through
+        try {
+          var lastSteps = typeof prevAnalyses[0].next_steps === "string"
+            ? JSON.parse(prevAnalyses[0].next_steps) : (prevAnalyses[0].next_steps || []);
+          if (Array.isArray(lastSteps) && lastSteps.length) {
+            lines.push("LAST RECOMMENDED NEXT STEPS: " + lastSteps.join("; "));
+          }
+        } catch (e2) { /* ignore parse error */ }
+      }
+    } catch (e) { /* non-critical */ }
+
+    // 3. Last 10 ghost scans — reveal targeting patterns
+    try {
+      var { data: scans } = await supabase.from("ghost_scans")
+        .select("company, title, ghost_score, outcome, created_at")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (scans && scans.length > 0) {
+        var scanLines = scans.slice(0, 6).map(function (s) {
+          return (s.title || "Unknown role") + (s.company ? " at " + s.company : "") +
+            " (ghost score: " + (s.ghost_score != null ? s.ghost_score : "?") + (s.outcome ? ", outcome: " + s.outcome : "") + ")";
+        }).join("; ");
+        lines.push("RECENT JOB SCANS (" + scans.length + " total): " + scanLines);
+        var uniqueTitles = [];
+        scans.forEach(function (s) { if (s.title && !uniqueTitles.includes(s.title)) uniqueTitles.push(s.title); });
+        if (uniqueTitles.length) lines.push("ROLES BEING TARGETED: " + uniqueTitles.slice(0, 6).join(", "));
+      }
+    } catch (e) { /* non-critical */ }
+
+    if (!lines.length) return "";
+    return "=== USER CONTEXT (use this to personalize your analysis) ===\n" + lines.join("\n") + "\n===========================================================";
   }
 
   async function handleAnalyze() {
@@ -849,7 +918,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     setResult(null);
     setShowCLForm(false);
     setCLResult(null);
-    var ctx = profileContext();
+    var ctx = await buildUserContext();
     try {
       var parsed;
       var dbPayload;
@@ -857,14 +926,14 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       if (advisorMode === "general") {
         var genPrompt = "You are an expert resume advisor with 20 years of experience reviewing resumes for top companies. Analyze the resume and return a JSON object with EXACTLY these fields:\n" +
           "strength_score (integer 0-100), " +
-          "strength_justification (string, 2 sentences explaining the score), " +
+          "strength_justification (string, 2 sentences explaining the score — if previous scores are in the USER CONTEXT, explicitly note whether this is an improvement or regression), " +
           "formatting_feedback (string, 2-3 sentences on layout/length/section order/density), " +
           "writing_quality (string, 2-3 sentences on action verbs/quantification/passive voice/filler language), " +
           "missing_sections (string, 2-3 sentences on absent or underdeveloped sections: summary/skills/certifications/links/portfolio), " +
-          "industry_alignment (string, 2-3 sentences on how well the resume speaks to industry norms and what industry-specific keywords are missing), " +
-          "career_trajectory (string, 2-3 sentences on what career story this resume tells and whether it makes sense), " +
+          "industry_alignment (string, 2-3 sentences on how well the resume speaks to industry norms and what industry-specific keywords are missing — use the user's industry and targeted roles from USER CONTEXT if available), " +
+          "career_trajectory (string, 2-3 sentences on what career story this resume tells — flag any mismatch between what the resume positions the user for and the roles they are actually targeting from ROLES BEING TARGETED in USER CONTEXT), " +
           "red_flags (string, 2-3 sentences on what a recruiter would pause at — gaps/job hopping/vague titles/inconsistencies — write None identified. if none), " +
-          "next_steps (array of exactly 3 strings, the highest-impact improvements ranked by importance).\n" +
+          "next_steps (array of exactly 3 strings, the highest-impact improvements ranked by importance — if LAST RECOMMENDED NEXT STEPS are in USER CONTEXT, note whether they were addressed).\n" +
           "Return only valid JSON, no markdown, no code blocks.";
         var genMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + resume.extracted_text;
         var raw = await apiCall([{ role: "user", content: genPrompt + "\n\n" + genMsg }]);
@@ -888,18 +957,19 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         var jobPrompt = "You are an expert resume advisor and ATS optimization specialist. Analyze the resume against the job listing and return a JSON object with EXACTLY these fields:\n" +
           "fit_score (integer 0-100, match to this specific role), " +
           "strength_score (integer 0-100, overall resume quality independent of this job), " +
-          "strength_justification (string, 2 sentences), " +
+          "strength_justification (string, 2 sentences — if USER CONTEXT includes prior strength_scores, explicitly note whether the score has improved, declined, or stayed flat since the last analysis and why), " +
           "formatting_feedback (string, 2 sentences), " +
           "writing_quality (string, 2 sentences), " +
           "missing_sections (string, 2 sentences), " +
-          "industry_alignment (string, 2 sentences on alignment to this role's industry), " +
-          "career_trajectory (string, 2 sentences relative to this role's requirements), " +
+          "industry_alignment (string, 2 sentences on alignment to this role's industry — if USER CONTEXT includes prior ghost_scans or analyses, note whether this role is consistent with the user's recent targeting pattern or represents a shift), " +
+          "career_trajectory (string, 2 sentences relative to this role's requirements — if USER CONTEXT includes ROLES BEING TARGETED, flag any mismatch between what the resume positions them for and the roles they are actively pursuing), " +
           "red_flags (string, 2 sentences or None identified.), " +
-          "next_steps (array of exactly 3 strings, highest-impact improvements ranked), " +
+          "next_steps (array of exactly 3 strings, highest-impact improvements ranked — if USER CONTEXT includes prior next_steps, check whether the user has addressed those recommendations and open your first item by acknowledging follow-through or lack thereof), " +
           "keyword_gaps (array of strings — up to 15 important keywords from the job listing missing from resume), " +
           "bullet_rewrites (array of 3-5 objects with original and improved fields — pick weakest bullets and rewrite for this role), " +
           "ats_feedback (string, 2-3 sentences of specific ATS optimization tips for this listing), " +
-          "cover_letter (string, complete tailored cover letter in 3-4 paragraphs).\n" +
+          "cover_letter (string, complete tailored cover letter in 3-4 paragraphs — incorporate the user's background and any relevant details from USER CONTEXT to personalize the opening).\n" +
+          "If a USER CONTEXT block is present in the user message, use it to personalize all feedback. Reference specific prior scores, companies scanned, or unaddressed action items where relevant.\n" +
           "Return only valid JSON, no markdown, no code blocks.";
         var jobMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + resume.extracted_text + "\n\nJOB LISTING:\n" + jobText;
         var raw2 = await apiCall([{ role: "user", content: jobPrompt + "\n\n" + jobMsg }]);
