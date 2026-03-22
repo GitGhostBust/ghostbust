@@ -247,6 +247,10 @@ const STYLE = `
   /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* PAGE ENTRANCE */
+  @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .profile-root { animation: gbFadeIn 0.6s ease both; }
 `;
 
 const TICKER_ITEMS = [
@@ -359,17 +363,6 @@ export default function Profile() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
-
-  // Scroll reveal — profile sections fade in as they enter the viewport
-  useEffect(function() {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.profile-header, .card').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
-    return function() { observer.disconnect(); };
-  }, [loading]);
 
   async function loadProfile(uid) {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).single();
@@ -526,7 +519,7 @@ export default function Profile() {
   if (loading) return <><style>{STYLE}</style><div className="loading">LOADING...</div></>;
 
   return (
-    <>
+    <div className="profile-root">
       <style>{STYLE}</style>
 
       <div className="sticky-header">
@@ -929,6 +922,6 @@ export default function Profile() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

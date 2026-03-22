@@ -66,6 +66,10 @@ const STYLE = `
   /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* PAGE ENTRANCE */
+  @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .community-root { animation: gbFadeIn 0.6s ease both; }
 `;
 
 const TICKER_ITEMS = [
@@ -150,19 +154,8 @@ export default function CommunityPage() {
       });
   }, [session]);
 
-  // Scroll reveal — community sections fade in as they enter the viewport
-  useEffect(function() {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.cb-hero, .cb-feed, .cp-footer').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
-    return function() { observer.disconnect(); };
-  }, []);
-
   return (
-    <div style={{width:"100%",maxWidth:"100%",margin:0,padding:0,boxSizing:"border-box",overflowX:"hidden"}}>
+    <div className="community-root" style={{width:"100%",maxWidth:"100%",margin:0,padding:0,boxSizing:"border-box",overflowX:"hidden"}}>
       <style>{STYLE}</style>
       <div className="scanlines" />
 

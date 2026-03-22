@@ -50,11 +50,13 @@
     html, body { width: 100%; max-width: 100%; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
+    @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     body {
       background: var(--void);
       color: var(--paper);
       font-family: 'Libre Baskerville', Georgia, serif;
       overflow-x: hidden;
+      animation: gbFadeIn 0.6s ease both;
     }
 
     /* SCANLINES */

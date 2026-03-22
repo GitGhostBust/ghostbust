@@ -24,7 +24,8 @@ const STYLE = `
   html, body { width: 100%; max-width: 100%; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--void); color: var(--paper); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
-  .app-root { width: 100vw; max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; overflow-x: hidden; }
+  @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .app-root { width: 100vw; max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; overflow-x: hidden; animation: gbFadeIn 0.6s ease both; }
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
   .app { width: 100%; max-width: 100%; margin: 0; padding: 0 24px 120px; box-sizing: border-box; }
 
@@ -1323,17 +1324,6 @@ export default function App() {
   var [showTutorial, setShowTutorial] = useState(function() {
     try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
   });
-
-  // Scroll reveal — header fades in on mount
-  useEffect(function() {
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.header').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
-    return function() { observer.disconnect(); };
-  }, []);
 
   // Scroll reveal — panel fades in on each tab switch
   useEffect(function() {
