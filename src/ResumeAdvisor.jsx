@@ -478,10 +478,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     setUploadError(null);
     setPreviewContent(null);
     try {
-      // Extract text
-      var text = await extractTextFromFile(file);
-
-      // Upload to Supabase Storage
+      // 1. Upload to Supabase Storage first
       var ext = name.endsWith(".pdf") ? ".pdf" : ".docx";
       var path = session.user.id + "/resume-" + Date.now() + ext;
       var { error: storageError } = await supabase.storage.from("resumes").upload(path, file, { upsert: true });
@@ -490,12 +487,12 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       var { data: urlData } = supabase.storage.from("resumes").getPublicUrl(path);
       var fileUrl = urlData ? urlData.publicUrl : path;
 
-      // Save to DB (no auto-delete of old resumes — user can delete manually)
+      // 2. Insert DB row immediately (extracted_text null until extraction finishes)
       var { data: newResume, error: dbError } = await supabase.from("resumes").insert({
         user_id: session.user.id,
         file_url: fileUrl,
         file_name: file.name,
-        extracted_text: text,
+        extracted_text: null,
       }).select().single();
       if (dbError) throw dbError;
 
@@ -503,6 +500,16 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       setExpandedId(newResume.id);
       loadResumes();
       buildPreviewFromFile(file, path);
+
+      // 3. Best-effort text extraction — runs after upload succeeds, never blocks
+      extractTextFromFile(file).then(function (text) {
+        if (!text) return;
+        supabase.from("resumes").update({ extracted_text: text }).eq("id", newResume.id)
+          .then(function (res) {
+            if (!res.error) setResume(function (prev) { return prev && prev.id === newResume.id ? Object.assign({}, prev, { extracted_text: text }) : prev; });
+          });
+      }).catch(function (e) { console.warn("Text extraction failed (non-critical):", e); });
+
     } catch (err) {
       setUploadError("Upload failed: " + err.message);
     } finally {
