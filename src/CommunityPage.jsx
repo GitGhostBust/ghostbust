@@ -165,8 +165,8 @@ export default function CommunityPage() {
           <span className="cp-nav-btn active">Community</span>
           <a href="/profile.html" className="cp-nav-btn">Profile</a>
         </div>
+        <UserSearch />
         <div className="cp-nav-right">
-          <UserSearch />
           <button className="cp-nav-signout" onClick={function(){ if(session){ supabase.auth.signOut(); } else { setShowAuth(true); } }}>
             {session ? "Sign Out" : "Sign In"}
           </button>

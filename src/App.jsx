@@ -1355,6 +1355,7 @@ export default function App() {
           <a href="/community.html" className="app-nav-btn">Community</a>
           <a href="/profile.html" className="app-nav-btn">Profile</a>
         </div>
+        <UserSearch />
         <button className="app-nav-signout" onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}}>{session?"Sign Out":"Sign In"}</button>
       </nav>
       <div className="app">
