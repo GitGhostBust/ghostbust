@@ -28,7 +28,7 @@ const STYLE = `
   .app { width: 100%; max-width: 100%; margin: 0; padding: 0 24px 120px; box-sizing: border-box; }
 
   /* TICKER */
-  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; }
+  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; line-height: 0; }
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 36s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
   .ticker-item { font-family: 'Space Mono', monospace; font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
