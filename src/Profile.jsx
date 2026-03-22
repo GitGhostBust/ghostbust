@@ -42,14 +42,14 @@ const STYLE = `
   }
 
   .sticky-header { position: sticky; top: 0; z-index: 200; width: 100%; max-width: 100%; }
-  .ticker-wrap { background: var(--blood); overflow: hidden; padding: 6px 0; }
-  .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 40s linear infinite; }
+  .ticker-wrap { background: #d42200; overflow: hidden; padding: 8px 0; }
+  .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 36s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
-  .ticker-item { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 0 32px; opacity: 0.9; }
+  .ticker-item { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
 
   .nav {
     display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px;
-    background: var(--void);
+    background: #070709;
     border-bottom: 1px solid var(--border);
     position: static;
   }
