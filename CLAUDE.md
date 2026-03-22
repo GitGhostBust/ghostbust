@@ -274,3 +274,8 @@ The job tracker stores application data in **localStorage** under key `ghostbust
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
 - Migrations `20260322_*.sql` must be run manually in Supabase SQL editor
 - App.jsx ghost job scoring still uses user-provided API key at runtime (not env var)
+- Application Tracker migration from localStorage to Supabase is pending (Phase 2 item)
+- Job Search Advisor mode (Mode 3) and Career Coach mode (Mode 4) in ResumeAdvisor are not yet built
+- RESUME tab rename to CAREER is pending until all Career Suite modes are live
+- Terms of Service and Privacy Policy pages not yet built
+- Landing page update (accounts CTA, founding member pitch, new features) pending
