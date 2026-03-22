@@ -753,16 +753,15 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         setResumes(list);
         // Keep selected resume in sync; default to most recent
         if (list.length > 0) {
-          setResume(function (prev) {
-            var still = list.find(function (r) { return prev && r.id === prev.id; });
-            return still || list[0];
-          });
-          // Keep advisor resume in sync; default to most recent
+          var targetResume = list.find(function (r) { return resume && r.id === resume.id; }) || list[0];
+          setResume(targetResume);
           setAdvisorResume(function (prev) {
             var still = list.find(function (r) { return prev && r.id === prev.id; });
             return still || list[0];
           });
           setExpandedId(function (prev) { return prev || list[0].id; });
+          // Build preview on initial load (when no preview exists yet)
+          if (!previewContent) buildPreviewFromDb(targetResume);
         } else {
           setResume(null);
           setAdvisorResume(null);
