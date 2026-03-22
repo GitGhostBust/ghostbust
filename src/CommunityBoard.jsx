@@ -546,7 +546,7 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
         <div className="cb-hero-left">
           <div className="cb-hero-eyebrow">GhostBust · Community Board</div>
           <div className="cb-heading">The Ghost<em>Bust</em><br/>Community</div>
-          <p className="cb-hero-desc">Real talk from real job seekers. Share ghost job alerts, company reviews, wins, and advice. No recruiters. No corporate speak. Just people fighting back against a broken hiring market.</p>
+          <p className="cb-hero-desc">Everyone here has been ghosted, strung along, or lied to — and everyone here gets it. Share what you know, celebrate each other's wins, and never job hunt alone again.</p>
         </div>
         <div className="cb-hero-right">
           {session ? (
