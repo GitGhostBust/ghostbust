@@ -6,13 +6,23 @@ import { supabase } from "./supabase.js";
 ================================================================ */
 const STYLE = `
   /* COMMUNITY BOARD */
-  .cb-wrap { padding: 32px 0 80px; }
-  .cb-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
-  .cb-heading { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 0.04em; color: var(--paper); line-height: 1; }
+  .cb-wrap { padding: 0 0 80px; }
+
+  /* HERO */
+  .cb-hero { padding: 36px 0 28px; border-bottom: 1px solid var(--border); margin-bottom: 28px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 20px; }
+  .cb-hero-left { min-width: 0; }
+  .cb-hero-eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 8px; }
+  .cb-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 6vw, 60px); letter-spacing: 0.03em; color: var(--paper); line-height: 0.92; margin-bottom: 12px; }
   .cb-heading em { color: var(--blood); font-style: normal; }
-  .cb-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 5px; }
-  .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 10px 22px; cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0; }
+  .cb-hero-desc { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; color: rgba(238,234,224,0.7); line-height: 1.7; max-width: 620px; }
+  .cb-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+  .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px 28px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .cb-new-btn:hover { background: #e52600; }
+  .cb-region-badge { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--ice); background: var(--ice-dim); border: 1px solid rgba(0,200,230,0.25); padding: 5px 10px; white-space: nowrap; }
+  .cb-region-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ice); flex-shrink: 0; }
+  .cb-region-change { background: none; border: none; color: rgba(0,200,230,0.5); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; transition: color 0.15s; }
+  .cb-region-change:hover { color: var(--ice); }
+  .cb-no-region { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
 
   /* FILTER BAR */
   .cb-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
@@ -118,7 +128,8 @@ const STYLE = `
 
   @media (max-width: 600px) {
     .cb-filters { gap: 6px; }
-    .cb-top { flex-direction: column; align-items: flex-start; }
+    .cb-hero { grid-template-columns: 1fr; }
+    .cb-hero-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
   }
 `;
 
@@ -531,16 +542,30 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
     <div className="cb-wrap">
       <style>{STYLE}</style>
 
-      <div className="cb-top">
-        <div>
-          <div className="cb-heading">Ghost<em>Bust</em> Community</div>
-          <div className="cb-sub">Share experiences · call out ghost jobs · celebrate wins</div>
+      <div className="cb-hero">
+        <div className="cb-hero-left">
+          <div className="cb-hero-eyebrow">GhostBust · Community Board</div>
+          <div className="cb-heading">The Ghost<em>Bust</em><br/>Community</div>
+          <p className="cb-hero-desc">Real talk from real job seekers. Share ghost job alerts, company reviews, wins, and advice. No recruiters. No corporate speak. Just people fighting back against a broken hiring market.</p>
         </div>
-        {session ? (
-          <button className="cb-new-btn" onClick={function(){ setShowNewPost(true); }}>+ New Post</button>
-        ) : (
-          <button className="cb-new-btn" onClick={onRequestSignIn}>Sign In to Post</button>
-        )}
+        <div className="cb-hero-right">
+          {session ? (
+            <button className="cb-new-btn" onClick={function(){ setShowNewPost(true); }}>+ New Post</button>
+          ) : (
+            <button className="cb-new-btn" onClick={onRequestSignIn}>Sign In to Post</button>
+          )}
+          {userRegion ? (
+            <div className="cb-region-badge">
+              <span className="cb-region-badge-dot" />
+              {userRegion}
+              <button className="cb-region-change" title="Toggle region filter" onClick={function(){ setMyRegionOnly(function(v){ return !v; }); }}>
+                {myRegionOnly ? "✕" : "⇄"}
+              </button>
+            </div>
+          ) : (
+            <span className="cb-no-region">🌐 Global feed</span>
+          )}
+        </div>
       </div>
 
       <div className="cb-filters">
