@@ -197,16 +197,34 @@ const STYLE = `
    HELPERS
 ================================================================ */
 function apiCall(messages) {
+  var apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return Promise.reject(new Error("VITE_ANTHROPIC_API_KEY is not set. Add it to your .env file."));
+  }
   return fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 4000, messages }),
   })
-    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      if (!r.ok) {
+        return r.text().then(function (t) { throw new Error("HTTP " + r.status + ": " + t); });
+      }
+      return r.json();
+    })
     .then(function (data) {
       if (data.error) throw new Error(data.error.type + ": " + data.error.message);
       if (!data.content || !data.content.length) throw new Error("Empty API response");
       return data.content.filter(function (b) { return b.type === "text"; }).map(function (b) { return b.text; }).join("\n").replace(/```json/g, "").replace(/```/g, "").trim();
+    })
+    .catch(function (err) {
+      console.error("[ResumeAdvisor] API call failed:", err);
+      throw err;
     });
 }
 
