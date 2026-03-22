@@ -546,7 +546,7 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
         <div className="cb-hero-left">
           <div className="cb-hero-eyebrow">GhostBust · Community Board</div>
           <div className="cb-heading">The Ghost<em>Bust</em><br/>Community</div>
-          <p className="cb-hero-desc">Real talk from real job seekers. Share ghost job alerts, company reviews, wins, and advice. Share your thoughts and experiences, and contribute to the GhostBust community.</p>
+          <p className="cb-hero-desc">Real talk from real job seekers. Share ghost job alerts, company reviews, wins, and advice. Give us your thoughts and experiences, and contribute to the GhostBust community.</p>
         </div>
         <div className="cb-hero-right">
           {session ? (
