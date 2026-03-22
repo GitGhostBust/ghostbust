@@ -420,7 +420,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
 
   function loadResumes() {
     supabase.from("resumes").select("*").eq("user_id", session.user.id)
-      .order("created_at", { ascending: false })
+      .order("uploaded_at", { ascending: false })
       .then(function (res) {
         var list = (res.data && res.data.length > 0) ? res.data : [];
         setResumes(list);
@@ -685,7 +685,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                   <div className="ra-resume-icon">{r.file_name.toLowerCase().endsWith(".pdf") ? "📕" : "📘"}</div>
                   <div>
                     <div className="ra-resume-name">{r.file_name}</div>
-                    <div className="ra-resume-date">Uploaded {formatDate(r.created_at)}</div>
+                    <div className="ra-resume-date">Uploaded {formatDate(r.uploaded_at)}</div>
                   </div>
                   <div className="ra-resume-actions">
                     <button className="ra-replace-btn" style={{ pointerEvents: "none" }}>
