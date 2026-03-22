@@ -18,20 +18,20 @@ const STYLE = `
   .ra-upload-zone:hover, .ra-upload-zone.drag-over { border-color: rgba(212,34,0,0.6); background: var(--blood-dim); }
   .ra-upload-icon { font-size: 40px; margin-bottom: 14px; opacity: 0.7; }
   .ra-upload-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 6px; }
-  .ra-upload-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; text-transform: uppercase; }
+  .ra-upload-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); letter-spacing: 0.1em; text-transform: uppercase; }
 
   /* Resume card */
   .ra-resume-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--signal); padding: 18px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
   .ra-resume-icon { font-size: 28px; flex-shrink: 0; }
   .ra-resume-name { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper); font-weight: 700; }
-  .ra-resume-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); margin-top: 3px; }
+  .ra-resume-date { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); margin-top: 3px; }
   .ra-resume-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
-  .ra-replace-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border-hi); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+  .ra-replace-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border-hi); background: none; color: rgba(238,234,224,0.65); cursor: pointer; transition: color 0.15s, border-color 0.15s; }
   .ra-replace-btn:hover { color: var(--paper); border-color: var(--paper); }
 
   /* Extracted text preview */
   .ra-text-preview { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 16px; margin-top: 16px; max-height: 220px; overflow-y: auto; }
-  .ra-text-preview-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
+  .ra-text-preview-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 10px; }
   .ra-text-preview pre { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.65); line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
 
   /* Advisor form */
@@ -39,13 +39,13 @@ const STYLE = `
   .ra-no-resume { text-align: center; padding: 48px 20px; }
   .ra-no-resume-icon { font-size: 36px; margin-bottom: 12px; }
   .ra-no-resume-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 0.04em; color: var(--ghost); margin-bottom: 8px; }
-  .ra-no-resume-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; }
+  .ra-no-resume-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); letter-spacing: 0.08em; }
 
   /* Results */
   .ra-results { margin-top: 28px; display: flex; flex-direction: column; gap: 20px; }
 
   .ra-section { background: var(--surface); border: 1px solid var(--border); padding: 22px 24px; }
-  .ra-section-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ghost); margin-bottom: 14px; }
+  .ra-section-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 14px; }
 
   /* Fit score */
   .ra-fit-score-display { display: flex; align-items: center; gap: 20px; }
@@ -54,7 +54,7 @@ const STYLE = `
   .ra-score-yellow { color: var(--bile); }
   .ra-score-red { color: var(--blood); }
   .ra-score-label { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; color: var(--paper); }
-  .ra-score-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); margin-top: 4px; letter-spacing: 0.08em; }
+  .ra-score-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); margin-top: 4px; letter-spacing: 0.08em; }
   .ra-score-bar-wrap { flex: 1; max-width: 260px; }
   .ra-score-bar-track { height: 6px; background: rgba(255,255,255,0.07); border-radius: 0; margin-top: 8px; }
   .ra-score-bar-fill { height: 6px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
@@ -90,15 +90,15 @@ const STYLE = `
   .ra-history-score { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; flex-shrink: 0; width: 52px; text-align: center; }
   .ra-history-meta { flex: 1; min-width: 0; }
   .ra-history-snippet { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.7); line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ra-history-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--ghost); margin-top: 4px; letter-spacing: 0.06em; }
+  .ra-history-date { font-family: 'Space Mono', monospace; font-size: 9px; color: rgba(238,234,224,0.65); margin-top: 4px; letter-spacing: 0.06em; }
   .ra-history-arrow { color: var(--ghost); flex-shrink: 0; }
-  .ra-history-back { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); background: none; color: var(--ghost); cursor: pointer; margin-bottom: 20px; transition: color 0.15s; }
+  .ra-history-back { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); background: none; color: rgba(238,234,224,0.65); cursor: pointer; margin-bottom: 20px; transition: color 0.15s; }
   .ra-history-back:hover { color: var(--paper); }
 
   /* Loading */
   .ra-loading { text-align: center; padding: 48px 20px; background: var(--surface); border: 1px solid var(--border); }
   .ra-spin { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--blood); border-radius: 50%; animation: spin 0.75s linear infinite; margin: 0 auto 14px; }
-  .ra-load-text { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
+  .ra-load-text { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: rgba(238,234,224,0.65); text-transform: uppercase; }
 
   /* Locked / no session */
   .ra-locked { text-align: center; padding: 60px 20px; }
@@ -110,7 +110,7 @@ const STYLE = `
   /* Section header with divider */
   .ra-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
   .ra-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); }
-  .ra-section-count { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; }
+  .ra-section-count { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); letter-spacing: 0.08em; }
 
   /* Error */
   .ra-error { padding: 14px 18px; background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); margin-top: 16px; }
@@ -123,7 +123,7 @@ const STYLE = `
   .ra-preview-container { margin-top: 24px; }
   .ra-preview-label { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 10px; }
   .ra-preview-box { background: #111; border: 1px solid rgba(212,34,0,0.3); overflow: hidden; height: 800px; position: relative; z-index: 9001; }
-  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); text-transform: uppercase; }
+  .ra-preview-loading { display: flex; align-items: center; justify-content: center; height: 100%; gap: 12px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: rgba(238,234,224,0.65); text-transform: uppercase; }
   .ra-preview-docx { padding: 28px 32px; background: #111; border: none; outline: none; overflow-y: auto; height: 100%; box-sizing: border-box; }
   /* Hard reset — kill every possible source of horizontal line artifacts */
   .ra-preview-docx hr { display: none !important; }
@@ -148,7 +148,7 @@ const STYLE = `
   /* SCORE CARDS */
   .ra-scores-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
   .ra-score-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
-  .ra-score-card-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
+  .ra-score-card-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 10px; }
   .ra-score-big { font-family: 'Bebas Neue', sans-serif; font-size: 88px; line-height: 1; letter-spacing: -0.01em; }
   .ra-score-card-sub { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.6); line-height: 1.65; margin-top: 8px; }
   .ra-score-card-bar { height: 4px; background: rgba(255,255,255,0.07); margin-top: 14px; }
@@ -159,7 +159,7 @@ const STYLE = `
   .ra-feedback-card.danger { border-left-color: var(--blood); }
   .ra-feedback-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
   .ra-feedback-icon { font-size: 16px; }
-  .ra-feedback-title { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ghost); }
+  .ra-feedback-title { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(238,234,224,0.65); }
 
   /* NEXT STEPS */
   .ra-next-steps-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--signal); padding: 20px 22px; margin-bottom: 12px; }
@@ -170,28 +170,28 @@ const STYLE = `
   /* ANALYZING STATE */
   .ra-analyzing { text-align: center; padding: 60px 20px; background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); margin-top: 20px; }
   .ra-analyzing-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.08em; color: var(--paper); margin-top: 20px; }
-  .ra-analyzing-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); margin-top: 8px; text-transform: uppercase; }
+  .ra-analyzing-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: rgba(238,234,224,0.65); margin-top: 8px; text-transform: uppercase; }
 
   /* COVER LETTER GENERATOR (general mode) */
-  .ra-cl-trigger { display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px; border: 1px dashed var(--border-hi); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-top: 12px; }
+  .ra-cl-trigger { display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px; border: 1px dashed var(--border-hi); background: none; color: rgba(238,234,224,0.65); cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-top: 12px; }
   .ra-cl-trigger:hover { color: var(--paper); border-color: var(--paper); }
   .ra-cl-form-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 12px; }
   .ra-cl-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 10px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; box-sizing: border-box; }
   .ra-cl-input:focus { border-color: rgba(255,255,255,0.3); }
-  .ra-cl-input::placeholder { color: var(--ghost); }
+  .ra-cl-input::placeholder { color: rgba(238,234,224,0.65); }
   .ra-cl-result-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 16px; }
 
   /* ANALYZING: doc selector (AI Advisor tab) */
   .ra-doc-selector { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 16px 20px; margin-bottom: 24px; }
-  .ra-doc-selector-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.18em; color: var(--ghost); margin-bottom: 10px; }
+  .ra-doc-selector-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.18em; color: rgba(238,234,224,0.65); margin-bottom: 10px; }
   .ra-doc-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .ra-doc-name { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper); font-weight: 700; }
-  .ra-doc-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
+  .ra-doc-date { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); }
   .ra-analysis-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; }
-  .ra-analysis-badge.first { background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: rgba(238,234,224,0.4); }
+  .ra-analysis-badge.first { background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: rgba(238,234,224,0.65); }
   .ra-analysis-badge.followup { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.35); color: var(--bile); }
   .ra-resume-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
-  .ra-resume-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 6px 12px; border: 1px solid var(--border-hi); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; white-space: nowrap; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+  .ra-resume-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 6px 12px; border: 1px solid var(--border-hi); background: none; color: rgba(238,234,224,0.65); cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; white-space: nowrap; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
   .ra-resume-btn:hover { color: var(--paper); border-color: rgba(255,255,255,0.2); }
   .ra-resume-btn.active { color: var(--paper); border-color: var(--blood); background: var(--blood-dim); }
 
@@ -1109,7 +1109,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           <div className="ra-pro-badge">Pro Feature</div>
           <div className="ra-locked-title">Resume Advisor</div>
           <p className="ra-locked-sub">Resume upload, AI gap analysis, bullet rewrites, keyword matching, ATS optimization, and cover letter generation are available on GhostBust Pro.</p>
-          <div style={{ marginTop: 28, fontFamily: "'Space Mono', monospace", fontSize: 10, color: "var(--ghost)", letterSpacing: "0.1em" }}>PRO PLAN — COMING SOON</div>
+          <div style={{ marginTop: 28, fontFamily: "'Space Mono', monospace", fontSize: 10, color: "rgba(238,234,224,0.65)", letterSpacing: "0.1em" }}>PRO PLAN — COMING SOON</div>
         </div>
       </div>
     );
@@ -1160,7 +1160,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
 
           {/* Resume list */}
           {resumes.length === 0 && !uploading && (
-            <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "var(--ghost)", lineHeight: 1.8 }}>
+            <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: "rgba(238,234,224,0.65)", lineHeight: 1.8 }}>
               <div style={{ marginBottom: 6 }}>• DOCX files give the most accurate text extraction</div>
               <div>• Your resume is stored privately — only you can access it</div>
             </div>
@@ -1291,11 +1291,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
 
               {/* Mode description */}
               {advisorMode === "general" ? (
-                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.55)", lineHeight: 1.75, marginBottom: 20 }}>
+                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 20 }}>
                   Get a full critique of your resume — strength score, formatting, writing quality, missing sections, industry alignment, career trajectory, red flags, and the top 3 changes that will have the highest impact.
                 </div>
               ) : (
-                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.55)", lineHeight: 1.75, marginBottom: 16 }}>
+                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 16 }}>
                   Paste a job listing to get a job fit score, keyword gap analysis, rewritten bullets tailored to the role, ATS optimization tips, and a generated cover letter.
                 </div>
               )}
@@ -1366,7 +1366,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           {selectedAnalysis ? (
             <div>
               <button className="ra-history-back" onClick={function () { setSelectedAnalysis(null); setCopied(false); }}>← Back to History</button>
-              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--ghost)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "rgba(238,234,224,0.65)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
                 <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : "job")}>{selectedAnalysis.mode === "general" ? "General Review" : "Job-Specific"}</span>
                 {formatDateTime(selectedAnalysis.created_at)}
                 {selectedAnalysis.job_title && <span>· {selectedAnalysis.job_title}</span>}
