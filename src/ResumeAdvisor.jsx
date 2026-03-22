@@ -187,6 +187,27 @@ function fitScoreLabel(n) {
   return "Weak Match";
 }
 
+// Injected into every DOCX preview — overrides all borders/dividers
+// that mammoth or the browser may render from DOCX content.
+// Uses !important so it beats any inline styles mammoth emits.
+var DOCX_RESET_STYLE = '<style>' +
+  '* { border: none !important; border-top: none !important; border-bottom: none !important; box-shadow: none !important; outline: none !important; }' +
+  'hr { display: none !important; }' +
+  'p, li, div, span, blockquote { border: none !important; background: transparent; }' +
+  'h1, h2, h3, h4, h5, h6 { border: none !important; border-bottom: none !important; }' +
+  'table, td, th { border: 1px solid rgba(255,255,255,0.07) !important; }' + // keep table structure only
+  '</style>';
+
+// styleMap tells mammoth not to emit <hr> elements for any DOCX paragraph style
+var MAMMOTH_OPTIONS = {
+  styleMap: [
+    "p[style-name='Horizontal Line'] => ",
+    "p[style-name='horizontal line'] => ",
+    "p[style-name='HR'] => ",
+  ],
+  ignoreEmptyParagraphs: false,
+};
+
 function storagePathFromUrl(url) {
   if (!url) return null;
   var match = url.match(/\/storage\/v1\/object\/(?:public|sign)\/resumes\/(.+?)(?:\?|$)/);
@@ -383,7 +404,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     loadAnalyses();
   }, [session]);
 
-  // Render PDF page 1 to canvas whenever previewContent changes to a PDF
+  // Render PDF page 1 to canvas whenever previewContent changes to a PDF.
+  // NOTE: Any horizontal lines visible on the canvas are actual PDF content
+  // (e.g. resume section dividers drawn by the PDF template). They are
+  // rendered faithfully by pdfjs and cannot be removed via CSS — the canvas
+  // is a pixel-accurate raster of the PDF page, not HTML.
   useEffect(function () {
     if (!previewContent || previewContent.type !== "pdf") return;
     var cancelled = false;
@@ -421,8 +446,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       } else if (name.endsWith(".docx") || name.endsWith(".doc")) {
         var buf = await file.arrayBuffer();
         var mammoth = await import("mammoth");
-        var res = await mammoth.default.convertToHtml({ arrayBuffer: buf });
-        setPreviewContent({ type: "docx", html: res.value });
+        var res = await mammoth.default.convertToHtml({ arrayBuffer: buf }, MAMMOTH_OPTIONS);
+        setPreviewContent({ type: "docx", html: DOCX_RESET_STYLE + res.value });
       }
     } catch (e) { /* silently fail — preview is non-critical */ }
     finally { setPreviewLoading(false); }
@@ -443,8 +468,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         var resp = await fetch(signedUrl);
         var buf2 = await resp.arrayBuffer();
         var mammoth2 = await import("mammoth");
-        var res2 = await mammoth2.default.convertToHtml({ arrayBuffer: buf2 });
-        setPreviewContent({ type: "docx", html: res2.value });
+        var res2 = await mammoth2.default.convertToHtml({ arrayBuffer: buf2 }, MAMMOTH_OPTIONS);
+        setPreviewContent({ type: "docx", html: DOCX_RESET_STYLE + res2.value });
       }
     } catch (e) { /* silently fail */ }
     finally { setPreviewLoading(false); }
