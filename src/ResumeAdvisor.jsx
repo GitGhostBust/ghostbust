@@ -190,23 +190,37 @@ function fitScoreLabel(n) {
 // Injected into every DOCX preview — overrides all borders/dividers
 // that mammoth or the browser may render from DOCX content.
 // Uses !important so it beats any inline styles mammoth emits.
-var DOCX_RESET_STYLE = '<style>' +
-  '* { border: none !important; border-top: none !important; border-bottom: none !important; box-shadow: none !important; outline: none !important; }' +
-  'hr { display: none !important; }' +
-  'p, li, div, span, blockquote { border: none !important; background: transparent; }' +
-  'h1, h2, h3, h4, h5, h6 { border: none !important; border-bottom: none !important; }' +
-  'table, td, th { border: 1px solid rgba(255,255,255,0.07) !important; }' + // keep table structure only
-  '</style>';
-
 // styleMap tells mammoth not to emit <hr> elements for any DOCX paragraph style
 var MAMMOTH_OPTIONS = {
   styleMap: [
     "p[style-name='Horizontal Line'] => ",
     "p[style-name='horizontal line'] => ",
     "p[style-name='HR'] => ",
+    "p[style-name='ruling line'] => ",
   ],
   ignoreEmptyParagraphs: false,
 };
+
+// Strip all <hr> tags and border/box-shadow inline styles from mammoth HTML.
+// CSS !important alone cannot beat inline style !important in all browsers,
+// so we sanitize the HTML string directly before rendering.
+function sanitizeDocxHtml(html) {
+  // Remove all <hr> elements outright
+  var out = html.replace(/<hr\s*\/?>/gi, "");
+  // Strip border-*, box-shadow, and outline from every inline style attribute
+  out = out.replace(/style="([^"]*)"/gi, function (_, styleVal) {
+    var cleaned = styleVal
+      .split(";")
+      .map(function (rule) { return rule.trim(); })
+      .filter(function (rule) {
+        var prop = rule.split(":")[0].trim().toLowerCase();
+        return prop !== "" && !prop.startsWith("border") && prop !== "box-shadow" && prop !== "outline";
+      })
+      .join("; ");
+    return cleaned ? 'style="' + cleaned + '"' : "";
+  });
+  return out;
+}
 
 function storagePathFromUrl(url) {
   if (!url) return null;
@@ -447,7 +461,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         var buf = await file.arrayBuffer();
         var mammoth = await import("mammoth");
         var res = await mammoth.default.convertToHtml({ arrayBuffer: buf }, MAMMOTH_OPTIONS);
-        setPreviewContent({ type: "docx", html: DOCX_RESET_STYLE + res.value });
+        setPreviewContent({ type: "docx", html: sanitizeDocxHtml(res.value) });
       }
     } catch (e) { /* silently fail — preview is non-critical */ }
     finally { setPreviewLoading(false); }
@@ -469,7 +483,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         var buf2 = await resp.arrayBuffer();
         var mammoth2 = await import("mammoth");
         var res2 = await mammoth2.default.convertToHtml({ arrayBuffer: buf2 }, MAMMOTH_OPTIONS);
-        setPreviewContent({ type: "docx", html: DOCX_RESET_STYLE + res2.value });
+        setPreviewContent({ type: "docx", html: sanitizeDocxHtml(res2.value) });
       }
     } catch (e) { /* silently fail */ }
     finally { setPreviewLoading(false); }
