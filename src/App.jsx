@@ -310,6 +310,10 @@ const STYLE = `
     .verdict-title { font-size: 24px; }
     .logo-title { font-size: clamp(38px, 11vw, 60px); }
   }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 `;
 
 /* ================================================================
@@ -1319,6 +1323,28 @@ export default function App() {
   var [showTutorial, setShowTutorial] = useState(function() {
     try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
   });
+
+  // Scroll reveal — header fades in on mount
+  useEffect(function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.header').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
+    return function() { observer.disconnect(); };
+  }, []);
+
+  // Scroll reveal — panel fades in on each tab switch
+  useEffect(function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.panel, .ra-panel').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
+    return function() { observer.disconnect(); };
+  }, [tab]);
 
   function closeTutorial() {
     try { localStorage.setItem("gb_tutorial_done", "1"); } catch(e) {}

@@ -62,6 +62,10 @@ const STYLE = `
   .af-error { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); margin-bottom: 10px; }
   .af-toggle { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); margin-top: 14px; text-align: center; }
   .af-toggle span { color: var(--ice); cursor: pointer; text-decoration: underline; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 `;
 
 const TICKER_ITEMS = [
@@ -145,6 +149,17 @@ export default function CommunityPage() {
         if (res.data && res.data.job_market_region) setUserRegion(res.data.job_market_region);
       });
   }, [session]);
+
+  // Scroll reveal — community sections fade in as they enter the viewport
+  useEffect(function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.cb-hero, .cb-feed, .cp-footer').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
+    return function() { observer.disconnect(); };
+  }, []);
 
   return (
     <div style={{width:"100%",maxWidth:"100%",margin:0,padding:0,boxSizing:"border-box",overflowX:"hidden"}}>

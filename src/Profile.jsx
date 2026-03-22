@@ -243,6 +243,10 @@ const STYLE = `
   .fmodal-username { font-family: "Space Mono", monospace; font-size: 11px; color: var(--paper); letter-spacing: 0.04em; }
   .fmodal-fullname { font-size: 12px; color: var(--ghost); margin-top: 2px; }
   .fmodal-empty { padding: 32px 18px; font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; text-align: center; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 `;
 
 const TICKER_ITEMS = [
@@ -355,6 +359,17 @@ export default function Profile() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Scroll reveal — profile sections fade in as they enter the viewport
+  useEffect(function() {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.profile-header, .card').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
+    return function() { observer.disconnect(); };
+  }, [loading]);
 
   async function loadProfile(uid) {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).single();
