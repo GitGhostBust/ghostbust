@@ -48,7 +48,7 @@ const STYLE = `
 
   /* HEADER */
   .header { padding: 40px 0 36px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 16px; }
-  .logo-eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 6px; }
+  .logo-eyebrow { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 6px; }
   .logo-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 10vw, 100px); line-height: 0.88; color: var(--paper); }
   .logo-title em { color: var(--blood); font-style: normal; }
   .logo-sub { font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 460px; margin-top: 10px; }
@@ -60,7 +60,7 @@ const STYLE = `
   .tab-btn { font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 0.08em; color: var(--ghost); background: none; border: none; padding: 12px 24px 14px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
   .tab-btn:hover { color: var(--paper); }
   .tab-btn.active { color: var(--paper); border-bottom-color: var(--blood); }
-  .tab-badge { background: var(--blood); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 9px; padding: 1px 5px; border-radius: 2px; min-width: 18px; text-align: center; }
+  .tab-badge { background: var(--blood); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; padding: 1px 5px; border-radius: 2px; min-width: 18px; text-align: center; }
   .tab-badge.green { background: var(--signal); color: #050a07; }
 
   /* SHARED FORM */
@@ -69,18 +69,18 @@ const STYLE = `
   .form-box.green-top { border-top: 3px solid var(--signal); }
   .form-box.red-top { border-top: 3px solid var(--blood); }
   .form-box.ice-top { border-top: 3px solid var(--ice); }
-  .form-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px; display: block; }
+  .form-label { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px; display: block; }
   .form-label.green { color: var(--paper); }
   .form-label.red { color: var(--blood); }
   .form-label.ice { color: var(--ice); }
-  .field-label { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 8px; display: block; }
+  .field-label { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 8px; display: block; }
   .field-label.red { color: var(--blood); }
-  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
+  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
   .f-input:focus { border-color: var(--border-hi); }
-  .f-input::placeholder { color: rgba(255,255,255,0.4); font-family: 'Space Mono', monospace; font-size: 11px; }
+  .f-input::placeholder { color: rgba(255,255,255,0.4); font-family: 'Space Mono', monospace; font-size: 12px; }
   select.f-input { appearance: none; cursor: pointer; }
   select.f-input option { background: #13131a; color: var(--paper); }
-  .paste-area { width: 100%; min-height: 160px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
+  .paste-area { width: 100%; min-height: 160px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
   .paste-area:focus { border-color: var(--border-hi); }
   .paste-area::placeholder { color: var(--ghost); font-style: italic; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
@@ -90,7 +90,7 @@ const STYLE = `
   .run-btn.red { background: var(--blood); color: var(--paper); }
   .run-btn.red:hover:not(:disabled) { background: #e52600; }
   .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .err-box { padding: 14px 18px; background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); font-family: 'Space Mono', monospace; font-size: 13px; color: var(--blood); margin-top: 18px; word-break: break-all; }
+  .err-box { padding: 14px 18px; background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); font-family: 'Space Mono', monospace; font-size: 14px; color: var(--blood); margin-top: 18px; word-break: break-all; }
 
   /* LOADING */
   .loading-card { background: var(--surface); border: 1px solid var(--border); padding: 40px 32px; text-align: center; margin-top: 24px; }
@@ -98,7 +98,7 @@ const STYLE = `
   .spin.red { border-top-color: var(--blood); }
   @keyframes spin { to { transform: rotate(360deg); } }
   .load-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 18px; }
-  .load-step { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.2); padding: 4px 0; transition: color 0.3s; }
+  .load-step { font-family: 'Space Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.2); padding: 4px 0; transition: color 0.3s; }
   .load-step.active-r { color: var(--blood); }
   .load-step.done { color: rgba(255,255,255,0.15); text-decoration: line-through; }
 
@@ -106,7 +106,7 @@ const STYLE = `
   .boards-section { margin-top: 32px; }
   .boards-header { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
   .boards-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; }
-  .boards-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 4px; }
+  .boards-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 4px; }
   .board-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .board-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ghost); padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: background 0.15s; }
   .board-card:hover { background: var(--surface2); }
@@ -124,12 +124,12 @@ const STYLE = `
   .board-name.monster { color: #6e44ff; }
   .board-name.simplyhired { color: #ff6b35; }
   .board-desc { font-size: 11px; color: var(--muted); line-height: 1.6; flex: 1; }
-  .board-link { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); text-decoration: none; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 9px; transition: background 0.15s; }
+  .board-link { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); text-decoration: none; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 9px; transition: background 0.15s; }
   .board-link:hover { background: rgba(255,255,255,0.1); }
   .search-tips { margin-top: 24px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 18px; }
-  .search-tips-title { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--paper); margin-bottom: 12px; }
+  .search-tips-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--paper); margin-bottom: 12px; }
   .tip-row { display: flex; gap: 10px; font-size: 13px; color: rgba(238,234,224,0.7); padding: 4px 0; line-height: 1.6; }
-  .tip-n { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
+  .tip-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
 
   /* VERDICT */
   .verdict-card { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); padding: 26px; margin-top: 24px; }
@@ -142,31 +142,31 @@ const STYLE = `
   .score-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
   .score-box { background: var(--surface2); border: 1px solid var(--border); padding: 12px 8px; text-align: center; }
   .score-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
-  .score-lbl { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); margin-top: 3px; }
+  .score-lbl { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); margin-top: 3px; }
   .sc-red { color: var(--blood); } .sc-yellow { color: var(--bile); } .sc-green { color: var(--signal); }
   .conf-bar-wrap { margin-bottom: 16px; }
-  .conf-bar-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--ghost); display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .conf-bar-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--ghost); display: flex; justify-content: space-between; margin-bottom: 5px; }
   .conf-bar-track { height: 3px; background: rgba(255,255,255,0.07); }
   .conf-bar-fill { height: 3px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
   .fill-ghost { background: var(--blood); } .fill-legit { background: var(--signal); } .fill-suspicious { background: var(--bile); }
   .v-summary { font-size: 14px; line-height: 1.75; color: rgba(238,234,224,0.8); margin-bottom: 18px; }
   .flags-list { list-style: none; }
   .flag-row { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; line-height: 1.5; color: rgba(238,234,224,0.7); }
-  .sev-pill { font-family: 'Space Mono', monospace; font-size: 11px; padding: 3px 9px; flex-shrink: 0; margin-top: 2px; }
+  .sev-pill { font-family: 'Space Mono', monospace; font-size: 12px; padding: 3px 9px; flex-shrink: 0; margin-top: 2px; }
   .sev-high { background: var(--blood-dim); color: var(--blood); }
   .sev-med { background: var(--bile-dim); color: var(--bile); }
   .sev-low { background: rgba(255,255,255,0.05); color: var(--ghost); }
   .action-tips { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 16px; margin-top: 18px; }
-  .action-tips-title { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 10px; }
+  .action-tips-title { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 10px; }
 
   /* SAVE TO TRACKER */
   .save-bar { margin-top: 20px; background: var(--surface2); border: 1px solid var(--border-hi); padding: 18px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-  .save-bar-title { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ice); margin-bottom: 14px; width: 100%; }
+  .save-bar-title { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ice); margin-bottom: 14px; width: 100%; }
   .save-bar .f-input { flex: 1; min-width: 160px; }
   .save-btn { background: var(--ice); color: #050a09; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
   .save-btn:hover { background: #00e8ff; }
   .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .save-success { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--paper); padding: 10px 0; width: 100%; }
+  .save-success { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--paper); padding: 10px 0; width: 100%; }
 
   /* TRACKER */
   .tracker-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 28px; }
@@ -174,7 +174,7 @@ const STYLE = `
   .stat-box:hover { background: var(--surface2); }
   .stat-box.active-filter { border-color: var(--border-hi); background: var(--surface2); }
   .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1; }
-  .stat-lbl { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-top: 3px; }
+  .stat-lbl { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-top: 3px; }
   .stat-saved { color: var(--paper); }
   .stat-researching { color: var(--bile); }
   .stat-applied { color: var(--ice); }
@@ -189,7 +189,7 @@ const STYLE = `
   .tracker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .tracker-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); }
   .tracker-actions { display: flex; gap: 8px; }
-  .small-btn { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+  .small-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s; }
   .small-btn:hover { color: var(--paper); border-color: var(--border-hi); }
   .small-btn.danger:hover { color: var(--blood); border-color: var(--blood); }
 
@@ -202,18 +202,18 @@ const STYLE = `
   .app-card.status-rejected { border-left-color: var(--blood); }
   .app-card.status-offer { border-left-color: var(--bile); }
   .app-title { font-size: 14px; font-weight: 600; color: var(--paper); margin-bottom: 3px; line-height: 1.3; }
-  .app-company { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.06em; margin-bottom: 8px; }
+  .app-company { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.06em; margin-bottom: 8px; }
   .app-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .app-chip { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--border); color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.03); }
-  .gs-chip { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.05em; padding: 3px 9px; }
+  .app-chip { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--border); color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.03); }
+  .gs-chip { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; padding: 3px 9px; }
   .gs-low { background: var(--signal-dim); border: 1px solid rgba(0,230,122,0.2); color: var(--signal); }
   .gs-mid { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.2); color: var(--bile); }
   .gs-high { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.2); color: var(--blood); }
   .app-notes { font-size: 12px; color: var(--muted); margin-top: 8px; font-style: italic; line-height: 1.5; }
-  .app-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--ghost); }
+  .app-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
 
   .app-controls { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
-  .status-select { background: var(--surface2); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; padding: 5px 8px; outline: none; cursor: pointer; appearance: none; text-align: center; }
+  .status-select { background: var(--surface2); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 5px 8px; outline: none; cursor: pointer; appearance: none; text-align: center; }
   .status-select option { background: #13131a; color: var(--paper); }
   .status-select.status-saved { color: rgba(238,234,224,0.6); }
   .status-select.status-applied { color: var(--ice); }
@@ -229,11 +229,11 @@ const STYLE = `
   .empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; color: var(--ghost); margin-bottom: 8px; }
   .empty-sub { font-size: 13px; color: var(--ghost); line-height: 1.6; max-width: 340px; margin: 0 auto; }
 
-  .notes-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 6px 10px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
+  .notes-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 6px 10px; outline: none; margin-top: 6px; transition: border-color 0.2s; }
   .notes-input:focus { border-color: var(--border-hi); }
   .notes-input::placeholder { color: var(--ghost); }
 
-  .footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; color: rgba(255,255,255,0.55); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.55); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
   /* MANUAL ADD */
   .add-form { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ice); padding: 22px; margin-bottom: 28px; }
@@ -242,45 +242,45 @@ const STYLE = `
   .add-submit { background: var(--ice); color: #050a09; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; transition: background 0.15s; width: 100%; margin-top: 6px; }
   .add-submit:hover:not(:disabled) { background: #00e8ff; }
   .add-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-  .toggle-add-btn { background: none; border: 1px solid var(--ice); color: var(--ice); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s; }
+  .toggle-add-btn { background: none; border: 1px solid var(--ice); color: var(--ice); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s; }
   .toggle-add-btn:hover { background: var(--ice-dim); }
 
   /* EDIT MODE ON CARD */
   .edit-inline { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
-  .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 8px; outline: none; flex: 1; }
-  .edit-save-btn { background: var(--signal); color: #050a07; font-family: 'Space Mono', monospace; font-size: 9px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
+  .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 4px 8px; outline: none; flex: 1; }
+  .edit-save-btn { background: var(--signal); color: #050a07; font-family: 'Space Mono', monospace; font-size: 10px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
 
   /* FOLLOW-UP DATE */
   .followup-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-  .followup-label { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
-  .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 8px; outline: none; cursor: pointer; }
+  .followup-label { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
+  .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 3px 8px; outline: none; cursor: pointer; }
   .followup-date:focus { border-color: var(--border-hi); }
-  .followup-due { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--bile); }
+  .followup-due { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--bile); }
   .followup-overdue { color: var(--blood); }
 
   /* EXPORT */
-  .export-btn { background: none; border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; cursor: pointer; transition: background 0.15s; }
+  .export-btn { background: none; border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; cursor: pointer; transition: background 0.15s; }
   .export-btn:hover { background: rgba(255,255,255,0.05); }
 
   /* GHOST REPORT CARD */
-  .report-btn { background: none; border: 1px solid var(--bile); color: var(--bile); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s; }
+  .report-btn { background: none; border: 1px solid var(--bile); color: var(--bile); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s; }
   .report-btn:hover { background: var(--bile-dim); }
   .report-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .report-card { background: var(--void); border: 1px solid var(--border-hi); max-width: 500px; width: 100%; position: relative; }
   .report-top { background: var(--blood); padding: 22px 24px 18px; }
-  .report-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 6px; }
+  .report-eyebrow { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 6px; }
   .report-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 0.9; letter-spacing: 0.02em; color: var(--paper); }
-  .report-date { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(238,234,224,0.6); margin-top: 8px; }
+  .report-date { font-family: 'Space Mono', monospace; font-size: 12px; color: rgba(238,234,224,0.6); margin-top: 8px; }
   .report-body { padding: 22px 24px; }
   .report-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
   .report-stat { text-align: center; padding: 14px 8px; background: var(--surface); border: 1px solid var(--border); }
   .report-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; color: var(--paper); }
-  .report-stat-lbl { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-top: 3px; }
+  .report-stat-lbl { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-top: 3px; }
   .report-insight { font-size: 13px; color: var(--muted); line-height: 1.75; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); margin-bottom: 18px; }
   .report-share-row { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
   .report-brand { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--ghost); letter-spacing: 0.05em; }
   .report-brand em { color: var(--blood); font-style: normal; }
-  .copy-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border: 1px solid var(--border-hi); color: var(--paper); background: none; cursor: pointer; transition: background 0.15s; }
+  .copy-btn { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border: 1px solid var(--border-hi); color: var(--paper); background: none; cursor: pointer; transition: background 0.15s; }
   .copy-btn:hover { background: rgba(255,255,255,0.05); }
   .copy-btn.copied { color: var(--paper); border-color: var(--border-hi); }
   .report-close { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); color: rgba(238,234,224,0.6); width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.15s; }
@@ -527,7 +527,7 @@ function VerdictCard(props) {
       <p className="v-summary">{r.summary}</p>
       {r.flags&&r.flags.length>0&&(
         <div>
-          <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,letterSpacing:"0.3em",color:"rgba(255,255,255,0.6)",textTransform:"uppercase",marginBottom:10}}>Signals Detected</div>
+          <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.3em",color:"rgba(255,255,255,0.6)",textTransform:"uppercase",marginBottom:10}}>Signals Detected</div>
           <ul className="flags-list">
             {r.flags.map(function(f,i){
               var sc2=f.severity==="HIGH"?"sev-high":f.severity==="MEDIUM"?"sev-med":"sev-low";
@@ -551,7 +551,7 @@ function VerdictCard(props) {
         </div>
       )}
       <div style={{marginTop:16,padding:"10px 14px",background:"rgba(255,255,255,0.03)",borderLeft:"2px solid rgba(255,255,255,0.08)"}}>
-        <p style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
+        <p style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
           DISCLAIMER: GhostBust scores are algorithmic estimates based on patterns in listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. A low score does not guarantee a role is unfilled, and a high score does not guarantee a hire. Always conduct your own research.
         </p>
       </div>
@@ -737,7 +737,7 @@ function VerifyTab(props) {
           <p style={{fontSize:13,color:"var(--muted)",lineHeight:1.8}}>
             Paste the full text of any job listing. The AI reads the actual language — not just surface signals — and identifies patterns that correlate with listings that never result in hires: vague or contradictory requirements, copy-pasted boilerplate, implausible experience stacking, missing process detail, and structural inconsistencies. It returns a Ghost Score, a breakdown of specific signals found in this listing, and concrete next steps.
           </p>
-          <p style={{fontSize:12,color:"rgba(255,255,255,0.5)",lineHeight:1.7,marginTop:8,fontFamily:"'Space Mono',monospace"}}>
+          <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.7,marginTop:8,fontFamily:"'Space Mono',monospace"}}>
             Paste the raw listing text — do not summarise it. The more complete the text, the more accurate the analysis.
           </p>
         </div>
@@ -1036,7 +1036,7 @@ function TrackerTab(props) {
   }
 
   if (!loaded) {
-    return <div className="panel"><div style={{textAlign:"center",padding:"60px 0",fontFamily:"'Space Mono',monospace",fontSize:11,color:"rgba(255,255,255,0.5)"}}>Loading...</div></div>;
+    return <div className="panel"><div style={{textAlign:"center",padding:"60px 0",fontFamily:"'Space Mono',monospace",fontSize:12,color:"rgba(255,255,255,0.5)"}}>Loading...</div></div>;
   }
 
   return (
@@ -1062,7 +1062,7 @@ function TrackerTab(props) {
       </div>
 
       {apps.length>0&&(
-        <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:"rgba(255,255,255,0.6)",marginBottom:20,display:"flex",gap:20,flexWrap:"wrap"}}>
+        <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:20,display:"flex",gap:20,flexWrap:"wrap"}}>
           <span>Ghost rate: <strong style={{color:rate>50?"var(--blood)":rate>25?"var(--bile)":"var(--signal)"}}>{rate}%</strong></span>
           {counts["Offer"]>0&&<span>Offer rate: <strong style={{color:"var(--bile)"}}>{Math.round((counts["Offer"]||0)/apps.length*100)}%</strong></span>}
           {counts["Interviewing"]>0&&<span>In pipeline: <strong style={{color:"var(--signal)"}}>{counts["Interviewing"]}</strong></span>}
@@ -1143,7 +1143,7 @@ function TrackerTab(props) {
           <div className="empty-title">Your tracker is empty</div>
           <p className="empty-sub">Go to the Ghost Detector tab, paste a listing, get your analysis — then save it here with one click. Or hit <strong style={{color:"var(--ice)"}}>+ Add Manually</strong> above to log any job you're tracking, no analysis needed.</p>
           <div style={{marginTop:24,padding:"16px",background:"rgba(201,154,0,0.08)",border:"1px solid rgba(201,154,0,0.15)",maxWidth:380,margin:"24px auto 0"}}>
-            <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,letterSpacing:"0.2em",textTransform:"uppercase",color:"var(--bile)",marginBottom:8}}>📊 Ghost Report</div>
+            <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.2em",textTransform:"uppercase",color:"var(--bile)",marginBottom:8}}>📊 Ghost Report</div>
             <p style={{fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.7}}>Once you start tracking applications, you can generate your personal Ghost Report — your response rate, active pipeline, and average Ghost Score across all your saved listings.</p>
           </div>
         </div>
@@ -1245,7 +1245,7 @@ function TutorialOverlay(props) {
         {/* Buttons */}
         <div style={{display:"flex",gap:12,alignItems:"center"}}>
           {step > 0 && (
-            <button onClick={prev} style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.12em",background:"none",border:"1px solid var(--border)",color:"var(--muted)",padding:"10px 18px",cursor:"pointer"}}>← BACK</button>
+            <button onClick={prev} style={{fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",background:"none",border:"1px solid var(--border)",color:"var(--muted)",padding:"10px 18px",cursor:"pointer"}}>← BACK</button>
           )}
           <button onClick={next} style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:"0.08em",background:"var(--blood)",color:"var(--paper)",border:"none",padding:"12px 28px",cursor:"pointer",flex:1}}>
             {isLast ? "LET'S GO →" : "NEXT →"}
@@ -1253,7 +1253,7 @@ function TutorialOverlay(props) {
         </div>
 
         {/* Step counter */}
-        <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:"rgba(255,255,255,0.45)",marginTop:16,letterSpacing:"0.1em"}}>{step+1} of {TUTORIAL_STEPS.length}</div>
+        <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:"rgba(255,255,255,0.45)",marginTop:16,letterSpacing:"0.1em"}}>{step+1} of {TUTORIAL_STEPS.length}</div>
       </div>
     </div>
   );
@@ -1353,9 +1353,9 @@ export default function App() {
   return (
     <div className="app-root">
       <style>{STYLE}</style>
-          {resetMode&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36}}>{resetDone?(<div style={{textAlign:"center"}}><div style={{fontSize:40,marginBottom:12}}>✓</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Password Updated</div><p style={{fontSize:13,color:"var(--muted)"}}>Your password has been changed. You are now signed in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setResetMode(false);setResetDone(false);}}>Continue</button></div>):(<div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>SET NEW PASSWORD</div><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="New password (min 6 characters)" value={newPassword} onChange={function(e){setNewPassword(e.target.value);}}/>{resetError&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{resetError}</div>}<button className="run-btn red" onClick={async function(){if(newPassword.length<6){setResetError("Password must be at least 6 characters.");return;}setResetError(null);var res=await supabase.auth.updateUser({password:newPassword});if(res.error){setResetError(res.error.message);return;}setResetDone(true);}} disabled={!newPassword}>SET PASSWORD</button></div>)}</div></div>)}
-  {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>SIGNED IN</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
-{showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:10,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} onClose={function(){setShowAuth(false);}} /></div></div>)}
+          {resetMode&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36}}>{resetDone?(<div style={{textAlign:"center"}}><div style={{fontSize:40,marginBottom:12}}>✓</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Password Updated</div><p style={{fontSize:13,color:"var(--muted)"}}>Your password has been changed. You are now signed in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setResetMode(false);setResetDone(false);}}>Continue</button></div>):(<div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>SET NEW PASSWORD</div><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="New password (min 6 characters)" value={newPassword} onChange={function(e){setNewPassword(e.target.value);}}/>{resetError&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{resetError}</div>}<button className="run-btn red" onClick={async function(){if(newPassword.length<6){setResetError("Password must be at least 6 characters.");return;}setResetError(null);var res=await supabase.auth.updateUser({password:newPassword});if(res.error){setResetError(res.error.message);return;}setResetDone(true);}} disabled={!newPassword}>SET PASSWORD</button></div>)}</div></div>)}
+  {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>SIGNED IN</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
+{showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} onClose={function(){setShowAuth(false);}} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       {showRegionModal && session && <RegionModal userId={session.user.id} onClose={function(){setShowRegionModal(false);}} />}
       <div className="scanlines" />
@@ -1379,7 +1379,7 @@ export default function App() {
         <header className="header">
           <div>
             <div className="logo-eyebrow">AI-powered job intelligence</div>
-            <a href="/" style={{display:"inline-block",marginTop:8,marginBottom:4,fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.15em",color:"var(--paper)",background:"var(--blood)",padding:"6px 14px",textDecoration:"none",cursor:"pointer"}}>← BACK TO GHOSTBUST.US</a>
+            <a href="/" style={{display:"inline-block",marginTop:8,marginBottom:4,fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.15em",color:"var(--paper)",background:"var(--blood)",padding:"6px 14px",textDecoration:"none",cursor:"pointer"}}>← BACK TO GHOSTBUST.US</a>
             <h1 className="logo-title">Ghost<em>Bust</em></h1>
             <p className="logo-sub">Find real jobs. Expose ghost listings. Track every application. The only job search tool built to fight back against a broken market.</p>
           </div>
@@ -1402,7 +1402,7 @@ export default function App() {
           </button>
           <span style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <UserSearch />
-            <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
+            <button className="tab-btn" onClick={function(){setShowTutorial(true);}} style={{fontFamily:"'Space Mono',monospace",fontSize:12,letterSpacing:"0.12em",color:"var(--paper)",border:"1px solid var(--border-hi)",padding:"6px 14px",background:"rgba(255,255,255,0.05)",cursor:"pointer"}} title="How to use GhostBust">
               ? HELP
             </button>
           </span>

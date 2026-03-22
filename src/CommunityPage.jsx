@@ -43,7 +43,7 @@ const STYLE = `
   .cp-body { width: 100%; padding: 0 24px 120px; box-sizing: border-box; }
 
   /* FOOTER */
-  .cp-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 60px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ghost); }
+  .cp-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 60px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ghost); }
 
   /* AUTH MODAL */
   .cp-auth-modal { position: fixed; inset: 0; background: rgba(7,7,9,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
@@ -52,15 +52,15 @@ const STYLE = `
 
   /* AUTH FORM (inline) */
   .af-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; margin-bottom: 4px; }
-  .af-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--blood); letter-spacing: 0.2em; margin-bottom: 24px; }
-  .af-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 11px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+  .af-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); letter-spacing: 0.2em; margin-bottom: 24px; }
+  .af-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 11px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
   .af-input:focus { border-color: rgba(255,255,255,0.3); }
   .af-input::placeholder { color: var(--ghost); }
   .af-btn { width: 100%; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px; cursor: pointer; margin-top: 4px; transition: background 0.15s; }
   .af-btn:hover:not(:disabled) { background: #e52600; }
   .af-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .af-error { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); margin-bottom: 10px; }
-  .af-toggle { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); margin-top: 14px; text-align: center; }
+  .af-error { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--blood); margin-bottom: 10px; }
+  .af-toggle { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ghost); margin-top: 14px; text-align: center; }
   .af-toggle span { color: var(--ice); cursor: pointer; text-decoration: underline; }
 
   /* SCROLL REVEAL */
@@ -113,7 +113,7 @@ function AuthForm({ onClose }) {
     <div style={{textAlign:"center"}}>
       <div style={{fontSize:40,marginBottom:12}}>✉️</div>
       <div className="af-title">Check Your Email</div>
-      <p style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:"var(--ghost)",marginTop:8,lineHeight:1.7}}>We sent a confirmation link to <strong style={{color:"var(--paper)"}}>{email}</strong>. Click it to activate your account.</p>
+      <p style={{fontFamily:"'Space Mono',monospace",fontSize:12,color:"var(--ghost)",marginTop:8,lineHeight:1.7}}>We sent a confirmation link to <strong style={{color:"var(--paper)"}}>{email}</strong>. Click it to activate your account.</p>
       <button className="af-btn" style={{marginTop:20}} onClick={onClose}>Done</button>
     </div>
   );
