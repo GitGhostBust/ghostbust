@@ -42,10 +42,10 @@ const STYLE = `
   }
 
   .sticky-header { position: sticky; top: 0; z-index: 200; width: 100%; max-width: 100%; }
-  .ticker-wrap { background: #d42200; overflow: hidden; padding: 8px 0; line-height: 0; }
+  .ticker-wrap { background: #d42200; overflow: hidden; padding: 7px 0; line-height: 0; }
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 36s linear infinite; }
   @keyframes ticker { to { transform: translateX(-50%); } }
-  .ticker-item { font-family: "Space Mono", monospace; font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 28px; }
+  .ticker-item { font-family: "Space Mono", monospace; font-size: 10px; line-height: 1; letter-spacing: 0.18em; text-transform: uppercase; padding: 0 32px; }
 
   .nav {
     display: flex; align-items: center; gap: 12px; padding: 0 24px; height: 56px;
