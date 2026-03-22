@@ -14,7 +14,7 @@ const STYLE = `
   .cb-hero-eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 8px; }
   .cb-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 6vw, 60px); letter-spacing: 0.03em; color: var(--paper); line-height: 0.92; margin-bottom: 12px; }
   .cb-heading em { color: var(--blood); font-style: normal; }
-  .cb-hero-desc { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; color: rgba(238,234,224,0.7); line-height: 1.7; max-width: 620px; }
+  .cb-hero-desc { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-style: italic; color: rgba(238,234,224,0.7); line-height: 1.7; max-width: 620px; }
   .cb-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
   .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px 28px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .cb-new-btn:hover { background: #e52600; }
@@ -546,7 +546,7 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
         <div className="cb-hero-left">
           <div className="cb-hero-eyebrow">GhostBust · Community Board</div>
           <div className="cb-heading">The Ghost<em>Bust</em><br/>Community</div>
-          <p className="cb-hero-desc">Everyone here has been ghosted, strung along, or lied to — and everyone here gets it. Share what you know, celebrate each other's wins, and never job hunt alone again.</p>
+          <p className="cb-hero-desc">Real talk from real job seekers. Share ghost job alerts, company reviews, wins, and advice. Share your thoughts and experiences, and contribute to the GhostBust community.</p>
         </div>
         <div className="cb-hero-right">
           {session ? (
