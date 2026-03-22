@@ -138,6 +138,54 @@ const STYLE = `
   .ra-preview-docx table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
   .ra-preview-docx td, .ra-preview-docx th { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.75); padding: 5px 8px; border: 1px solid var(--border); vertical-align: top; }
 
+  /* MODE TOGGLE */
+  .ra-mode-toggle { display: flex; gap: 0; border: 1px solid var(--border-hi); margin-bottom: 28px; }
+  .ra-mode-btn { flex: 1; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 12px 16px; border: none; background: none; color: #72728a; cursor: pointer; transition: color 0.15s, background 0.15s; border-right: 1px solid var(--border-hi); }
+  .ra-mode-btn:last-child { border-right: none; }
+  .ra-mode-btn:hover { color: var(--paper); background: rgba(255,255,255,0.03); }
+  .ra-mode-btn.active { color: var(--paper); background: var(--blood-dim); border-bottom: 2px solid var(--blood); }
+
+  /* SCORE CARDS */
+  .ra-scores-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .ra-score-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; }
+  .ra-score-card-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
+  .ra-score-big { font-family: 'Bebas Neue', sans-serif; font-size: 88px; line-height: 1; letter-spacing: -0.01em; }
+  .ra-score-card-sub { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.6); line-height: 1.65; margin-top: 8px; }
+  .ra-score-card-bar { height: 4px; background: rgba(255,255,255,0.07); margin-top: 14px; }
+  .ra-score-card-bar-fill { height: 4px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+  /* FEEDBACK CARDS */
+  .ra-feedback-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--border-hi); padding: 20px 22px; margin-bottom: 12px; }
+  .ra-feedback-card.danger { border-left-color: var(--blood); }
+  .ra-feedback-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .ra-feedback-icon { font-size: 16px; }
+  .ra-feedback-title { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ghost); }
+
+  /* NEXT STEPS */
+  .ra-next-steps-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--signal); padding: 20px 22px; margin-bottom: 12px; }
+  .ra-next-steps { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+  .ra-next-step { display: flex; gap: 14px; align-items: flex-start; }
+  .ra-step-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--signal); line-height: 1; flex-shrink: 0; width: 24px; }
+
+  /* ANALYZING STATE */
+  .ra-analyzing { text-align: center; padding: 60px 20px; background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); margin-top: 20px; }
+  .ra-analyzing-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.08em; color: var(--paper); margin-top: 20px; }
+  .ra-analyzing-sub { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--ghost); margin-top: 8px; text-transform: uppercase; }
+
+  /* COVER LETTER GENERATOR (general mode) */
+  .ra-cl-trigger { display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px; border: 1px dashed var(--border-hi); background: none; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-top: 12px; }
+  .ra-cl-trigger:hover { color: var(--paper); border-color: var(--paper); }
+  .ra-cl-form-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 12px; }
+  .ra-cl-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 10px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; box-sizing: border-box; }
+  .ra-cl-input:focus { border-color: rgba(255,255,255,0.3); }
+  .ra-cl-input::placeholder { color: var(--ghost); }
+  .ra-cl-result-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 16px; }
+
+  /* HISTORY badge */
+  .ra-mode-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; border-radius: 0; margin-right: 8px; }
+  .ra-mode-badge.general { background: rgba(0,200,230,0.12); border: 1px solid rgba(0,200,230,0.25); color: var(--ice); }
+  .ra-mode-badge.job { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.25); color: var(--blood); }
+
   @media (max-width: 720px) {
     .ra-bullet-pair { grid-template-columns: 1fr; }
     .ra-fit-score-display { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -368,6 +416,164 @@ function AnalysisResults({ data, onCopy, copied }) {
 }
 
 /* ================================================================
+   SCORE CARD
+================================================================ */
+function ScoreCard({ label, score, sub }) {
+  var cls = score >= 70 ? "ra-score-green" : score >= 40 ? "ra-score-yellow" : "ra-score-red";
+  var bar = score >= 70 ? "var(--signal)" : score >= 40 ? "var(--bile)" : "var(--blood)";
+  return (
+    <div className="ra-score-card" style={{ borderTop: "4px solid " + bar }}>
+      <div className="ra-score-card-label">{label}</div>
+      <div className={"ra-score-big " + cls}>{score}</div>
+      {sub && <div className="ra-score-card-sub">{sub}</div>}
+      <div className="ra-score-card-bar"><div className="ra-score-card-bar-fill" style={{ width: Math.min(100, score) + "%", background: bar }} /></div>
+    </div>
+  );
+}
+
+/* ================================================================
+   FEEDBACK CARD
+================================================================ */
+function FeedbackCard({ title, text, icon, danger }) {
+  return (
+    <div className={"ra-feedback-card" + (danger ? " danger" : "")}>
+      <div className="ra-feedback-header">
+        {icon && <span className="ra-feedback-icon">{icon}</span>}
+        <div className="ra-feedback-title">{title}</div>
+      </div>
+      <div className="ra-prose">{text}</div>
+    </div>
+  );
+}
+
+/* ================================================================
+   COMPREHENSIVE RESULTS
+================================================================ */
+function ComprehensiveResults({ data, onCopy, copied, onShowCLForm, showCLForm, clJobTitle, clCompany, onCLJobTitle, onCLCompany, onGenerateCL, generatingCL, clResult, onCopyCL, copiedCL }) {
+  var isJobSpecific = (data.mode || "job_specific") === "job_specific";
+
+  var bullets = [];
+  try { bullets = typeof data.bullet_rewrites === "string" ? JSON.parse(data.bullet_rewrites) : (data.bullet_rewrites || []); } catch (e) { bullets = []; }
+  var keywords = [];
+  try {
+    keywords = typeof data.keyword_gaps === "string" ? JSON.parse(data.keyword_gaps) : (data.keyword_gaps || []);
+    if (!Array.isArray(keywords)) keywords = [];
+  } catch (e) {
+    if (typeof data.keyword_gaps === "string") keywords = data.keyword_gaps.split(",").map(function (k) { return k.trim(); }).filter(Boolean);
+  }
+  var nextSteps = [];
+  try { nextSteps = typeof data.next_steps === "string" ? JSON.parse(data.next_steps) : (data.next_steps || []); if (!Array.isArray(nextSteps)) nextSteps = []; } catch (e) { nextSteps = []; }
+
+  return (
+    <div className="ra-results">
+      {/* Scores */}
+      <div className="ra-scores-row">
+        {isJobSpecific && data.fit_score != null && <ScoreCard label="Job Fit Score" score={data.fit_score} sub="Match to this specific role" />}
+        {data.strength_score != null && data.strength_score > 0 && <ScoreCard label="Resume Strength" score={data.strength_score} sub={data.strength_justification} />}
+      </div>
+
+      {/* Feedback sections */}
+      {data.formatting_feedback && <FeedbackCard title="Formatting & Structure" text={data.formatting_feedback} icon="📐" />}
+      {data.writing_quality && <FeedbackCard title="Writing Quality" text={data.writing_quality} icon="✏️" />}
+      {data.missing_sections && <FeedbackCard title="Missing or Weak Sections" text={data.missing_sections} icon="🔍" />}
+      {data.industry_alignment && <FeedbackCard title="Industry Alignment" text={data.industry_alignment} icon="🏭" />}
+      {data.career_trajectory && <FeedbackCard title="Career Trajectory" text={data.career_trajectory} icon="📈" />}
+      {data.red_flags && <FeedbackCard title="Red Flags" text={data.red_flags} icon="⚠️" danger={true} />}
+      {/* Backward compat: old analyses only have gap_analysis */}
+      {!data.formatting_feedback && data.gap_analysis && <FeedbackCard title="Gap Analysis" text={data.gap_analysis} icon="🔍" />}
+
+      {/* Job-specific: keywords */}
+      {isJobSpecific && keywords.length > 0 && (
+        <div className="ra-feedback-card">
+          <div className="ra-feedback-header"><span className="ra-feedback-icon">🔑</span><div className="ra-feedback-title">Missing Keywords</div></div>
+          <div className="ra-pills" style={{ marginTop: 4 }}>{keywords.map(function (k, i) { return <span key={i} className="ra-pill">{k}</span>; })}</div>
+        </div>
+      )}
+
+      {/* Job-specific: bullet rewrites */}
+      {isJobSpecific && bullets.length > 0 && (
+        <div className="ra-section">
+          <div className="ra-section-label">Bullet Rewrites — {bullets.length} Improved for This Role</div>
+          <div className="ra-bullets">
+            {bullets.map(function (b, i) {
+              return (
+                <div key={i} className="ra-bullet-pair">
+                  <div className="ra-bullet-side original"><div className="ra-bullet-side-label">Original</div><div className="ra-bullet-text">{b.original}</div></div>
+                  <div className="ra-bullet-side improved"><div className="ra-bullet-side-label">Improved</div><div className="ra-bullet-text">{b.improved}</div></div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Job-specific: ATS */}
+      {isJobSpecific && data.ats_feedback && <FeedbackCard title="ATS Optimization" text={data.ats_feedback} icon="🤖" />}
+
+      {/* Next steps */}
+      {nextSteps.length > 0 && (
+        <div className="ra-next-steps-card">
+          <div className="ra-feedback-header"><span className="ra-feedback-icon">🎯</span><div className="ra-feedback-title">Top 3 Highest-Impact Next Steps</div></div>
+          <div className="ra-next-steps">
+            {nextSteps.map(function (step, i) {
+              return (
+                <div key={i} className="ra-next-step">
+                  <div className="ra-step-num">{i + 1}</div>
+                  <div className="ra-prose">{step}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Job-specific: auto cover letter */}
+      {isJobSpecific && data.cover_letter && (
+        <div className="ra-section">
+          <div className="ra-section-label">Generated Cover Letter</div>
+          <div className="ra-cover-letter">{data.cover_letter}</div>
+          <button className={"ra-copy-btn" + (copied ? " copied" : "")} onClick={onCopy}>{copied ? "✓ Copied!" : "Copy Cover Letter"}</button>
+        </div>
+      )}
+
+      {/* General mode: optional cover letter generator */}
+      {!isJobSpecific && !data.cover_letter && (
+        <div style={{ marginTop: 8 }}>
+          {!showCLForm ? (
+            <button className="ra-cl-trigger" onClick={onShowCLForm}>+ Generate a Cover Letter from This Resume</button>
+          ) : (
+            <div className="ra-cl-form-box">
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--bile)", marginBottom: 14 }}>Cover Letter Generator</div>
+              <input className="ra-cl-input" type="text" placeholder="Target job title (required)" value={clJobTitle} onChange={function (e) { onCLJobTitle(e.target.value); }} />
+              <input className="ra-cl-input" type="text" placeholder="Company name (optional)" value={clCompany} onChange={function (e) { onCLCompany(e.target.value); }} />
+              <button className="run-btn red" style={{ marginTop: 4 }} onClick={onGenerateCL} disabled={generatingCL || !clJobTitle.trim()}>
+                {generatingCL ? "Generating..." : "Generate Cover Letter →"}
+              </button>
+            </div>
+          )}
+          {clResult && (
+            <div className="ra-cl-result-box" style={{ marginTop: 16 }}>
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--bile)", marginBottom: 12 }}>Cover Letter</div>
+              <div className="ra-cover-letter">{clResult}</div>
+              <button className={"ra-copy-btn" + (copiedCL ? " copied" : "")} onClick={onCopyCL}>{copiedCL ? "✓ Copied!" : "Copy Cover Letter"}</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* General mode: if cover letter already saved (from a prior CL generation) */}
+      {!isJobSpecific && data.cover_letter && (
+        <div className="ra-section">
+          <div className="ra-section-label">Cover Letter</div>
+          <div className="ra-cover-letter">{data.cover_letter}</div>
+          <button className={"ra-copy-btn" + (copied ? " copied" : "")} onClick={onCopy}>{copied ? "✓ Copied!" : "Copy Cover Letter"}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ================================================================
    MAIN COMPONENT
 ================================================================ */
 export default function ResumeAdvisor({ session, onRequestSignIn }) {
@@ -389,17 +595,27 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [dragOver, setDragOver] = useState(false);
   var [previewContent, setPreviewContent] = useState(null); // { type:"pdf", url } | { type:"docx", html }
   var [previewLoading, setPreviewLoading] = useState(false);
+  // Advisor mode
+  var [advisorMode, setAdvisorMode] = useState("general"); // "general" | "job_specific"
+  var [userProfile, setUserProfile] = useState(null);
+  var [showCLForm, setShowCLForm] = useState(false);
+  var [clJobTitle, setCLJobTitle] = useState("");
+  var [clCompany, setCLCompany] = useState("");
+  var [generatingCL, setGeneratingCL] = useState(false);
+  var [clResult, setCLResult] = useState(null);
+  var [copiedCL, setCopiedCL] = useState(false);
   var fileRef = useRef(null);
   var canvasRef = useRef(null);
 
-  // Load Pro status + admin check
+  // Load Pro status + admin check + profile context for AI prompts
   useEffect(function () {
     if (!session) return;
-    supabase.from("profiles").select("founding_member, username").eq("id", session.user.id).single()
+    supabase.from("profiles").select("founding_member, username, job_market_region, job_market_country, job_market_state").eq("id", session.user.id).single()
       .then(function (res) {
         if (res.data) {
           setIsPro(res.data.founding_member === true);
           setIsAdmin(res.data.username === "GhostBustOfficial");
+          setUserProfile(res.data);
         } else {
           setIsPro(false);
         }
@@ -599,37 +815,106 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     handleFile(e.dataTransfer.files[0]);
   }
 
+  function profileContext() {
+    if (!userProfile) return "";
+    var parts = [];
+    if (userProfile.job_market_region) parts.push("Job market region: " + userProfile.job_market_region);
+    if (userProfile.job_market_country) parts.push("Country: " + userProfile.job_market_country);
+    return parts.join(" | ");
+  }
+
   async function handleAnalyze() {
-    if (!resume || !resume.extracted_text || !jobText.trim()) return;
+    if (!resume || !resume.extracted_text) return;
+    if (advisorMode === "job_specific" && jobText.trim().length < 50) return;
     setAnalyzing(true);
     setAnalysisError(null);
     setResult(null);
+    setShowCLForm(false);
+    setCLResult(null);
+    var ctx = profileContext();
     try {
-      var systemPrompt = "You are an expert resume advisor and ATS optimization specialist. Analyze the provided resume against the job listing and return a JSON object with these exact fields: fit_score (integer 0-100), gap_analysis (string, 2-3 paragraphs), bullet_rewrites (array of objects with 'original' and 'improved' fields for the top 3-5 bullet points to rewrite), keyword_gaps (array of strings — keywords in job description missing from resume), ats_feedback (string, specific ATS optimization advice), cover_letter (string, complete tailored cover letter). Return only valid JSON, no markdown.";
-      var userContent = "RESUME:\n" + resume.extracted_text + "\n\nJOB LISTING:\n" + jobText;
-      var raw = await apiCall([
-        { role: "user", content: systemPrompt + "\n\n" + userContent }
-      ]);
-      var parsed = parseJSON(raw);
+      var parsed;
+      var dbPayload;
 
-      // Normalise fields for DB storage
-      var bulletStr = typeof parsed.bullet_rewrites === "string" ? parsed.bullet_rewrites : JSON.stringify(parsed.bullet_rewrites || []);
-      var kwStr = typeof parsed.keyword_gaps === "string" ? parsed.keyword_gaps : JSON.stringify(parsed.keyword_gaps || []);
+      if (advisorMode === "general") {
+        var genPrompt = "You are an expert resume advisor with 20 years of experience reviewing resumes for top companies. Analyze the resume and return a JSON object with EXACTLY these fields:\n" +
+          "strength_score (integer 0-100), " +
+          "strength_justification (string, 2 sentences explaining the score), " +
+          "formatting_feedback (string, 2-3 sentences on layout/length/section order/density), " +
+          "writing_quality (string, 2-3 sentences on action verbs/quantification/passive voice/filler language), " +
+          "missing_sections (string, 2-3 sentences on absent or underdeveloped sections: summary/skills/certifications/links/portfolio), " +
+          "industry_alignment (string, 2-3 sentences on how well the resume speaks to industry norms and what industry-specific keywords are missing), " +
+          "career_trajectory (string, 2-3 sentences on what career story this resume tells and whether it makes sense), " +
+          "red_flags (string, 2-3 sentences on what a recruiter would pause at — gaps/job hopping/vague titles/inconsistencies — write None identified. if none), " +
+          "next_steps (array of exactly 3 strings, the highest-impact improvements ranked by importance).\n" +
+          "Return only valid JSON, no markdown, no code blocks.";
+        var genMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + resume.extracted_text;
+        var raw = await apiCall([{ role: "user", content: genPrompt + "\n\n" + genMsg }]);
+        parsed = parseJSON(raw);
+        dbPayload = {
+          user_id: session.user.id, resume_id: resume.id,
+          mode: "general", job_listing_text: null, fit_score: 0,
+          strength_score: parsed.strength_score || 0,
+          strength_justification: parsed.strength_justification || "",
+          formatting_feedback: parsed.formatting_feedback || "",
+          writing_quality: parsed.writing_quality || "",
+          missing_sections: parsed.missing_sections || "",
+          industry_alignment: parsed.industry_alignment || "",
+          career_trajectory: parsed.career_trajectory || "",
+          red_flags: parsed.red_flags || "",
+          next_steps: JSON.stringify(parsed.next_steps || []),
+          gap_analysis: "", bullet_rewrites: "[]", keyword_gaps: "[]", ats_feedback: "", cover_letter: "",
+        };
 
-      var { data: saved, error: dbErr } = await supabase.from("resume_analyses").insert({
-        user_id: session.user.id,
-        resume_id: resume.id,
-        job_listing_text: jobText.slice(0, 8000),
-        fit_score: parsed.fit_score || 0,
-        gap_analysis: parsed.gap_analysis || "",
-        bullet_rewrites: bulletStr,
-        keyword_gaps: kwStr,
-        ats_feedback: parsed.ats_feedback || "",
-        cover_letter: parsed.cover_letter || "",
-      }).select().single();
+      } else {
+        var jobPrompt = "You are an expert resume advisor and ATS optimization specialist. Analyze the resume against the job listing and return a JSON object with EXACTLY these fields:\n" +
+          "fit_score (integer 0-100, match to this specific role), " +
+          "strength_score (integer 0-100, overall resume quality independent of this job), " +
+          "strength_justification (string, 2 sentences), " +
+          "formatting_feedback (string, 2 sentences), " +
+          "writing_quality (string, 2 sentences), " +
+          "missing_sections (string, 2 sentences), " +
+          "industry_alignment (string, 2 sentences on alignment to this role's industry), " +
+          "career_trajectory (string, 2 sentences relative to this role's requirements), " +
+          "red_flags (string, 2 sentences or None identified.), " +
+          "next_steps (array of exactly 3 strings, highest-impact improvements ranked), " +
+          "keyword_gaps (array of strings — up to 15 important keywords from the job listing missing from resume), " +
+          "bullet_rewrites (array of 3-5 objects with original and improved fields — pick weakest bullets and rewrite for this role), " +
+          "ats_feedback (string, 2-3 sentences of specific ATS optimization tips for this listing), " +
+          "cover_letter (string, complete tailored cover letter in 3-4 paragraphs).\n" +
+          "Return only valid JSON, no markdown, no code blocks.";
+        var jobMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + resume.extracted_text + "\n\nJOB LISTING:\n" + jobText;
+        var raw2 = await apiCall([{ role: "user", content: jobPrompt + "\n\n" + jobMsg }]);
+        parsed = parseJSON(raw2);
+        dbPayload = {
+          user_id: session.user.id, resume_id: resume.id,
+          mode: "job_specific", job_listing_text: jobText.slice(0, 8000),
+          fit_score: parsed.fit_score || 0,
+          strength_score: parsed.strength_score || 0,
+          strength_justification: parsed.strength_justification || "",
+          formatting_feedback: parsed.formatting_feedback || "",
+          writing_quality: parsed.writing_quality || "",
+          missing_sections: parsed.missing_sections || "",
+          industry_alignment: parsed.industry_alignment || "",
+          career_trajectory: parsed.career_trajectory || "",
+          red_flags: parsed.red_flags || "",
+          next_steps: JSON.stringify(parsed.next_steps || []),
+          gap_analysis: "",
+          bullet_rewrites: typeof parsed.bullet_rewrites === "string" ? parsed.bullet_rewrites : JSON.stringify(parsed.bullet_rewrites || []),
+          keyword_gaps: typeof parsed.keyword_gaps === "string" ? parsed.keyword_gaps : JSON.stringify(parsed.keyword_gaps || []),
+          ats_feedback: parsed.ats_feedback || "",
+          cover_letter: parsed.cover_letter || "",
+        };
+      }
 
+      var { data: saved, error: dbErr } = await supabase.from("resume_analyses").insert(dbPayload).select().single();
       if (dbErr) throw dbErr;
-      setResult(saved);
+      // Merge saved DB record with parsed arrays (DB stores arrays as JSON strings)
+      setResult(Object.assign({}, saved, {
+        next_steps: parsed.next_steps || [],
+        bullet_rewrites: parsed.bullet_rewrites || [],
+        keyword_gaps: parsed.keyword_gaps || [],
+      }));
       loadAnalyses();
     } catch (err) {
       setAnalysisError("Analysis failed: " + err.message);
@@ -638,11 +923,38 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     }
   }
 
-  function copyCoverLetter(data) {
-    var text = data.cover_letter || "";
-    navigator.clipboard.writeText(text).catch(function () {});
+  async function handleGenerateCoverLetter() {
+    if (!resume || !resume.extracted_text || !clJobTitle.trim()) return;
+    setGeneratingCL(true);
+    setCLResult(null);
+    try {
+      var clPrompt = "You are an expert career coach. Write a professional, engaging, specific cover letter (3-4 paragraphs) based on the candidate's resume and target job information. Do not use placeholder text. Return only the cover letter text — no subject line, no headers.";
+      var clMsg = "RESUME:\n" + resume.extracted_text +
+        "\n\nTARGET JOB TITLE: " + clJobTitle +
+        (clCompany ? "\nCOMPANY: " + clCompany : "");
+      var raw = await apiCall([{ role: "user", content: clPrompt + "\n\n" + clMsg }]);
+      setCLResult(raw.trim());
+      // Patch the saved analysis with the generated cover letter
+      if (result && result.id) {
+        supabase.from("resume_analyses").update({ cover_letter: raw.trim(), job_title: clJobTitle, company_name: clCompany }).eq("id", result.id).then(function () { loadAnalyses(); });
+      }
+    } catch (err) {
+      setCLResult("Generation failed: " + err.message);
+    } finally {
+      setGeneratingCL(false);
+    }
+  }
+
+  function copyCoverLetter(text) {
+    navigator.clipboard.writeText(text || "").catch(function () {});
     setCopied(true);
     setTimeout(function () { setCopied(false); }, 2500);
+  }
+
+  function copyCoverLetterStandalone(text) {
+    navigator.clipboard.writeText(text || "").catch(function () {});
+    setCopiedCL(true);
+    setTimeout(function () { setCopiedCL(false); }, 2500);
   }
 
   // ---- RENDER ----
@@ -807,48 +1119,87 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           ) : !resume.extracted_text ? (
             <div className="ra-no-resume">
               <div className="ra-no-resume-icon">⚠️</div>
-              <div className="ra-no-resume-title">No Extracted Text</div>
-              <div className="ra-no-resume-sub" style={{ marginTop: 6 }}>Re-upload your resume as a DOCX file so the AI can read its content.</div>
+              <div className="ra-no-resume-title">No Text Extracted</div>
+              <div className="ra-no-resume-sub" style={{ marginTop: 6 }}>Re-upload your resume — DOCX files give the most accurate text extraction for AI analysis.</div>
+              <button className="run-btn red" style={{ maxWidth: 240, margin: "16px auto 0", display: "block" }} onClick={function () { setInnerTab("manager"); }}>Re-upload Resume →</button>
             </div>
           ) : (
             <div>
-              <div className="ra-advisor-box">
-                <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--blood)", display: "block", marginBottom: 6 }}>AI Resume Advisor</span>
-                <label style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: "rgba(238,234,224,0.6)", display: "block", marginBottom: 6, lineHeight: 1.7 }}>
-                  Paste the full job listing below. The AI will score your fit, identify gaps, rewrite weak bullets, flag missing keywords, and generate a tailored cover letter.
-                </label>
-                <textarea
-                  className="paste-area"
-                  style={{ minHeight: 200, marginTop: 10 }}
-                  placeholder="Paste the full job listing here — title, responsibilities, requirements, company description..."
-                  value={jobText}
-                  onChange={function (e) { setJobText(e.target.value); setResult(null); }}
-                />
-                <button
-                  className="run-btn red"
-                  style={{ marginTop: 14 }}
-                  onClick={handleAnalyze}
-                  disabled={analyzing || jobText.trim().length < 50}
-                >
-                  {analyzing ? "Analysing..." : "Analyse My Resume →"}
+              {/* Mode toggle */}
+              <div className="ra-mode-toggle">
+                <button className={"ra-mode-btn" + (advisorMode === "general" ? " active" : "")} onClick={function () { setAdvisorMode("general"); setResult(null); setAnalysisError(null); }}>
+                  📋 General Resume Review
+                </button>
+                <button className={"ra-mode-btn" + (advisorMode === "job_specific" ? " active" : "")} onClick={function () { setAdvisorMode("job_specific"); setResult(null); setAnalysisError(null); }}>
+                  🎯 Job-Specific Analysis
                 </button>
               </div>
 
-              {analyzing && (
-                <div className="ra-loading" style={{ marginTop: 20 }}>
-                  <div className="ra-spin" />
-                  <div className="ra-load-text">Reading your resume against the job listing...</div>
+              {/* Mode description */}
+              {advisorMode === "general" ? (
+                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.55)", lineHeight: 1.75, marginBottom: 20 }}>
+                  Get a full critique of your resume — strength score, formatting, writing quality, missing sections, industry alignment, career trajectory, red flags, and the top 3 changes that will have the highest impact.
+                </div>
+              ) : (
+                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.55)", lineHeight: 1.75, marginBottom: 16 }}>
+                  Paste a job listing to get a job fit score, keyword gap analysis, rewritten bullets tailored to the role, ATS optimization tips, and a generated cover letter.
                 </div>
               )}
 
-              {analysisError && <div className="ra-error">{analysisError}</div>}
+              {/* Job listing textarea (job-specific only) */}
+              {advisorMode === "job_specific" && (
+                <div className="ra-advisor-box" style={{ marginBottom: 16 }}>
+                  <textarea
+                    className="paste-area"
+                    style={{ minHeight: 200, marginTop: 0 }}
+                    placeholder="Paste the full job listing here — title, responsibilities, requirements, company description..."
+                    value={jobText}
+                    onChange={function (e) { setJobText(e.target.value); setResult(null); }}
+                  />
+                </div>
+              )}
 
-              {result && (
-                <AnalysisResults
-                  data={result}
-                  onCopy={function () { copyCoverLetter(result); }}
-                  copied={copied}
-                />
+              {/* Analyze button */}
+              <button
+                className="run-btn red"
+                onClick={handleAnalyze}
+                disabled={analyzing || (advisorMode === "job_specific" && jobText.trim().length < 50)}
+              >
+                {analyzing ? "Analysing..." : advisorMode === "general" ? "Analyze My Resume →" : "Analyze Against This Job →"}
+              </button>
+
+              {/* Loading */}
+              {analyzing && (
+                <div className="ra-analyzing">
+                  <div className="ra-spin" style={{ margin: "0 auto" }} />
+                  <div className="ra-analyzing-title">Analyzing Your Resume...</div>
+                  <div className="ra-analyzing-sub">{advisorMode === "general" ? "Running full resume review" : "Matching against job listing"}</div>
+                </div>
+              )}
+
+              {/* Error */}
+              {analysisError && <div className="ra-error" style={{ marginTop: 16 }}>{analysisError}</div>}
+
+              {/* Results */}
+              {result && !analyzing && (
+                <div style={{ marginTop: 28 }}>
+                  <ComprehensiveResults
+                    data={result}
+                    onCopy={function () { copyCoverLetter(result.cover_letter); }}
+                    copied={copied}
+                    onShowCLForm={function () { setShowCLForm(true); }}
+                    showCLForm={showCLForm}
+                    clJobTitle={clJobTitle}
+                    clCompany={clCompany}
+                    onCLJobTitle={setCLJobTitle}
+                    onCLCompany={setCLCompany}
+                    onGenerateCL={handleGenerateCoverLetter}
+                    generatingCL={generatingCL}
+                    clResult={clResult}
+                    onCopyCL={function () { copyCoverLetterStandalone(clResult); }}
+                    copiedCL={copiedCL}
+                  />
+                </div>
               )}
             </div>
           )}
@@ -861,13 +1212,21 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           {selectedAnalysis ? (
             <div>
               <button className="ra-history-back" onClick={function () { setSelectedAnalysis(null); setCopied(false); }}>← Back to History</button>
-              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--ghost)", letterSpacing: "0.1em", marginBottom: 16 }}>
-                {formatDate(selectedAnalysis.created_at)} · Fit Score: {selectedAnalysis.fit_score}
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--ghost)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+                <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : "job")}>{selectedAnalysis.mode === "general" ? "General Review" : "Job-Specific"}</span>
+                {formatDate(selectedAnalysis.created_at)}
+                {selectedAnalysis.job_title && <span>· {selectedAnalysis.job_title}</span>}
+                {selectedAnalysis.fit_score > 0 && <span>· Fit: {selectedAnalysis.fit_score}</span>}
+                {selectedAnalysis.strength_score > 0 && <span>· Strength: {selectedAnalysis.strength_score}</span>}
               </div>
-              <AnalysisResults
+              <ComprehensiveResults
                 data={selectedAnalysis}
-                onCopy={function () { copyCoverLetter(selectedAnalysis); }}
+                onCopy={function () { copyCoverLetter(selectedAnalysis.cover_letter); }}
                 copied={copied}
+                onShowCLForm={function () {}}
+                showCLForm={false}
+                clJobTitle="" clCompany="" onCLJobTitle={function () {}} onCLCompany={function () {}}
+                onGenerateCL={function () {}} generatingCL={false} clResult={null} onCopyCL={function () {}} copiedCL={false}
               />
             </div>
           ) : analyses.length === 0 ? (
@@ -884,13 +1243,21 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               </div>
               <div className="ra-history-list">
                 {analyses.map(function (a) {
-                  var cls = fitScoreClass(a.fit_score);
+                  var displayScore = a.mode === "general" ? (a.strength_score || 0) : (a.fit_score || 0);
+                  var cls = fitScoreClass(displayScore);
+                  var snippet = a.mode === "general"
+                    ? (a.strength_justification || "General resume review")
+                    : (a.job_listing_text ? a.job_listing_text.slice(0, 100) : "Job-specific analysis");
                   return (
                     <div key={a.id} className="ra-history-card" onClick={function () { setSelectedAnalysis(a); setCopied(false); }}>
-                      <div className={"ra-history-score " + cls}>{a.fit_score}</div>
+                      <div className={"ra-history-score " + cls}>{displayScore || "—"}</div>
                       <div className="ra-history-meta">
-                        <div className="ra-history-snippet">{a.job_listing_text ? a.job_listing_text.slice(0, 100) : "No preview"}</div>
-                        <div className="ra-history-date">{formatDate(a.created_at)} · {fitScoreLabel(a.fit_score)}</div>
+                        <div style={{ marginBottom: 4 }}>
+                          <span className={"ra-mode-badge " + (a.mode === "general" ? "general" : "job")}>{a.mode === "general" ? "General" : "Job-Specific"}</span>
+                          {a.job_title && <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--paper)", letterSpacing: "0.06em" }}>{a.job_title}</span>}
+                        </div>
+                        <div className="ra-history-snippet">{snippet}</div>
+                        <div className="ra-history-date">{formatDate(a.created_at)}</div>
                       </div>
                       <div className="ra-history-arrow">›</div>
                     </div>
