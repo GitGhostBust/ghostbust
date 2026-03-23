@@ -447,6 +447,9 @@ function apiCall(messages) {
    STORAGE HOOKS
 ================================================================ */
 
+// The exact 15 columns that exist in the applications table
+var APP_SELECT = "id, user_id, company, title, job_board, url, status, ghost_score, signal_flags, notes, applied_date, outcome, created_at, updated_at, followup_date";
+
 // Map a Supabase row → UI app object (camelCase shape the rest of the UI expects)
 function appFromDb(row) {
   return {
@@ -454,12 +457,13 @@ function appFromDb(row) {
     title:       row.title || "",
     company:     row.company || "",
     ghostScore:  row.ghost_score || 0,
-    verdict:     row.verdict || "UNKNOWN",
+    verdict:     row.outcome || "UNKNOWN",
+    signalFlags: row.signal_flags || [],
     status:      row.status || "Researching",
     notes:       row.notes || "",
     url:         row.url || "",
     sourceBoard: row.job_board || "",
-    listingText: row.listing_text || "",
+    appliedDate: row.applied_date || "",
     followupDate:row.followup_date || "",
     savedAt:     row.created_at ? new Date(row.created_at).getTime() : Date.now(),
   };
@@ -471,12 +475,13 @@ function appToDb(app, userId) {
     title:        app.title || "",
     company:      app.company || "",
     ghost_score:  app.ghostScore || 0,
-    verdict:      app.verdict || "UNKNOWN",
+    outcome:      app.verdict || "UNKNOWN",
+    signal_flags: app.signalFlags || [],
     status:       app.status || "Researching",
     notes:        app.notes || "",
     url:          app.url || "",
     job_board:    app.sourceBoard || "",
-    listing_text: app.listingText || "",
+    applied_date: app.appliedDate || null,
     followup_date:app.followupDate || null,
   };
   if (userId) row.user_id = userId;
@@ -489,12 +494,13 @@ function changestoDb(changes) {
   if (changes.title       !== undefined) db.title        = changes.title;
   if (changes.company     !== undefined) db.company      = changes.company;
   if (changes.ghostScore  !== undefined) db.ghost_score  = changes.ghostScore;
-  if (changes.verdict     !== undefined) db.verdict      = changes.verdict;
+  if (changes.verdict     !== undefined) db.outcome      = changes.verdict;
+  if (changes.signalFlags !== undefined) db.signal_flags = changes.signalFlags;
   if (changes.status      !== undefined) db.status       = changes.status;
   if (changes.notes       !== undefined) db.notes        = changes.notes;
   if (changes.url         !== undefined) db.url          = changes.url;
   if (changes.sourceBoard !== undefined) db.job_board    = changes.sourceBoard;
-  if (changes.listingText !== undefined) db.listing_text = changes.listingText;
+  if (changes.appliedDate !== undefined) db.applied_date = changes.appliedDate || null;
   if (changes.followupDate!== undefined) db.followup_date= changes.followupDate || null;
   if (Object.keys(db).length > 0) db.updated_at = new Date().toISOString();
   return db;
@@ -518,7 +524,7 @@ function useApplications(session) {
 
     // Load existing rows from Supabase — explicit columns avoid schema-cache 400s
     supabase.from("applications")
-      .select("id, user_id, title, company, status, ghost_score, verdict, notes, url, job_board, listing_text, followup_date, created_at, updated_at")
+      .select(APP_SELECT)
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .then(function(res) {
@@ -536,7 +542,7 @@ function useApplications(session) {
             var local = JSON.parse(raw);
             if (Array.isArray(local) && local.length > 0) {
               var rows = local.map(function(a) { return appToDb(a, userId); });
-              supabase.from("applications").insert(rows).select("id, user_id, title, company, status, ghost_score, verdict, notes, url, job_board, listing_text, followup_date, created_at, updated_at")
+              supabase.from("applications").insert(rows).select(APP_SELECT)
                 .then(function(ins) {
                   if (ins.error) {
                     console.error("[applications] migration failed — message:", ins.error.message, "| code:", ins.error.code, "| details:", ins.error.details);
@@ -570,7 +576,7 @@ function useApplications(session) {
     }
     var row = appToDb(app, userId);
     console.log("[applications] inserting row:", row);
-    supabase.from("applications").insert(row).select("id, user_id, title, company, status, ghost_score, verdict, notes, url, job_board, listing_text, followup_date, created_at, updated_at").single()
+    supabase.from("applications").insert(row).select(APP_SELECT).single()
       .then(function(res) {
         if (res.error) {
           console.error("[applications] insert failed — message:", res.error.message, "| code:", res.error.code, "| details:", res.error.details, "| hint:", res.error.hint);
