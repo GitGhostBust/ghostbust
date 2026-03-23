@@ -12,7 +12,8 @@
       "Bash(ls -la C:/Users/gabri/ghostbust-app/.env*)",
       "Bash(node:*)",
       "Bash(node -e \":*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(git revert:*)"
     ]
   }
 }
