@@ -1007,30 +1007,43 @@
     }
     #gb-intro .gb-slide {
       position: absolute; inset: 0;
+      height: 100vh; overflow: hidden;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: 60px 32px;
-      opacity: 0; pointer-events: none;
-      transition: opacity 500ms ease;
+      padding: 48px 32px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 600ms ease-in-out, transform 600ms ease-in-out;
       box-sizing: border-box;
     }
-    #gb-intro .gb-slide.active { opacity: 1; pointer-events: auto; }
-    #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; text-align: center; }
-    #gb-intro .gb-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(72px, 14vw, 120px);
-      letter-spacing: 0.02em; line-height: 1;
-      color: #eeeae0; margin-bottom: 28px;
+    #gb-intro .gb-slide.active {
+      opacity: 1; transform: translateY(0); pointer-events: auto;
     }
-    #gb-intro .gb-logo em { color: #d42200; font-style: normal; }
+    #gb-intro .gb-slide.leaving {
+      opacity: 0; transform: translateY(-10px); pointer-events: none;
+    }
+    #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; text-align: center; }
+    /* Slide 0 */
+    #gb-intro .gb-favicon {
+      width: 88px; height: 88px;
+      display: block; margin: 0 auto 16px;
+    }
+    #gb-intro .gb-wordmark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 5.5vw, 48px);
+      letter-spacing: 0.02em; line-height: 1;
+      color: #eeeae0; margin-bottom: 14px;
+    }
+    #gb-intro .gb-wordmark em { color: #d42200; font-style: normal; }
     #gb-intro .gb-tagline {
-      font-family: 'Libre Baskerville', Georgia, serif;
-      font-style: italic; font-size: 17px;
-      color: rgba(238,234,224,0.6); letter-spacing: 0.01em;
-      margin-bottom: 72px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px;
+      color: rgba(238,234,224,0.6); letter-spacing: 0.08em;
+      margin-bottom: 56px;
     }
     #gb-intro .gb-continue {
-      font-family: 'Space Mono', monospace; font-size: 10px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 10px;
       letter-spacing: 0.38em; text-transform: uppercase;
       color: rgba(238,234,224,0.38);
       animation: gbPulse 2.8s ease-in-out infinite;
@@ -1039,59 +1052,61 @@
       0%, 100% { opacity: 0.38; }
       50% { opacity: 0.82; }
     }
+    /* Slides 1-5 */
     #gb-intro .gb-rule {
       width: 44px; height: 1px; background: #d42200;
-      margin: 0 auto 36px;
+      margin: 0 auto 28px;
     }
     #gb-intro .gb-heading {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(34px, 5.5vw, 62px);
+      font-size: clamp(30px, 4.5vw, 50px);
       letter-spacing: 0.04em; color: #eeeae0;
-      line-height: 1.0; margin-bottom: 32px;
+      line-height: 1.0; margin-bottom: 24px;
     }
     #gb-intro .gb-body {
       font-family: 'Libre Baskerville', Georgia, serif;
-      font-size: clamp(15px, 2.1vw, 18px);
-      line-height: 1.75; color: rgba(238,234,224,0.85);
+      font-size: clamp(14px, 1.7vw, 16px);
+      line-height: 1.7; color: rgba(238,234,224,0.85);
       max-width: 640px; margin: 0 auto;
     }
+    /* Ghost score mockup (slide 2) */
     #gb-intro .gb-mockup {
       background: #0e0e12;
       border: 1px solid rgba(255,255,255,0.07);
-      padding: 22px 26px 20px;
-      max-width: 400px; margin: 36px auto 0;
+      padding: 18px 22px 16px;
+      max-width: 380px; margin: 24px auto 0;
       text-align: left;
     }
     #gb-intro .gb-mockup-header {
       display: flex; align-items: flex-start;
-      gap: 18px; margin-bottom: 16px;
+      gap: 16px; margin-bottom: 12px;
     }
     #gb-intro .gb-mockup-score {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 68px; line-height: 1; color: #d42200;
+      font-size: 58px; line-height: 1; color: #d42200;
     }
-    #gb-intro .gb-mockup-meta { padding-top: 9px; }
+    #gb-intro .gb-mockup-meta { padding-top: 7px; }
     #gb-intro .gb-mockup-lbl {
       font-family: 'Space Mono', monospace; font-size: 9px;
       letter-spacing: 0.3em; text-transform: uppercase;
-      color: rgba(238,234,224,0.32); margin-bottom: 6px;
+      color: rgba(238,234,224,0.32); margin-bottom: 5px;
     }
     #gb-intro .gb-mockup-verdict {
-      font-family: 'Space Mono', monospace; font-size: 12px;
+      font-family: 'Space Mono', monospace; font-size: 11px;
       letter-spacing: 0.15em; text-transform: uppercase;
       color: #c99a00;
     }
     #gb-intro .gb-mockup-flags {
       border-top: 1px solid rgba(255,255,255,0.07);
-      padding-top: 14px; display: flex;
-      flex-direction: column; gap: 9px;
+      padding-top: 11px; display: flex;
+      flex-direction: column; gap: 8px;
     }
     #gb-intro .gb-mockup-flag {
-      display: flex; align-items: flex-start; gap: 9px;
+      display: flex; align-items: flex-start; gap: 8px;
     }
     #gb-intro .gb-flag-pill {
       font-family: 'Space Mono', monospace; font-size: 9px;
-      letter-spacing: 0.08em; padding: 2px 7px;
+      letter-spacing: 0.08em; padding: 2px 6px;
       text-transform: uppercase; flex-shrink: 0; margin-top: 1px;
     }
     #gb-intro .gb-flag-pill.high {
@@ -1104,21 +1119,23 @@
     }
     #gb-intro .gb-flag-text {
       font-family: 'Space Mono', monospace; font-size: 11px;
-      color: rgba(238,234,224,0.58); line-height: 1.5;
+      color: rgba(238,234,224,0.58); line-height: 1.4;
     }
+    /* CTA buttons (slide 5) */
     #gb-intro .gb-cta-row {
-      display: flex; gap: 16px; justify-content: center;
-      margin-top: 48px; flex-wrap: wrap;
+      display: flex; gap: 14px; justify-content: center;
+      margin-top: 36px; flex-wrap: wrap;
     }
     #gb-intro .gb-cta-btn {
-      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
-      letter-spacing: 0.08em; padding: 14px 40px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 19px;
+      letter-spacing: 0.08em; padding: 12px 36px;
       text-decoration: none; cursor: pointer;
       transition: opacity 150ms; display: inline-block;
     }
     #gb-intro .gb-cta-btn:hover { opacity: 0.82; }
     #gb-intro .gb-cta-primary { background: #d42200; color: #eeeae0; border: none; }
     #gb-intro .gb-cta-outline { background: none; color: #d42200; border: 2px solid #d42200; }
+    /* Skip */
     #gb-skip {
       position: fixed; top: 24px; right: 28px;
       font-family: 'Space Mono', monospace; font-size: 10px;
@@ -1129,6 +1146,7 @@
       opacity: 0; pointer-events: none;
     }
     #gb-skip:hover { color: rgba(238,234,224,0.8); }
+    /* Dots */
     #gb-dots {
       position: fixed; bottom: 28px; left: 50%;
       transform: translateX(-50%);
@@ -1141,19 +1159,21 @@
       transition: background 300ms;
     }
     #gb-dots .gb-dot.active { background: #d42200; }
+    /* Mobile */
     @media (max-width: 600px) {
-      #gb-intro .gb-slide { padding: 44px 20px; }
-      #gb-intro .gb-tagline { margin-bottom: 52px; }
+      #gb-intro .gb-slide { padding: 40px 20px; }
+      #gb-intro .gb-tagline { margin-bottom: 40px; }
       #gb-intro .gb-cta-row { flex-direction: column; align-items: center; }
-      #gb-intro .gb-cta-btn { width: 100%; max-width: 280px; text-align: center; }
-      #gb-intro .gb-mockup { padding: 18px 18px 16px; }
+      #gb-intro .gb-cta-btn { width: 100%; max-width: 260px; text-align: center; }
+      #gb-intro .gb-mockup { padding: 16px 16px 14px; }
     }
   </style>
 
   <!-- Slide 0: THE FOYER -->
   <div class="gb-slide active" id="gb-s0">
     <div class="gb-slide-inner">
-      <div class="gb-logo">GHOST<em>BUST</em></div>
+      <img class="gb-favicon" src="/favicon.svg" alt="GhostBust">
+      <div class="gb-wordmark">GHOST<em>BUST</em></div>
       <p class="gb-tagline">The job market has a ghost problem.</p>
       <div class="gb-continue">Click to continue</div>
     </div>
@@ -1170,7 +1190,7 @@
 
   <!-- Slide 2: GHOST DETECTION + JOB SEARCH -->
   <div class="gb-slide" id="gb-s2">
-    <div class="gb-slide-inner" style="max-width:720px;">
+    <div class="gb-slide-inner" style="max-width:700px;">
       <h2 class="gb-heading">FIND REAL JOBS. EXPOSE THE FAKE ONES.</h2>
       <p class="gb-body">GhostBust gives you two tools in one. Search across six major job boards simultaneously from a single interface, filtered by industry, role, location, and job type &mdash; no tab-switching, no repeated searches. Then paste any listing into the Ghost Detector and our AI scores it against the linguistic and structural patterns most commonly associated with postings that never result in hires &mdash; vague employer identity, missing application process, implausible requirement stacking, copy-pasted boilerplate. You get a Ghost Score, a full signal breakdown, and concrete next steps. In seconds.</p>
       <div class="gb-mockup">
@@ -1239,24 +1259,44 @@
 
   <script>
   (function() {
-    var overlay = document.getElementById('gb-intro');
-    var slides  = overlay.querySelectorAll('.gb-slide');
-    var skipBtn = document.getElementById('gb-skip');
-    var dotsWrap = document.getElementById('gb-dots');
-    var dots    = dotsWrap.querySelectorAll('.gb-dot');
-    var current = 0;
+    var overlay   = document.getElementById('gb-intro');
+    var slides    = overlay.querySelectorAll('.gb-slide');
+    var skipBtn   = document.getElementById('gb-skip');
+    var dotsWrap  = document.getElementById('gb-dots');
+    var dots      = dotsWrap.querySelectorAll('.gb-dot');
+    var current   = 0;
+    var busy      = false;
 
     function showSlide(n) {
-      slides.forEach(function(s, i) { s.classList.toggle('active', i === n); });
+      var prev = current;
+
+      // Outgoing slide exits upward
+      if (slides[prev] && prev !== n) {
+        slides[prev].classList.remove('active');
+        slides[prev].classList.add('leaving');
+        (function(s) {
+          setTimeout(function() { s.classList.remove('leaving'); }, 660);
+        })(slides[prev]);
+      }
+
+      // Incoming slide rises from below to center
+      slides[n].classList.remove('leaving');
+      slides[n].classList.add('active');
+
+      // Chrome: skip + dots hidden on slide 0
       var chrome = n > 0;
       skipBtn.style.opacity      = chrome ? '1' : '0';
       skipBtn.style.pointerEvents = chrome ? 'auto' : 'none';
       dotsWrap.style.opacity     = chrome ? '1' : '0';
       dots.forEach(function(d, i) { d.classList.toggle('active', i === n); });
+
       current = n;
     }
 
     function advance() {
+      if (busy) return;
+      busy = true;
+      setTimeout(function() { busy = false; }, 660);
       if (current < slides.length - 1) { showSlide(current + 1); }
       else { dismiss(); }
     }
@@ -1264,7 +1304,7 @@
     function dismiss() {
       overlay.style.opacity      = '0';
       overlay.style.pointerEvents = 'none';
-      setTimeout(function() { overlay.style.display = 'none'; }, 400);
+      setTimeout(function() { overlay.style.display = 'none'; }, 420);
       localStorage.setItem('gb_intro_seen', 'true');
     }
 
@@ -1285,10 +1325,13 @@
     });
 
     window.gbOpenIntro = function() {
+      slides.forEach(function(s) { s.classList.remove('active', 'leaving'); });
       current = 0;
+      busy = false;
       overlay.style.display      = 'flex';
       overlay.style.opacity      = '1';
       overlay.style.pointerEvents = 'auto';
+      void overlay.offsetWidth; // force reflow before activating slide 0
       showSlide(0);
     };
 
