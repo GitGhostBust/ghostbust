@@ -994,7 +994,7 @@
       GhostBust Ghost Scores are algorithmic estimates based on patterns in job listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. Ghost job statistics cited on this page are sourced from third-party research and reporting. GhostBust is not affiliated with any of the job boards or hiring platforms referenced. &copy; 2026 GhostBust.
     </div>
   
-    <button onclick="localStorage.removeItem('gb_intro_seen');location.reload();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.28);cursor:pointer;padding:8px 0 0;margin-top:14px;transition:color 150ms;display:block;">REPLAY INTRO</button>
+    <button onclick="localStorage.removeItem('gbIntroSeen');location.reload();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.28);cursor:pointer;padding:8px 0 0;margin-top:14px;transition:color 150ms;display:block;">REPLAY INTRO</button>
   </footer>
 
   <!-- CINEMATIC INTRO OVERLAY -->
@@ -1021,7 +1021,7 @@
     #gb-intro .gb-slide.active {
       opacity: 1; pointer-events: auto;
     }
-    #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; max-width: min(680px, 100%); overflow-x: hidden; text-align: left; }
+    #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; max-width: min(680px, 100%); overflow: hidden; text-align: left; }
     #gb-intro #gb-s0 .gb-slide-inner { text-align: center; }
     #gb-intro #gb-s0 .gb-favicon { margin-left: auto; margin-right: auto; }
     /* Slide 0 */
