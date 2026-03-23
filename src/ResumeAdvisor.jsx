@@ -206,6 +206,21 @@ const STYLE = `
     .ra-score-bar-wrap { width: 100%; max-width: 100%; }
   }
 
+  /* JOB SEARCH ADVISOR */
+  .ra-jsa-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+  .ra-jsa-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--blood); padding: 22px 24px; }
+  .ra-jsa-score-card { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); padding: 24px; display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+  .ra-jsa-score-num { font-family: 'Bebas Neue', sans-serif; font-size: 88px; line-height: 1; letter-spacing: -0.01em; }
+  .ra-jsa-score-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 10px; }
+  .ra-jsa-score-meta { flex: 1; min-width: 200px; }
+  .ra-jsa-score-bar { height: 4px; background: rgba(255,255,255,0.07); margin-top: 14px; }
+  .ra-jsa-score-bar-fill { height: 4px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .ra-jsa-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 10px; }
+  .ra-jsa-action-list { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+  .ra-jsa-action { display: flex; gap: 14px; align-items: flex-start; }
+  .ra-jsa-action-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--blood); line-height: 1; flex-shrink: 0; width: 24px; }
+  .ra-mode-badge.search { background: rgba(0,230,122,0.12); border: 1px solid rgba(0,230,122,0.25); color: var(--signal); }
+
   /* HISTORY DETAIL VIEW — all Space Mono & Libre Baskerville +2pt */
   .ra-history-detail .ra-history-back { font-size: 11px; }
   .ra-history-detail .ra-mode-badge { font-size: 10px; }
@@ -496,6 +511,92 @@ function FeedbackCard({ title, text, icon, danger }) {
         <div className="ra-feedback-title">{title}</div>
       </div>
       <div className="ra-prose">{text}</div>
+    </div>
+  );
+}
+
+/* ================================================================
+   JOB SEARCH ADVISOR RESULTS
+================================================================ */
+function JobSearchAdvisorResults({ data }) {
+  var score = data.fit_score || 0;
+  var cls = score >= 70 ? "ra-score-green" : score >= 40 ? "ra-score-yellow" : "ra-score-red";
+  var barColor = score >= 70 ? "var(--signal)" : score >= 40 ? "var(--bile)" : "var(--blood)";
+  var readinessLabel = score >= 70 ? "Ready to Apply" : score >= 40 ? "Nearly There" : "Build Before Applying";
+  var actionPlan = [];
+  try { actionPlan = typeof data.next_steps === "string" ? JSON.parse(data.next_steps) : (Array.isArray(data.next_steps) ? data.next_steps : []); } catch (e) { actionPlan = []; }
+
+  return (
+    <div className="ra-jsa-grid">
+      {/* Search Readiness Score */}
+      <div className="ra-jsa-score-card">
+        <div>
+          <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(238,234,224,0.65)", marginBottom: 8 }}>Search Readiness Score</div>
+          <div className={"ra-jsa-score-num " + cls}>{score}</div>
+          <div className="ra-jsa-score-bar"><div className="ra-jsa-score-bar-fill" style={{ width: Math.min(100, score) + "%", background: barColor }} /></div>
+        </div>
+        <div className="ra-jsa-score-meta">
+          <div className="ra-jsa-score-title">{readinessLabel}</div>
+          {data.strength_justification && <div className="ra-prose">{data.strength_justification}</div>}
+        </div>
+      </div>
+
+      {/* Target Role Clarity */}
+      {data.career_trajectory && (
+        <div className="ra-jsa-card">
+          <div className="ra-jsa-section-title">Target Role Clarity</div>
+          <div className="ra-prose">{data.career_trajectory}</div>
+        </div>
+      )}
+
+      {/* Regional Market Intelligence */}
+      {data.industry_alignment && (
+        <div className="ra-jsa-card">
+          <div className="ra-jsa-section-title">Regional Market Intelligence</div>
+          <div className="ra-prose">{data.industry_alignment}</div>
+        </div>
+      )}
+
+      {/* Job Board Strategy */}
+      {data.formatting_feedback && (
+        <div className="ra-jsa-card">
+          <div className="ra-jsa-section-title">Job Board Strategy</div>
+          <div className="ra-prose">{data.formatting_feedback}</div>
+        </div>
+      )}
+
+      {/* Application Cadence */}
+      {data.writing_quality && (
+        <div className="ra-jsa-card">
+          <div className="ra-jsa-section-title">Application Cadence</div>
+          <div className="ra-prose">{data.writing_quality}</div>
+        </div>
+      )}
+
+      {/* Immediate Action Plan */}
+      {actionPlan.length > 0 && (
+        <div className="ra-jsa-card" style={{ borderLeft: "3px solid var(--signal)" }}>
+          <div className="ra-jsa-section-title">Immediate Action Plan</div>
+          <div className="ra-jsa-action-list">
+            {actionPlan.map(function (step, i) {
+              return (
+                <div key={i} className="ra-jsa-action">
+                  <div className="ra-jsa-action-num">{i + 1}</div>
+                  <div className="ra-prose">{step}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Ghost Job Avoidance */}
+      {data.red_flags && (
+        <div className="ra-jsa-card" style={{ borderLeft: "3px solid var(--bile)" }}>
+          <div className="ra-jsa-section-title">Ghost Job Avoidance</div>
+          <div className="ra-prose">{data.red_flags}</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -953,6 +1054,94 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     return "=== USER CONTEXT (use this to personalize your analysis) ===\n" + lines.join("\n") + "\n===========================================================";
   }
 
+  async function handleJobSearchAdvisor() {
+    setAnalyzing(true);
+    setAnalysisError(null);
+    setResult(null);
+    try {
+      var [resumeRes, profileRes, scansRes, analysesRes] = await Promise.all([
+        supabase.from("resumes").select("extracted_text, id").eq("user_id", session.user.id)
+          .order("uploaded_at", { ascending: false }).limit(1).maybeSingle(),
+        supabase.from("profiles")
+          .select("display_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country")
+          .eq("id", session.user.id).single(),
+        supabase.from("ghost_scans").select("company, title, ghost_score, outcome")
+          .eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(10),
+        supabase.from("resume_analyses").select("strength_score, fit_score, mode, next_steps")
+          .eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(3),
+      ]);
+
+      var resumeText = resumeRes.data ? resumeRes.data.extracted_text : null;
+      var resumeId = resumeRes.data ? resumeRes.data.id : null;
+      var profile = profileRes.data || {};
+      var scans = scansRes.data || [];
+      var priorAnalyses = analysesRes.data || [];
+
+      var ctxLines = [];
+      if (profile.employment_status) ctxLines.push("Employment: " + profile.employment_status);
+      if (profile.current_job) ctxLines.push("Current role: " + profile.current_job);
+      if (profile.industry) ctxLines.push("Industry: " + profile.industry);
+      if (profile.job_market_region) ctxLines.push("Market: " + profile.job_market_region + (profile.job_market_state ? ", " + profile.job_market_state : "") + (profile.job_market_country ? ", " + profile.job_market_country : ""));
+      if (profile.bio) ctxLines.push("Bio: " + profile.bio.slice(0, 300));
+      if (scans.length) {
+        var scanSummary = scans.map(function (s) {
+          return (s.title || "?") + (s.company ? " at " + s.company : "") + " (ghost score: " + (s.ghost_score != null ? s.ghost_score : "?") + (s.outcome ? ", " + s.outcome : "") + ")";
+        }).join("; ");
+        ctxLines.push("Ghost scans (" + scans.length + "): " + scanSummary);
+      }
+      if (priorAnalyses.length) {
+        var analysisSummary = priorAnalyses.map(function (a) {
+          return (a.mode || "unknown") + " score: " + (a.strength_score || a.fit_score || 0);
+        }).join(", ");
+        ctxLines.push("Prior analyses: " + analysisSummary);
+      }
+
+      var ctxBlock = ctxLines.length ? "=== USER CONTEXT ===\n" + ctxLines.join("\n") + "\n===================\n\n" : "";
+
+      var jsaPrompt = "You are an expert job search strategist and career coach. Based on all available context, produce a personalized job search strategy report. Return a JSON object with EXACTLY these fields:\n" +
+        "search_readiness_score (integer 0-100 — how ready is this person to be actively applying right now; factor in resume quality, targeting consistency, market conditions, and ghost job exposure), " +
+        "search_readiness_justification (string, 2-3 sentences explaining the score), " +
+        "target_role_clarity (string, 3-4 sentences — what roles are they realistically positioned for based on their resume and scan history, are they being consistent or scattered in their targeting), " +
+        "regional_market_intelligence (string, 3-4 sentences — what is the job market like in their selected region for their industry, what should they know about ghost job prevalence in their field based on their scan data), " +
+        "job_board_strategy (string, 3-4 sentences — which job boards to prioritize and deprioritize based on their industry and region, include ghost score awareness and direct application vs. aggregator tradeoffs), " +
+        "application_cadence (string, 3-4 sentences — how many applications per week, what mix of reach/target/safety roles, when to follow up, how to pace for sustainability vs. urgency), " +
+        "immediate_action_plan (array of exactly 5 strings — specific concrete actions ranked by impact that they should take THIS WEEK, be specific to their situation), " +
+        "ghost_job_avoidance (string, 3-4 sentences — specific red flags to watch for in their target industry and region based on GhostBust scan patterns and general ghost job intelligence).\n" +
+        "Return only valid JSON, no markdown, no code blocks.";
+
+      var userMsg = ctxBlock + (resumeText ? "RESUME:\n" + resumeText : "(No resume on file — provide advice based on profile context only)");
+      var raw = await apiCall([{ role: "user", content: jsaPrompt + "\n\n" + userMsg }]);
+      var parsed = parseJSON(raw);
+
+      var dbPayload = {
+        user_id: session.user.id,
+        resume_id: resumeId || (advisorResume ? advisorResume.id : null),
+        mode: "job_search_advisor",
+        job_listing_text: "",
+        fit_score: parsed.search_readiness_score || 0,
+        strength_score: 0,
+        strength_justification: parsed.search_readiness_justification || "",
+        formatting_feedback: parsed.job_board_strategy || "",
+        writing_quality: parsed.application_cadence || "",
+        missing_sections: "",
+        industry_alignment: parsed.regional_market_intelligence || "",
+        career_trajectory: parsed.target_role_clarity || "",
+        red_flags: parsed.ghost_job_avoidance || "",
+        next_steps: JSON.stringify(parsed.immediate_action_plan || []),
+        gap_analysis: "", bullet_rewrites: "[]", keyword_gaps: "[]", ats_feedback: "", cover_letter: "",
+      };
+
+      var { data: saved, error: dbErr } = await supabase.from("resume_analyses").insert(dbPayload).select().single();
+      if (dbErr) throw dbErr;
+      setResult(Object.assign({}, saved, { next_steps: parsed.immediate_action_plan || [] }));
+      loadAnalyses();
+    } catch (err) {
+      setAnalysisError("Analysis failed: " + err.message);
+    } finally {
+      setAnalyzing(false);
+    }
+  }
+
   async function handleAnalyze() {
     if (!advisorResume || !advisorResume.extracted_text) return;
     if (advisorMode === "job_specific" && jobText.trim().length < 50) return;
@@ -1257,7 +1446,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           ) : (
             <div>
               {/* ANALYZING: doc selector */}
-              {(function () {
+              {advisorMode !== "job_search_advisor" && (function () {
                 var priorForResume = analyses.filter(function (a) { return a.resume_id === advisorResume.id; });
                 var isFirst = priorForResume.length === 0;
                 var lastDate = !isFirst ? priorForResume[0].created_at : null;
@@ -1302,6 +1491,9 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                 <button className={"ra-mode-btn" + (advisorMode === "job_specific" ? " active" : "")} onClick={function () { setAdvisorMode("job_specific"); setResult(null); setAnalysisError(null); }}>
                   🎯 Job-Specific Analysis
                 </button>
+                <button className={"ra-mode-btn" + (advisorMode === "job_search_advisor" ? " active" : "")} onClick={function () { setAdvisorMode("job_search_advisor"); setResult(null); setAnalysisError(null); }}>
+                  🔍 Job Search Advisor
+                </button>
               </div>
 
               {/* Mode description */}
@@ -1309,9 +1501,13 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                 <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 20 }}>
                   Get a full critique of your resume — strength score, formatting, writing quality, missing sections, industry alignment, career trajectory, red flags, and the top 3 changes that will have the highest impact.
                 </div>
-              ) : (
+              ) : advisorMode === "job_specific" ? (
                 <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 16 }}>
                   Paste a job listing to get a job fit score, keyword gap analysis, rewritten bullets tailored to the role, ATS optimization tips, and a generated cover letter.
+                </div>
+              ) : (
+                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 20 }}>
+                  Get a personalized job search strategy — search readiness score, target role clarity, regional market intelligence, job board recommendations, application cadence, a 5-step action plan, and ghost job avoidance tips tailored to your field.
                 </div>
               )}
 
@@ -1331,18 +1527,18 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               {/* Analyze button */}
               <button
                 className="run-btn red"
-                onClick={handleAnalyze}
-                disabled={analyzing || (advisorMode === "job_specific" && jobText.trim().length < 50)}
+                onClick={advisorMode === "job_search_advisor" ? handleJobSearchAdvisor : handleAnalyze}
+                disabled={analyzing || (advisorMode === "job_specific" && jobText.trim().length < 50) || (advisorMode !== "job_search_advisor" && !advisorResume)}
               >
-                {analyzing ? "Analysing..." : advisorMode === "general" ? "Analyze My Resume →" : "Analyze Against This Job →"}
+                {analyzing ? (advisorMode === "job_search_advisor" ? "Building..." : "Analysing...") : advisorMode === "general" ? "Analyze My Resume →" : advisorMode === "job_specific" ? "Analyze Against This Job →" : "Build My Search Strategy →"}
               </button>
 
               {/* Loading */}
               {analyzing && (
                 <div className="ra-analyzing">
                   <div className="ra-spin" style={{ margin: "0 auto" }} />
-                  <div className="ra-analyzing-title">Analyzing Your Resume...</div>
-                  <div className="ra-analyzing-sub">{advisorMode === "general" ? "Running full resume review" : "Matching against job listing"}</div>
+                  <div className="ra-analyzing-title">{advisorMode === "job_search_advisor" ? "Building Your Search Strategy..." : "Analyzing Your Resume..."}</div>
+                  <div className="ra-analyzing-sub">{advisorMode === "general" ? "Running full resume review" : advisorMode === "job_specific" ? "Matching against job listing" : "Pulling scan history, profile, and resume data"}</div>
                 </div>
               )}
 
@@ -1352,22 +1548,26 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               {/* Results */}
               {result && !analyzing && (
                 <div style={{ marginTop: 28 }}>
-                  <ComprehensiveResults
-                    data={result}
-                    onCopy={function () { copyCoverLetter(result.cover_letter); }}
-                    copied={copied}
-                    onShowCLForm={function () { setShowCLForm(true); }}
-                    showCLForm={showCLForm}
-                    clJobTitle={clJobTitle}
-                    clCompany={clCompany}
-                    onCLJobTitle={setCLJobTitle}
-                    onCLCompany={setCLCompany}
-                    onGenerateCL={handleGenerateCoverLetter}
-                    generatingCL={generatingCL}
-                    clResult={clResult}
-                    onCopyCL={function () { copyCoverLetterStandalone(clResult); }}
-                    copiedCL={copiedCL}
-                  />
+                  {result.mode === "job_search_advisor" ? (
+                    <JobSearchAdvisorResults data={result} />
+                  ) : (
+                    <ComprehensiveResults
+                      data={result}
+                      onCopy={function () { copyCoverLetter(result.cover_letter); }}
+                      copied={copied}
+                      onShowCLForm={function () { setShowCLForm(true); }}
+                      showCLForm={showCLForm}
+                      clJobTitle={clJobTitle}
+                      clCompany={clCompany}
+                      onCLJobTitle={setCLJobTitle}
+                      onCLCompany={setCLCompany}
+                      onGenerateCL={handleGenerateCoverLetter}
+                      generatingCL={generatingCL}
+                      clResult={clResult}
+                      onCopyCL={function () { copyCoverLetterStandalone(clResult); }}
+                      copiedCL={copiedCL}
+                    />
+                  )}
                 </div>
               )}
             </div>
@@ -1382,21 +1582,28 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
             <div className="ra-history-detail">
               <button className="ra-history-back" onClick={function () { setSelectedAnalysis(null); setCopied(false); }}>← Back to History</button>
               <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 13, color: "rgba(238,234,224,0.65)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
-                <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : "job")}>{selectedAnalysis.mode === "general" ? "General Review" : "Job-Specific"}</span>
+                <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : selectedAnalysis.mode === "job_search_advisor" ? "search" : "job")}>
+                  {selectedAnalysis.mode === "general" ? "General Review" : selectedAnalysis.mode === "job_search_advisor" ? "Search Strategy" : "Job-Specific"}
+                </span>
                 {formatDateTime(selectedAnalysis.created_at)}
-                {selectedAnalysis.job_title && <span>· {selectedAnalysis.job_title}</span>}
-                {selectedAnalysis.fit_score > 0 && <span>· Fit: {selectedAnalysis.fit_score}</span>}
+                {selectedAnalysis.job_title && selectedAnalysis.mode !== "job_search_advisor" && <span>· {selectedAnalysis.job_title}</span>}
+                {selectedAnalysis.fit_score > 0 && selectedAnalysis.mode !== "job_search_advisor" && <span>· Fit: {selectedAnalysis.fit_score}</span>}
                 {selectedAnalysis.strength_score > 0 && <span>· Strength: {selectedAnalysis.strength_score}</span>}
+                {selectedAnalysis.mode === "job_search_advisor" && selectedAnalysis.fit_score > 0 && <span>· Readiness: {selectedAnalysis.fit_score}</span>}
               </div>
-              <ComprehensiveResults
-                data={selectedAnalysis}
-                onCopy={function () { copyCoverLetter(selectedAnalysis.cover_letter); }}
-                copied={copied}
-                onShowCLForm={function () {}}
-                showCLForm={false}
-                clJobTitle="" clCompany="" onCLJobTitle={function () {}} onCLCompany={function () {}}
-                onGenerateCL={function () {}} generatingCL={false} clResult={null} onCopyCL={function () {}} copiedCL={false}
-              />
+              {selectedAnalysis.mode === "job_search_advisor" ? (
+                <JobSearchAdvisorResults data={selectedAnalysis} />
+              ) : (
+                <ComprehensiveResults
+                  data={selectedAnalysis}
+                  onCopy={function () { copyCoverLetter(selectedAnalysis.cover_letter); }}
+                  copied={copied}
+                  onShowCLForm={function () {}}
+                  showCLForm={false}
+                  clJobTitle="" clCompany="" onCLJobTitle={function () {}} onCLCompany={function () {}}
+                  onGenerateCL={function () {}} generatingCL={false} clResult={null} onCopyCL={function () {}} copiedCL={false}
+                />
+              )}
             </div>
           ) : analyses.length === 0 ? (
             <div className="ra-no-resume">
@@ -1412,18 +1619,23 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               </div>
               <div className="ra-history-list">
                 {analyses.map(function (a) {
-                  var displayScore = a.mode === "general" ? (a.strength_score || 0) : (a.fit_score || 0);
+                  var isJSA = a.mode === "job_search_advisor";
+                  var displayScore = isJSA ? (a.fit_score || 0) : a.mode === "general" ? (a.strength_score || 0) : (a.fit_score || 0);
                   var cls = fitScoreClass(displayScore);
-                  var snippet = a.mode === "general"
-                    ? (a.strength_justification || "General resume review")
-                    : (a.job_listing_text ? a.job_listing_text.slice(0, 100) : "Job-specific analysis");
+                  var snippet = isJSA
+                    ? (a.strength_justification || "Job search strategy report")
+                    : a.mode === "general"
+                      ? (a.strength_justification || "General resume review")
+                      : (a.job_listing_text ? a.job_listing_text.slice(0, 100) : "Job-specific analysis");
+                  var badgeClass = isJSA ? "search" : a.mode === "general" ? "general" : "job";
+                  var badgeLabel = isJSA ? "Search Strategy" : a.mode === "general" ? "General" : "Job-Specific";
                   return (
                     <div key={a.id} className="ra-history-card" onClick={function () { setSelectedAnalysis(a); setCopied(false); }}>
                       <div className={"ra-history-score " + cls}>{displayScore || "—"}</div>
                       <div className="ra-history-meta">
                         <div style={{ marginBottom: 4 }}>
-                          <span className={"ra-mode-badge " + (a.mode === "general" ? "general" : "job")}>{a.mode === "general" ? "General" : "Job-Specific"}</span>
-                          {a.job_title && <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--paper)", letterSpacing: "0.06em" }}>{a.job_title}</span>}
+                          <span className={"ra-mode-badge " + badgeClass}>{badgeLabel}</span>
+                          {a.job_title && !isJSA && <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--paper)", letterSpacing: "0.06em" }}>{a.job_title}</span>}
                         </div>
                         <div className="ra-history-snippet">{snippet}</div>
                         <div className="ra-history-date">{formatDateTime(a.created_at)}</div>
