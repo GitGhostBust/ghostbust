@@ -183,11 +183,11 @@ const STYLE = `
 
   /* ANALYZING: doc selector (AI Advisor tab) */
   .ra-doc-selector { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 16px 20px; margin-bottom: 24px; }
-  .ra-doc-selector-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.18em; color: rgba(238,234,224,0.65); margin-bottom: 10px; }
+  .ra-doc-selector-label { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.18em; color: rgba(238,234,224,0.65); margin-bottom: 10px; }
   .ra-doc-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .ra-doc-name { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper); font-weight: 700; }
-  .ra-doc-date { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); }
-  .ra-analysis-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; }
+  .ra-doc-name { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--paper); font-weight: 700; }
+  .ra-doc-date { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(238,234,224,0.65); }
+  .ra-analysis-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 8px; }
   .ra-analysis-badge.first { background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: rgba(238,234,224,0.65); }
   .ra-analysis-badge.followup { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.35); color: var(--bile); }
   .ra-resume-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
