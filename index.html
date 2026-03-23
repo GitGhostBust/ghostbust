@@ -1290,6 +1290,7 @@
       overlay.style.pointerEvents = 'none';
       setTimeout(function() { overlay.style.display = 'none'; }, 420);
       localStorage.setItem('gbIntroSeen', 'true');
+      document.documentElement.style.overflow = '';
     }
 
     overlay.addEventListener('click', function(e) {
@@ -1322,6 +1323,7 @@
     if (localStorage.getItem('gbIntroSeen')) {
       overlay.style.display = 'none';
     } else {
+      document.documentElement.style.overflow = 'hidden';
       showSlide(0);
     }
   })();
