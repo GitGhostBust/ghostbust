@@ -516,12 +516,14 @@ function useApplications(session) {
       return;
     }
 
-    // Load existing rows from Supabase
-    supabase.from("applications").select("*").eq("user_id", userId)
+    // Load existing rows from Supabase — explicit columns avoid schema-cache 400s
+    supabase.from("applications")
+      .select("id, user_id, title, company, status, ghost_score, verdict, notes, url, job_board, listing_text, followup_date, created_at, updated_at")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .then(function(res) {
         if (res.error) {
-          console.error("[applications] load error:", res.error);
+          console.error("[applications] load failed — message:", res.error.message, "| code:", res.error.code, "| details:", res.error.details, "| hint:", res.error.hint);
           setLoaded(true);
           return;
         }
@@ -534,10 +536,10 @@ function useApplications(session) {
             var local = JSON.parse(raw);
             if (Array.isArray(local) && local.length > 0) {
               var rows = local.map(function(a) { return appToDb(a, userId); });
-              supabase.from("applications").insert(rows).select()
+              supabase.from("applications").insert(rows).select("id, user_id, title, company, status, ghost_score, verdict, notes, url, job_board, listing_text, followup_date, created_at, updated_at")
                 .then(function(ins) {
                   if (ins.error) {
-                    console.error("[applications] migration insert error:", ins.error);
+                    console.error("[applications] migration failed — message:", ins.error.message, "| code:", ins.error.code, "| details:", ins.error.details);
                     setApps(dbApps);
                   } else {
                     var migrated = (ins.data || []).map(appFromDb);
@@ -568,10 +570,10 @@ function useApplications(session) {
     }
     var row = appToDb(app, userId);
     console.log("[applications] inserting row:", row);
-    supabase.from("applications").insert(row).select().single()
+    supabase.from("applications").insert(row).select("id, user_id, title, company, status, ghost_score, verdict, notes, url, job_board, listing_text, followup_date, created_at, updated_at").single()
       .then(function(res) {
         if (res.error) {
-          console.error("[applications] insert error:", res.error);
+          console.error("[applications] insert failed — message:", res.error.message, "| code:", res.error.code, "| details:", res.error.details, "| hint:", res.error.hint);
           return;
         }
         console.log("[applications] insert ok, id:", res.data.id);
@@ -589,7 +591,7 @@ function useApplications(session) {
     if (Object.keys(db).length > 0) {
       supabase.from("applications").update(db).eq("id", id).eq("user_id", userId)
         .then(function(res) {
-          if (res.error) console.error("[applications] update error:", res.error);
+          if (res.error) console.error("[applications] update failed — message:", res.error.message, "| code:", res.error.code, "| details:", res.error.details);
         });
     }
   }, [userId]);
@@ -599,7 +601,7 @@ function useApplications(session) {
     if (!userId) return;
     supabase.from("applications").delete().eq("id", id).eq("user_id", userId)
       .then(function(res) {
-        if (res.error) console.error("[applications] delete error:", res.error);
+        if (res.error) console.error("[applications] delete failed — message:", res.error.message, "| code:", res.error.code, "| details:", res.error.details);
       });
   }, [userId]);
 
@@ -613,7 +615,7 @@ function useApplications(session) {
     if (newApps.length === 0) {
       supabase.from("applications").delete().eq("user_id", userId)
         .then(function(res) {
-          if (res.error) console.error("[applications] clear error:", res.error);
+          if (res.error) console.error("[applications] clear failed — message:", res.error.message, "| code:", res.error.code, "| details:", res.error.details);
         });
     }
   }, [userId]);
