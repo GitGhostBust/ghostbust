@@ -1006,7 +1006,6 @@
       overflow: hidden;
       transition: opacity 400ms ease;
     }
-    body:has(#gb-intro[style*="display: flex"]) { overflow: hidden; }
     #gb-intro .gb-slide {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
@@ -1289,7 +1288,6 @@
       overlay.style.pointerEvents = 'none';
       setTimeout(function() { overlay.style.display = 'none'; }, 420);
       localStorage.setItem('gbIntroSeen', 'true');
-      document.body.style.overflow = '';
     }
 
     overlay.addEventListener('click', function(e) {
@@ -1315,7 +1313,6 @@
       overlay.style.display       = 'flex';
       overlay.style.opacity       = '1';
       overlay.style.pointerEvents = 'auto';
-      document.body.style.overflow = 'hidden';
       void overlay.offsetWidth;
       showSlide(0);
     };
@@ -1323,7 +1320,6 @@
     if (localStorage.getItem('gbIntroSeen')) {
       overlay.style.display = 'none';
     } else {
-      document.body.style.overflow = 'hidden';
       showSlide(0);
     }
   })();
