@@ -446,48 +446,166 @@ function apiCall(messages) {
 /* ================================================================
    STORAGE HOOKS
 ================================================================ */
-function useApplications() {
+
+// Map a Supabase row → UI app object (camelCase shape the rest of the UI expects)
+function appFromDb(row) {
+  return {
+    id:          row.id,
+    title:       row.title || "",
+    company:     row.company || "",
+    ghostScore:  row.ghost_score || 0,
+    verdict:     row.verdict || "UNKNOWN",
+    status:      row.status || "Researching",
+    notes:       row.notes || "",
+    url:         row.url || "",
+    sourceBoard: row.job_board || "",
+    listingText: row.listing_text || "",
+    followupDate:row.followup_date || "",
+    savedAt:     row.created_at ? new Date(row.created_at).getTime() : Date.now(),
+  };
+}
+
+// Map a UI app object → Supabase insert/update payload (snake_case)
+function appToDb(app, userId) {
+  var row = {
+    title:        app.title || "",
+    company:      app.company || "",
+    ghost_score:  app.ghostScore || 0,
+    verdict:      app.verdict || "UNKNOWN",
+    status:       app.status || "Researching",
+    notes:        app.notes || "",
+    url:          app.url || "",
+    job_board:    app.sourceBoard || "",
+    listing_text: app.listingText || "",
+    followup_date:app.followupDate || null,
+  };
+  if (userId) row.user_id = userId;
+  return row;
+}
+
+// Map only the changed fields to DB column names for updates
+function changestoDb(changes) {
+  var db = {};
+  if (changes.title       !== undefined) db.title        = changes.title;
+  if (changes.company     !== undefined) db.company      = changes.company;
+  if (changes.ghostScore  !== undefined) db.ghost_score  = changes.ghostScore;
+  if (changes.verdict     !== undefined) db.verdict      = changes.verdict;
+  if (changes.status      !== undefined) db.status       = changes.status;
+  if (changes.notes       !== undefined) db.notes        = changes.notes;
+  if (changes.url         !== undefined) db.url          = changes.url;
+  if (changes.sourceBoard !== undefined) db.job_board    = changes.sourceBoard;
+  if (changes.listingText !== undefined) db.listing_text = changes.listingText;
+  if (changes.followupDate!== undefined) db.followup_date= changes.followupDate || null;
+  if (Object.keys(db).length > 0) db.updated_at = new Date().toISOString();
+  return db;
+}
+
+function useApplications(session) {
   var [apps, setApps] = useState([]);
   var [loaded, setLoaded] = useState(false);
 
   useEffect(function() {
-    try {
-      var stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) { try { setApps(JSON.parse(stored)); } catch(e) { setApps([]); } }
-    } catch(e) {}
-    setLoaded(true);
-  }, []);
+    if (!session) {
+      // Not signed in — fall back to localStorage so the UI still works
+      try {
+        var stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) { try { setApps(JSON.parse(stored)); } catch(e) { setApps([]); } }
+      } catch(e) {}
+      setLoaded(true);
+      return;
+    }
 
-  var save = useCallback(function(newApps) {
-    setApps(newApps);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newApps)); } catch(e) {}
-  }, []);
+    var userId = session.user.id;
+
+    // Load existing rows from Supabase
+    supabase.from("applications").select("*").eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .then(function(res) {
+        var dbApps = (res.data || []).map(appFromDb);
+
+        // One-time localStorage migration
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            var local = JSON.parse(raw);
+            if (Array.isArray(local) && local.length > 0) {
+              var rows = local.map(function(a) { return appToDb(a, userId); });
+              supabase.from("applications").insert(rows).select()
+                .then(function(ins) {
+                  var migrated = (ins.data || []).map(appFromDb);
+                  setApps(migrated.concat(dbApps));
+                  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                  setLoaded(true);
+                })
+                .catch(function() {
+                  // Migration failed — use DB data, leave localStorage intact
+                  setApps(dbApps);
+                  setLoaded(true);
+                });
+              return;
+            }
+            // localStorage exists but empty — clear it
+            try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+          }
+        } catch(e) {}
+
+        setApps(dbApps);
+        setLoaded(true);
+      })
+      .catch(function() {
+        setLoaded(true);
+      });
+  }, [session]);
 
   var addApp = useCallback(function(app) {
-    setApps(function(prev) {
-      var next = [app].concat(prev);
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch(e) {}
-      return next;
-    });
-  }, []);
+    if (!session) {
+      setApps(function(prev) {
+        var next = [app].concat(prev);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch(e) {}
+        return next;
+      });
+      return;
+    }
+    var row = appToDb(app, session.user.id);
+    supabase.from("applications").insert(row).select().single()
+      .then(function(res) {
+        if (res.data) setApps(function(prev) { return [appFromDb(res.data)].concat(prev); });
+      });
+  }, [session]);
 
   var updateApp = useCallback(function(id, changes) {
+    // Optimistic update
     setApps(function(prev) {
-      var next = prev.map(function(a) { return a.id === id ? Object.assign({}, a, changes) : a; });
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch(e) {}
-      return next;
+      return prev.map(function(a) { return a.id === id ? Object.assign({}, a, changes) : a; });
     });
-  }, []);
+    if (!session) return;
+    var db = changestoDb(changes);
+    if (Object.keys(db).length > 0) {
+      supabase.from("applications").update(db).eq("id", id).eq("user_id", session.user.id)
+        .then(function() {});
+    }
+  }, [session]);
 
   var deleteApp = useCallback(function(id) {
-    setApps(function(prev) {
-      var next = prev.filter(function(a) { return a.id !== id; });
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch(e) {}
-      return next;
-    });
-  }, []);
+    setApps(function(prev) { return prev.filter(function(a) { return a.id !== id; }); });
+    if (!session) return;
+    supabase.from("applications").delete().eq("id", id).eq("user_id", session.user.id)
+      .then(function() {});
+  }, [session]);
 
-  return { apps:apps, loaded:loaded, addApp:addApp, updateApp:updateApp, deleteApp:deleteApp, save:save };
+  var save = useCallback(function(newApps) {
+    // Only called by handleClearAll (newApps === [])
+    setApps(newApps);
+    if (!session) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newApps)); } catch(e) {}
+      return;
+    }
+    if (newApps.length === 0) {
+      supabase.from("applications").delete().eq("user_id", session.user.id).then(function() {});
+    }
+  }, [session]);
+
+  return { apps: apps, loaded: loaded, addApp: addApp, updateApp: updateApp, deleteApp: deleteApp, save: save };
 }
 
 /* ================================================================
@@ -1331,7 +1449,7 @@ export default function App() {
       });
   },[session]);
   var [tab,setTab] = useState("search");
-  var storage = useApplications();
+  var storage = useApplications(session);
   var [showTutorial, setShowTutorial] = useState(function() {
     try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
   });
