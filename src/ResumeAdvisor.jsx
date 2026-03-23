@@ -220,6 +220,22 @@ const STYLE = `
   .ra-jsa-action { display: flex; gap: 14px; align-items: flex-start; }
   .ra-jsa-action-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--blood); line-height: 1; flex-shrink: 0; width: 24px; }
   .ra-mode-badge.search { background: rgba(0,230,122,0.12); border: 1px solid rgba(0,230,122,0.25); color: var(--signal); }
+  .ra-mode-badge.coach { background: rgba(201,154,0,0.15); border: 1px solid rgba(201,154,0,0.35); color: var(--bile); }
+
+  /* CAREER COACH */
+  .ra-cc-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
+  .ra-cc-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--blood); padding: 22px 24px; }
+  .ra-cc-card.honest { border-left-color: var(--bile); background: rgba(201,154,0,0.04); }
+  .ra-cc-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 10px; }
+  .ra-cc-interview-list { display: flex; flex-direction: column; gap: 18px; margin-top: 4px; }
+  .ra-cc-interview-q { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 14px 16px; }
+  .ra-cc-q-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 6px; }
+  .ra-cc-q-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: var(--paper); line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+  .ra-cc-coaching-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(238,234,224,0.65); margin-bottom: 6px; }
+  .ra-cc-coaching-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.85); line-height: 1.75; }
+  .ra-cc-week-list { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+  .ra-cc-week { display: flex; gap: 16px; align-items: flex-start; }
+  .ra-cc-week-label { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--blood); line-height: 1; flex-shrink: 0; width: 64px; }
 
   /* HISTORY DETAIL VIEW — all Space Mono & Libre Baskerville +2pt */
   .ra-history-detail .ra-history-back { font-size: 11px; }
@@ -511,6 +527,83 @@ function FeedbackCard({ title, text, icon, danger }) {
         <div className="ra-feedback-title">{title}</div>
       </div>
       <div className="ra-prose">{text}</div>
+    </div>
+  );
+}
+
+/* ================================================================
+   CAREER COACH RESULTS
+================================================================ */
+function CareerCoachResults({ data }) {
+  var interviews = [];
+  try { interviews = typeof data.ats_feedback === "string" ? JSON.parse(data.ats_feedback) : (Array.isArray(data.ats_feedback) ? data.ats_feedback : []); } catch (e) { interviews = []; }
+  var weekPlan = [];
+  try { weekPlan = typeof data.next_steps === "string" ? JSON.parse(data.next_steps) : (Array.isArray(data.next_steps) ? data.next_steps : []); } catch (e) { weekPlan = []; }
+
+  return (
+    <div className="ra-cc-grid">
+      {data.career_trajectory && (
+        <div className="ra-cc-card">
+          <div className="ra-cc-section-title">Career Stage Assessment</div>
+          <div className="ra-prose">{data.career_trajectory}</div>
+        </div>
+      )}
+      {data.missing_sections && (
+        <div className="ra-cc-card">
+          <div className="ra-cc-section-title">Skills Gap Analysis</div>
+          <div className="ra-prose">{data.missing_sections}</div>
+        </div>
+      )}
+      {interviews.length > 0 && (
+        <div className="ra-cc-card">
+          <div className="ra-cc-section-title">Interview Preparation</div>
+          <div className="ra-cc-interview-list">
+            {interviews.map(function (item, i) {
+              return (
+                <div key={i} className="ra-cc-interview-q">
+                  <div className="ra-cc-q-label">Question {i + 1}</div>
+                  <div className="ra-cc-q-text">{item.question}</div>
+                  <div className="ra-cc-coaching-label">How to Answer</div>
+                  <div className="ra-cc-coaching-text">{item.coaching}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      {data.writing_quality && (
+        <div className="ra-cc-card">
+          <div className="ra-cc-section-title">Salary Intelligence</div>
+          <div className="ra-prose">{data.writing_quality}</div>
+        </div>
+      )}
+      {data.industry_alignment && (
+        <div className="ra-cc-card">
+          <div className="ra-cc-section-title">Application Pattern Analysis</div>
+          <div className="ra-prose">{data.industry_alignment}</div>
+        </div>
+      )}
+      {weekPlan.length > 0 && (
+        <div className="ra-cc-card" style={{ borderLeft: "3px solid var(--signal)" }}>
+          <div className="ra-cc-section-title">30-Day Career Action Plan</div>
+          <div className="ra-cc-week-list">
+            {weekPlan.map(function (week, i) {
+              return (
+                <div key={i} className="ra-cc-week">
+                  <div className="ra-cc-week-label">WK {i + 1}</div>
+                  <div className="ra-prose">{week}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      {data.red_flags && (
+        <div className="ra-cc-card honest">
+          <div className="ra-cc-section-title">Honest Assessment</div>
+          <div className="ra-prose">{data.red_flags}</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1054,6 +1147,97 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     return "=== USER CONTEXT (use this to personalize your analysis) ===\n" + lines.join("\n") + "\n===========================================================";
   }
 
+  async function handleCareerCoach() {
+    setAnalyzing(true);
+    setAnalysisError(null);
+    setResult(null);
+    try {
+      var [resumeRes, profileRes, scansRes, analysesRes] = await Promise.all([
+        supabase.from("resumes").select("extracted_text, id").eq("user_id", session.user.id)
+          .order("uploaded_at", { ascending: false }).limit(1).maybeSingle(),
+        supabase.from("profiles")
+          .select("display_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country, education")
+          .eq("id", session.user.id).single(),
+        supabase.from("ghost_scans").select("company, title, ghost_score, outcome")
+          .eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(10),
+        supabase.from("resume_analyses").select("strength_score, fit_score, mode, next_steps, created_at")
+          .eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(5),
+      ]);
+
+      var resumeText = resumeRes.data ? resumeRes.data.extracted_text : null;
+      var resumeId = resumeRes.data ? resumeRes.data.id : null;
+      var profile = profileRes.data || {};
+      var scans = scansRes.data || [];
+      var priorAnalyses = analysesRes.data || [];
+
+      var ctxLines = [];
+      if (profile.employment_status) ctxLines.push("Employment: " + profile.employment_status);
+      if (profile.current_job) ctxLines.push("Current role: " + profile.current_job);
+      if (profile.industry) ctxLines.push("Industry: " + profile.industry);
+      if (profile.education) ctxLines.push("Education: " + profile.education);
+      if (profile.job_market_region) ctxLines.push("Market: " + profile.job_market_region + (profile.job_market_state ? ", " + profile.job_market_state : "") + (profile.job_market_country ? ", " + profile.job_market_country : ""));
+      if (profile.bio) ctxLines.push("Bio: " + profile.bio.slice(0, 300));
+      if (scans.length) {
+        var scanSummary = scans.map(function (s) {
+          return (s.title || "?") + (s.company ? " at " + s.company : "") + " (ghost score: " + (s.ghost_score != null ? s.ghost_score : "?") + (s.outcome ? ", " + s.outcome : "") + ")";
+        }).join("; ");
+        ctxLines.push("Ghost scans (" + scans.length + "): " + scanSummary);
+      }
+      if (priorAnalyses.length) {
+        var analysisSummary = priorAnalyses.map(function (a) {
+          return (a.mode || "unknown") + " score: " + (a.strength_score || a.fit_score || 0);
+        }).join(", ");
+        ctxLines.push("Prior analyses: " + analysisSummary);
+      }
+
+      var ctxBlock = ctxLines.length ? "=== USER CONTEXT ===\n" + ctxLines.join("\n") + "\n===================\n\n" : "";
+
+      var ccPrompt = "You are an expert career coach with 20 years of experience helping professionals navigate job searches. Based on all available context, deliver a personalized career coaching session. Return a JSON object with EXACTLY these fields:\n" +
+        "career_stage (string, 3-4 sentences — where is this person in their career, what stage are they at, and what does that mean for how they should be approaching their job search), " +
+        "skills_gap (string, 3-4 sentences — what hard and soft skills are they missing based on their resume and target industry that would make them significantly more competitive; be specific about both technical and interpersonal gaps), " +
+        "interview_questions (array of exactly 5 objects, each with \"question\" (string — a likely interview question for their target roles) and \"coaching\" (string, 2-3 sentences — concrete advice on how to answer this specific question based on their actual background and experience)), " +
+        "salary_intelligence (string, 3-4 sentences — realistic salary ranges for their target roles in their region, how to approach negotiation given their background, and whether their current trajectory positions them above or below median), " +
+        "application_patterns (string, 3-4 sentences — based on their scan and application history, identify any patterns: too many ghost listings, too narrow a search, inconsistent role targeting, or other behaviors that may be hurting their results), " +
+        "action_plan (array of exactly 4 strings — a concrete week-by-week breakdown; each string should describe specific, actionable steps for that week to meaningfully advance their job search over the next month), " +
+        "honest_assessment (string, 3-4 sentences — a direct, no-BS summary of where this person actually stands, what their biggest obstacle is, and the one or two things that will most determine whether their search succeeds or stalls).\n" +
+        "Return only valid JSON, no markdown, no code blocks.";
+
+      var userMsg = ctxBlock + (resumeText ? "RESUME:\n" + resumeText : "(No resume on file — provide coaching based on profile context only)");
+      var raw = await apiCall([{ role: "user", content: ccPrompt + "\n\n" + userMsg }]);
+      var parsed = parseJSON(raw);
+
+      var dbPayload = {
+        user_id: session.user.id,
+        resume_id: resumeId || (advisorResume ? advisorResume.id : null),
+        mode: "career_coach",
+        job_listing_text: "",
+        fit_score: 0,
+        strength_score: 0,
+        strength_justification: "",
+        career_trajectory: parsed.career_stage || "",
+        missing_sections: parsed.skills_gap || "",
+        ats_feedback: typeof parsed.interview_questions === "string" ? parsed.interview_questions : JSON.stringify(parsed.interview_questions || []),
+        writing_quality: parsed.salary_intelligence || "",
+        industry_alignment: parsed.application_patterns || "",
+        next_steps: JSON.stringify(parsed.action_plan || []),
+        red_flags: parsed.honest_assessment || "",
+        formatting_feedback: "", gap_analysis: "", bullet_rewrites: "[]", keyword_gaps: "[]", cover_letter: "",
+      };
+
+      var { data: saved, error: dbErr } = await supabase.from("resume_analyses").insert(dbPayload).select().single();
+      if (dbErr) throw dbErr;
+      setResult(Object.assign({}, saved, {
+        next_steps: parsed.action_plan || [],
+        ats_feedback: parsed.interview_questions || [],
+      }));
+      loadAnalyses();
+    } catch (err) {
+      setAnalysisError("Analysis failed: " + err.message);
+    } finally {
+      setAnalyzing(false);
+    }
+  }
+
   async function handleJobSearchAdvisor() {
     setAnalyzing(true);
     setAnalysisError(null);
@@ -1494,6 +1678,9 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                 <button className={"ra-mode-btn" + (advisorMode === "job_search_advisor" ? " active" : "")} onClick={function () { setAdvisorMode("job_search_advisor"); setResult(null); setAnalysisError(null); }}>
                   🔍 Job Search Advisor
                 </button>
+                <button className={"ra-mode-btn" + (advisorMode === "career_coach" ? " active" : "")} onClick={function () { setAdvisorMode("career_coach"); setResult(null); setAnalysisError(null); }}>
+                  🎓 Career Coach
+                </button>
               </div>
 
               {/* Mode description */}
@@ -1505,9 +1692,13 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                 <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 16 }}>
                   Paste a job listing to get a job fit score, keyword gap analysis, rewritten bullets tailored to the role, ATS optimization tips, and a generated cover letter.
                 </div>
-              ) : (
+              ) : advisorMode === "job_search_advisor" ? (
                 <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 20 }}>
                   Get a personalized job search strategy — search readiness score, target role clarity, regional market intelligence, job board recommendations, application cadence, a 5-step action plan, and ghost job avoidance tips tailored to your field.
+                </div>
+              ) : (
+                <div style={{ fontFamily: "'Libre Baskerville',Georgia,serif", fontSize: 13, color: "rgba(238,234,224,0.65)", lineHeight: 1.75, marginBottom: 20 }}>
+                  Get a personalized coaching session — career stage assessment, skills gap analysis, 5 likely interview questions with coaching, salary intelligence, application pattern feedback, a 30-day week-by-week action plan, and an honest assessment of where you stand.
                 </div>
               )}
 
@@ -1527,18 +1718,23 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               {/* Analyze button */}
               <button
                 className="run-btn red"
-                onClick={advisorMode === "job_search_advisor" ? handleJobSearchAdvisor : handleAnalyze}
-                disabled={analyzing || (advisorMode === "job_specific" && jobText.trim().length < 50) || (advisorMode !== "job_search_advisor" && !advisorResume)}
+                onClick={advisorMode === "job_search_advisor" ? handleJobSearchAdvisor : advisorMode === "career_coach" ? handleCareerCoach : handleAnalyze}
+                disabled={analyzing || (advisorMode === "job_specific" && jobText.trim().length < 50) || (advisorMode !== "job_search_advisor" && advisorMode !== "career_coach" && !advisorResume)}
               >
-                {analyzing ? (advisorMode === "job_search_advisor" ? "Building..." : "Analysing...") : advisorMode === "general" ? "Analyze My Resume →" : advisorMode === "job_specific" ? "Analyze Against This Job →" : "Build My Search Strategy →"}
+                {analyzing
+                  ? (advisorMode === "job_search_advisor" ? "Building..." : advisorMode === "career_coach" ? "Coaching..." : "Analysing...")
+                  : advisorMode === "general" ? "Analyze My Resume →"
+                  : advisorMode === "job_specific" ? "Analyze Against This Job →"
+                  : advisorMode === "job_search_advisor" ? "Build My Search Strategy →"
+                  : "Start My Coaching Session →"}
               </button>
 
               {/* Loading */}
               {analyzing && (
                 <div className="ra-analyzing">
                   <div className="ra-spin" style={{ margin: "0 auto" }} />
-                  <div className="ra-analyzing-title">{advisorMode === "job_search_advisor" ? "Building Your Search Strategy..." : "Analyzing Your Resume..."}</div>
-                  <div className="ra-analyzing-sub">{advisorMode === "general" ? "Running full resume review" : advisorMode === "job_specific" ? "Matching against job listing" : "Pulling scan history, profile, and resume data"}</div>
+                  <div className="ra-analyzing-title">{advisorMode === "job_search_advisor" ? "Building Your Search Strategy..." : advisorMode === "career_coach" ? "Your Career Coach is Thinking..." : "Analyzing Your Resume..."}</div>
+                  <div className="ra-analyzing-sub">{advisorMode === "general" ? "Running full resume review" : advisorMode === "job_specific" ? "Matching against job listing" : advisorMode === "career_coach" ? "Pulling resume, scans, and profile data" : "Pulling scan history, profile, and resume data"}</div>
                 </div>
               )}
 
@@ -1550,6 +1746,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                 <div style={{ marginTop: 28 }}>
                   {result.mode === "job_search_advisor" ? (
                     <JobSearchAdvisorResults data={result} />
+                  ) : result.mode === "career_coach" ? (
+                    <CareerCoachResults data={result} />
                   ) : (
                     <ComprehensiveResults
                       data={result}
@@ -1582,17 +1780,19 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
             <div className="ra-history-detail">
               <button className="ra-history-back" onClick={function () { setSelectedAnalysis(null); setCopied(false); }}>← Back to History</button>
               <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 13, color: "rgba(238,234,224,0.65)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
-                <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : selectedAnalysis.mode === "job_search_advisor" ? "search" : "job")}>
-                  {selectedAnalysis.mode === "general" ? "General Review" : selectedAnalysis.mode === "job_search_advisor" ? "Search Strategy" : "Job-Specific"}
+                <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : selectedAnalysis.mode === "job_search_advisor" ? "search" : selectedAnalysis.mode === "career_coach" ? "coach" : "job")}>
+                  {selectedAnalysis.mode === "general" ? "General Review" : selectedAnalysis.mode === "job_search_advisor" ? "Search Strategy" : selectedAnalysis.mode === "career_coach" ? "Career Coach" : "Job-Specific"}
                 </span>
                 {formatDateTime(selectedAnalysis.created_at)}
-                {selectedAnalysis.job_title && selectedAnalysis.mode !== "job_search_advisor" && <span>· {selectedAnalysis.job_title}</span>}
-                {selectedAnalysis.fit_score > 0 && selectedAnalysis.mode !== "job_search_advisor" && <span>· Fit: {selectedAnalysis.fit_score}</span>}
-                {selectedAnalysis.strength_score > 0 && <span>· Strength: {selectedAnalysis.strength_score}</span>}
+                {selectedAnalysis.job_title && selectedAnalysis.mode !== "job_search_advisor" && selectedAnalysis.mode !== "career_coach" && <span>· {selectedAnalysis.job_title}</span>}
+                {selectedAnalysis.fit_score > 0 && selectedAnalysis.mode !== "job_search_advisor" && selectedAnalysis.mode !== "career_coach" && <span>· Fit: {selectedAnalysis.fit_score}</span>}
+                {selectedAnalysis.strength_score > 0 && selectedAnalysis.mode !== "career_coach" && <span>· Strength: {selectedAnalysis.strength_score}</span>}
                 {selectedAnalysis.mode === "job_search_advisor" && selectedAnalysis.fit_score > 0 && <span>· Readiness: {selectedAnalysis.fit_score}</span>}
               </div>
               {selectedAnalysis.mode === "job_search_advisor" ? (
                 <JobSearchAdvisorResults data={selectedAnalysis} />
+              ) : selectedAnalysis.mode === "career_coach" ? (
+                <CareerCoachResults data={selectedAnalysis} />
               ) : (
                 <ComprehensiveResults
                   data={selectedAnalysis}
@@ -1620,22 +1820,25 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
               <div className="ra-history-list">
                 {analyses.map(function (a) {
                   var isJSA = a.mode === "job_search_advisor";
-                  var displayScore = isJSA ? (a.fit_score || 0) : a.mode === "general" ? (a.strength_score || 0) : (a.fit_score || 0);
+                  var isCC = a.mode === "career_coach";
+                  var displayScore = isJSA ? (a.fit_score || 0) : isCC ? 0 : a.mode === "general" ? (a.strength_score || 0) : (a.fit_score || 0);
                   var cls = fitScoreClass(displayScore);
                   var snippet = isJSA
                     ? (a.strength_justification || "Job search strategy report")
-                    : a.mode === "general"
-                      ? (a.strength_justification || "General resume review")
-                      : (a.job_listing_text ? a.job_listing_text.slice(0, 100) : "Job-specific analysis");
-                  var badgeClass = isJSA ? "search" : a.mode === "general" ? "general" : "job";
-                  var badgeLabel = isJSA ? "Search Strategy" : a.mode === "general" ? "General" : "Job-Specific";
+                    : isCC
+                      ? (a.career_trajectory ? a.career_trajectory.slice(0, 100) : "Career coaching session")
+                      : a.mode === "general"
+                        ? (a.strength_justification || "General resume review")
+                        : (a.job_listing_text ? a.job_listing_text.slice(0, 100) : "Job-specific analysis");
+                  var badgeClass = isJSA ? "search" : isCC ? "coach" : a.mode === "general" ? "general" : "job";
+                  var badgeLabel = isJSA ? "Search Strategy" : isCC ? "Career Coach" : a.mode === "general" ? "General" : "Job-Specific";
                   return (
                     <div key={a.id} className="ra-history-card" onClick={function () { setSelectedAnalysis(a); setCopied(false); }}>
                       <div className={"ra-history-score " + cls}>{displayScore || "—"}</div>
                       <div className="ra-history-meta">
                         <div style={{ marginBottom: 4 }}>
                           <span className={"ra-mode-badge " + badgeClass}>{badgeLabel}</span>
-                          {a.job_title && !isJSA && <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--paper)", letterSpacing: "0.06em" }}>{a.job_title}</span>}
+                          {a.job_title && !isJSA && !isCC && <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "var(--paper)", letterSpacing: "0.06em" }}>{a.job_title}</span>}
                         </div>
                         <div className="ra-history-snippet">{snippet}</div>
                         <div className="ra-history-date">{formatDateTime(a.created_at)}</div>
