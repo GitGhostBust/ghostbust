@@ -89,7 +89,7 @@ const STYLE = `
   .ra-history-card:hover { background: var(--surface2); }
   .ra-history-score { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; flex-shrink: 0; width: 52px; text-align: center; }
   .ra-history-meta { flex: 1; min-width: 0; }
-  .ra-history-snippet { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.7); line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ra-history-snippet { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; color: rgba(238,234,224,0.7); line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ra-history-date { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(238,234,224,0.65); margin-top: 4px; letter-spacing: 0.06em; }
   .ra-history-arrow { color: var(--ghost); flex-shrink: 0; }
   .ra-history-back { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 12px; border: 1px solid var(--border); background: none; color: rgba(238,234,224,0.65); cursor: pointer; margin-bottom: 20px; transition: color 0.15s; }
