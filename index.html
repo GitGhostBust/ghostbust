@@ -993,53 +993,312 @@
     <div class="footer-note">
       GhostBust Ghost Scores are algorithmic estimates based on patterns in job listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. Ghost job statistics cited on this page are sourced from third-party research and reporting. GhostBust is not affiliated with any of the job boards or hiring platforms referenced. &copy; 2026 GhostBust.
     </div>
+  
+    <button onclick="gbOpenIntro()" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.28);cursor:pointer;padding:8px 0 0;margin-top:14px;transition:color 150ms;display:block;">HOW IT WORKS</button>
   </footer>
 
-  <!-- HOW IT WORKS MODAL -->
-  <div id="how-modal" style="display:none;position:fixed;inset:0;background:rgba(7,7,9,0.95);z-index:9999;align-items:center;justify-content:center;padding:24px;overflow-y:auto;">
-    <div style="background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--blood);max-width:640px;width:100%;padding:40px;position:relative;">
+  <!-- CINEMATIC INTRO OVERLAY -->
+  <div id="gb-intro">
+  <style>
+    #gb-intro {
+      position: fixed; inset: 0; background: #070709; z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 400ms ease;
+    }
+    #gb-intro .gb-slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 60px 32px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 500ms ease;
+      box-sizing: border-box;
+    }
+    #gb-intro .gb-slide.active { opacity: 1; pointer-events: auto; }
+    #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; text-align: center; }
+    #gb-intro .gb-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 14vw, 120px);
+      letter-spacing: 0.02em; line-height: 1;
+      color: #eeeae0; margin-bottom: 28px;
+    }
+    #gb-intro .gb-logo em { color: #d42200; font-style: normal; }
+    #gb-intro .gb-tagline {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-style: italic; font-size: 17px;
+      color: rgba(238,234,224,0.6); letter-spacing: 0.01em;
+      margin-bottom: 72px;
+    }
+    #gb-intro .gb-continue {
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      letter-spacing: 0.38em; text-transform: uppercase;
+      color: rgba(238,234,224,0.38);
+      animation: gbPulse 2.8s ease-in-out infinite;
+    }
+    @keyframes gbPulse {
+      0%, 100% { opacity: 0.38; }
+      50% { opacity: 0.82; }
+    }
+    #gb-intro .gb-rule {
+      width: 44px; height: 1px; background: #d42200;
+      margin: 0 auto 36px;
+    }
+    #gb-intro .gb-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(34px, 5.5vw, 62px);
+      letter-spacing: 0.04em; color: #eeeae0;
+      line-height: 1.0; margin-bottom: 32px;
+    }
+    #gb-intro .gb-body {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: clamp(15px, 2.1vw, 18px);
+      line-height: 1.75; color: rgba(238,234,224,0.85);
+      max-width: 640px; margin: 0 auto;
+    }
+    #gb-intro .gb-mockup {
+      background: #0e0e12;
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 22px 26px 20px;
+      max-width: 400px; margin: 36px auto 0;
+      text-align: left;
+    }
+    #gb-intro .gb-mockup-header {
+      display: flex; align-items: flex-start;
+      gap: 18px; margin-bottom: 16px;
+    }
+    #gb-intro .gb-mockup-score {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 68px; line-height: 1; color: #d42200;
+    }
+    #gb-intro .gb-mockup-meta { padding-top: 9px; }
+    #gb-intro .gb-mockup-lbl {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(238,234,224,0.32); margin-bottom: 6px;
+    }
+    #gb-intro .gb-mockup-verdict {
+      font-family: 'Space Mono', monospace; font-size: 12px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: #c99a00;
+    }
+    #gb-intro .gb-mockup-flags {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 14px; display: flex;
+      flex-direction: column; gap: 9px;
+    }
+    #gb-intro .gb-mockup-flag {
+      display: flex; align-items: flex-start; gap: 9px;
+    }
+    #gb-intro .gb-flag-pill {
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.08em; padding: 2px 7px;
+      text-transform: uppercase; flex-shrink: 0; margin-top: 1px;
+    }
+    #gb-intro .gb-flag-pill.high {
+      background: rgba(212,34,0,0.13);
+      border: 1px solid rgba(212,34,0,0.28); color: #d42200;
+    }
+    #gb-intro .gb-flag-pill.med {
+      background: rgba(201,154,0,0.11);
+      border: 1px solid rgba(201,154,0,0.28); color: #c99a00;
+    }
+    #gb-intro .gb-flag-text {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      color: rgba(238,234,224,0.58); line-height: 1.5;
+    }
+    #gb-intro .gb-cta-row {
+      display: flex; gap: 16px; justify-content: center;
+      margin-top: 48px; flex-wrap: wrap;
+    }
+    #gb-intro .gb-cta-btn {
+      font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+      letter-spacing: 0.08em; padding: 14px 40px;
+      text-decoration: none; cursor: pointer;
+      transition: opacity 150ms; display: inline-block;
+    }
+    #gb-intro .gb-cta-btn:hover { opacity: 0.82; }
+    #gb-intro .gb-cta-primary { background: #d42200; color: #eeeae0; border: none; }
+    #gb-intro .gb-cta-outline { background: none; color: #d42200; border: 2px solid #d42200; }
+    #gb-skip {
+      position: fixed; top: 24px; right: 28px;
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(238,234,224,0.38); background: none; border: none;
+      cursor: pointer; z-index: 10001;
+      transition: color 150ms, opacity 250ms;
+      opacity: 0; pointer-events: none;
+    }
+    #gb-skip:hover { color: rgba(238,234,224,0.8); }
+    #gb-dots {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 10001;
+      transition: opacity 250ms; opacity: 0;
+    }
+    #gb-dots .gb-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      transition: background 300ms;
+    }
+    #gb-dots .gb-dot.active { background: #d42200; }
+    @media (max-width: 600px) {
+      #gb-intro .gb-slide { padding: 44px 20px; }
+      #gb-intro .gb-tagline { margin-bottom: 52px; }
+      #gb-intro .gb-cta-row { flex-direction: column; align-items: center; }
+      #gb-intro .gb-cta-btn { width: 100%; max-width: 280px; text-align: center; }
+      #gb-intro .gb-mockup { padding: 18px 18px 16px; }
+    }
+  </style>
 
-      <!-- Close -->
-      <button onclick="document.getElementById('how-modal').style.display='none'" style="position:absolute;top:16px;right:20px;background:none;border:none;color:var(--muted);font-size:23px;cursor:pointer;font-family:'Space Mono',monospace;letter-spacing:0.1em;">✕</button>
-
-      <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--blood);margin-bottom:16px;">How GhostBust Works</div>
-      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:0.02em;color:var(--paper);margin-bottom:32px;line-height:1;">Three tools. Use them in order.</h2>
-
-      <!-- Step 1 -->
-      <div style="display:flex;gap:20px;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--blood);opacity:0.5;line-height:1;flex-shrink:0;">01</div>
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.04em;color:var(--paper);margin-bottom:8px;">🔍 Find Jobs</div>
-          <p style="font-family:'Space Mono',monospace;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.8;">Pick your industry, specialisation, job type, city, and distance. GhostBust opens pre-filtered links to Indeed, LinkedIn, Wellfound, ZipRecruiter, Monster, and SimplyHired — all at once, all sorted by date. No re-entering the same search six times.</p>
-        </div>
-      </div>
-
-      <!-- Step 2 -->
-      <div style="display:flex;gap:20px;margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid var(--border);">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--blood);opacity:0.5;line-height:1;flex-shrink:0;">02</div>
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.04em;color:var(--paper);margin-bottom:8px;">👻 Ghost Detector</div>
-          <p style="font-family:'Space Mono',monospace;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.8;">Find a listing that looks interesting? Before you spend time applying, paste the full text into the Ghost Detector. The AI reads the actual language and returns a Ghost Score from 0–100, a breakdown of specific signals, and concrete next steps. A high score means proceed with caution. A low score means it looks real — apply with confidence.</p>
-        </div>
-      </div>
-
-      <!-- Step 3 -->
-      <div style="display:flex;gap:20px;margin-bottom:36px;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--blood);opacity:0.5;line-height:1;flex-shrink:0;">03</div>
-        <div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.04em;color:var(--paper);margin-bottom:8px;">📋 Tracker</div>
-          <p style="font-family:'Space Mono',monospace;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.8;">Save any analysed listing to your tracker with one click. Update the status as you go — Applied, Interviewing, Ghosted, Rejected, Offer. Set follow-up dates so nothing falls through the cracks. Your data saves in your browser automatically. Generate your Ghost Report anytime to see your full search picture.</p>
-        </div>
-      </div>
-
-      <!-- Disclaimer -->
-      <div style="background:rgba(255,255,255,0.03);border-left:2px solid rgba(255,255,255,0.08);padding:10px 14px;margin-bottom:28px;">
-        <p style="font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);line-height:1.7;letter-spacing:0.04em;">Ghost Scores are algorithmic estimates based on listing language patterns — not verified facts about employer intent. Use them as a signal, not a verdict. Always do your own research before deciding whether to apply.</p>
-      </div>
-
-      <a href="/app.html" class="cta-primary" style="display:inline-block;text-decoration:none;">Open GhostBust →</a>
+  <!-- Slide 0: THE FOYER -->
+  <div class="gb-slide active" id="gb-s0">
+    <div class="gb-slide-inner">
+      <div class="gb-logo">GHOST<em>BUST</em></div>
+      <p class="gb-tagline">The job market has a ghost problem.</p>
+      <div class="gb-continue">Click to continue</div>
     </div>
   </div>
+
+  <!-- Slide 1: THE PROBLEM -->
+  <div class="gb-slide" id="gb-s1">
+    <div class="gb-slide-inner">
+      <div class="gb-rule"></div>
+      <h2 class="gb-heading">THE JOB MARKET IS BROKEN.</h2>
+      <p class="gb-body">A significant portion of job listings posted on major platforms today are never intended to result in a hire. They exist to collect resumes, satisfy compliance requirements, or maintain the appearance of growth &mdash; and they are structurally indistinguishable from legitimate postings. The burden of that asymmetry falls entirely on the job seeker.</p>
+    </div>
+  </div>
+
+  <!-- Slide 2: GHOST DETECTION + JOB SEARCH -->
+  <div class="gb-slide" id="gb-s2">
+    <div class="gb-slide-inner" style="max-width:720px;">
+      <h2 class="gb-heading">FIND REAL JOBS. EXPOSE THE FAKE ONES.</h2>
+      <p class="gb-body">GhostBust gives you two tools in one. Search across six major job boards simultaneously from a single interface, filtered by industry, role, location, and job type &mdash; no tab-switching, no repeated searches. Then paste any listing into the Ghost Detector and our AI scores it against the linguistic and structural patterns most commonly associated with postings that never result in hires &mdash; vague employer identity, missing application process, implausible requirement stacking, copy-pasted boilerplate. You get a Ghost Score, a full signal breakdown, and concrete next steps. In seconds.</p>
+      <div class="gb-mockup">
+        <div class="gb-mockup-header">
+          <div class="gb-mockup-score">70</div>
+          <div class="gb-mockup-meta">
+            <div class="gb-mockup-lbl">Ghost Score</div>
+            <div class="gb-mockup-verdict">Suspicious</div>
+          </div>
+        </div>
+        <div class="gb-mockup-flags">
+          <div class="gb-mockup-flag">
+            <span class="gb-flag-pill high">HIGH</span>
+            <span class="gb-flag-text">Anonymous company identity</span>
+          </div>
+          <div class="gb-mockup-flag">
+            <span class="gb-flag-pill med">MED</span>
+            <span class="gb-flag-text">No application process mentioned</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: CAREER HQ -->
+  <div class="gb-slide" id="gb-s3">
+    <div class="gb-slide-inner">
+      <h2 class="gb-heading">YOUR ENTIRE JOB SEARCH. ONE PLACE.</h2>
+      <p class="gb-body">Career HQ brings AI into every stage of your search. Get a full resume analysis with a strength score, gap identification, and rewritten bullets tailored to specific roles. Build a personalized job search strategy based on your resume, region, and target industry. Run a career coaching session that draws on your full platform history &mdash; past scans, prior analyses, logged outcomes. Every feature gets more tailored the more you use GhostBust. This is not a generic AI tool. It knows you.</p>
+    </div>
+  </div>
+
+  <!-- Slide 4: THE COMMUNITY -->
+  <div class="gb-slide" id="gb-s4">
+    <div class="gb-slide-inner">
+      <h2 class="gb-heading">YOU ARE NOT SEARCHING ALONE.</h2>
+      <p class="gb-body">The GhostBust Community is where job seekers share what the algorithms won&rsquo;t tell you &mdash; real experiences, regional intel, industry warnings, and wins. Post anonymously or publicly. Filter by region, industry, or topic. Follow the people whose insight you trust. The job market is opaque by design. The community exists to change that.</p>
+    </div>
+  </div>
+
+  <!-- Slide 5: THE PITCH -->
+  <div class="gb-slide" id="gb-s5">
+    <div class="gb-slide-inner">
+      <h2 class="gb-heading">YOU&rsquo;RE EARLY. THAT MATTERS.</h2>
+      <p class="gb-body">GhostBust is building the first proprietary dataset of ghost job patterns &mdash; powered by real job seekers like you. Every scan you run and every outcome you log becomes a data point that sharpens the platform for everyone who comes after you. This is what it looks like to be part of something from the beginning.</p>
+      <div class="gb-cta-row">
+        <a href="/app.html" class="gb-cta-btn gb-cta-primary">CREATE FREE ACCOUNT</a>
+        <a href="/app.html" class="gb-cta-btn gb-cta-outline">ENTER APP</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skip -->
+  <button id="gb-skip">SKIP</button>
+
+  <!-- Progress dots -->
+  <div id="gb-dots">
+    <span class="gb-dot"></span>
+    <span class="gb-dot"></span>
+    <span class="gb-dot"></span>
+    <span class="gb-dot"></span>
+    <span class="gb-dot"></span>
+    <span class="gb-dot"></span>
+  </div>
+  </div>
+
+  <script>
+  (function() {
+    var overlay = document.getElementById('gb-intro');
+    var slides  = overlay.querySelectorAll('.gb-slide');
+    var skipBtn = document.getElementById('gb-skip');
+    var dotsWrap = document.getElementById('gb-dots');
+    var dots    = dotsWrap.querySelectorAll('.gb-dot');
+    var current = 0;
+
+    function showSlide(n) {
+      slides.forEach(function(s, i) { s.classList.toggle('active', i === n); });
+      var chrome = n > 0;
+      skipBtn.style.opacity      = chrome ? '1' : '0';
+      skipBtn.style.pointerEvents = chrome ? 'auto' : 'none';
+      dotsWrap.style.opacity     = chrome ? '1' : '0';
+      dots.forEach(function(d, i) { d.classList.toggle('active', i === n); });
+      current = n;
+    }
+
+    function advance() {
+      if (current < slides.length - 1) { showSlide(current + 1); }
+      else { dismiss(); }
+    }
+
+    function dismiss() {
+      overlay.style.opacity      = '0';
+      overlay.style.pointerEvents = 'none';
+      setTimeout(function() { overlay.style.display = 'none'; }, 400);
+      localStorage.setItem('gb_intro_seen', 'true');
+    }
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target.closest('#gb-skip') || e.target.closest('.gb-cta-btn')) return;
+      advance();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (!overlay || overlay.style.display === 'none') return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); advance(); }
+      if (e.key === 'Escape') dismiss();
+    });
+
+    skipBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dismiss();
+    });
+
+    window.gbOpenIntro = function() {
+      current = 0;
+      overlay.style.display      = 'flex';
+      overlay.style.opacity      = '1';
+      overlay.style.pointerEvents = 'auto';
+      showSlide(0);
+    };
+
+    if (localStorage.getItem('gb_intro_seen')) {
+      overlay.style.display = 'none';
+    } else {
+      showSlide(0);
+    }
+  })();
+  </script>
 
 </body>
 </html>

@@ -11,7 +11,8 @@
       "Bash(grep -n \"^\\\\`;\" C:/Users/gabri/ghostbust-app/src/Profile.jsx)",
       "Bash(ls -la C:/Users/gabri/ghostbust-app/.env*)",
       "Bash(node:*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(mv:*)"
     ]
   }
 }
