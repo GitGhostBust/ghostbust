@@ -687,7 +687,7 @@
       <div class="hero-cta-row">
         <a href="/app.html" class="cta-primary">Start For Free →</a>
         <a href="/community.html" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.08em;background:transparent;color:var(--paper);border:2px solid rgba(255,255,255,0.2);padding:16px 36px;cursor:pointer;transition:border-color 0.2s;text-decoration:none;display:inline-block;">🗣️ Community →</a>
-        <button onclick="document.getElementById('how-modal').style.display='flex'" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.08em;background:transparent;color:var(--paper);border:2px solid rgba(255,255,255,0.2);padding:16px 36px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'">How It Works ↗</button>
+        <button onclick="localStorage.removeItem('gbIntroSeen'); location.reload();" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">REPLAY INTRO</button>
         <span class="cta-note">No account required · Free to use</span>
       </div>
     </div>
@@ -791,8 +791,6 @@
       </div>
     </div>
   </section>
-
-  <button onclick="localStorage.removeItem('gbIntroSeen');location.reload();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.28);cursor:pointer;padding:8px 0 0;margin-top:14px;transition:color 150ms;display:block;">REPLAY INTRO</button>
 
   <!-- SAMPLE OUTPUT -->
   <section>
