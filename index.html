@@ -994,7 +994,7 @@
       GhostBust Ghost Scores are algorithmic estimates based on patterns in job listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. Ghost job statistics cited on this page are sourced from third-party research and reporting. GhostBust is not affiliated with any of the job boards or hiring platforms referenced. &copy; 2026 GhostBust.
     </div>
   
-    <button onclick="gbOpenIntro()" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.28);cursor:pointer;padding:8px 0 0;margin-top:14px;transition:color 150ms;display:block;">HOW IT WORKS</button>
+    <button onclick="localStorage.removeItem('gb_intro_seen');location.reload();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.28);cursor:pointer;padding:8px 0 0;margin-top:14px;transition:color 150ms;display:block;">REPLAY INTRO</button>
   </footer>
 
   <!-- CINEMATIC INTRO OVERLAY -->
@@ -1025,6 +1025,8 @@
       opacity: 0; transform: translateY(-10px); pointer-events: none;
     }
     #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; max-width: min(680px, 100%); overflow-x: hidden; text-align: left; }
+    #gb-intro #gb-s0 .gb-slide-inner { text-align: center; }
+    #gb-intro #gb-s0 .gb-favicon { margin-left: auto; margin-right: auto; }
     /* Slide 0 */
     #gb-intro .gb-favicon {
       width: 90px; height: 90px;
@@ -1136,6 +1138,7 @@
     #gb-intro .gb-cta-btn:hover { opacity: 0.82; }
     #gb-intro .gb-cta-primary { background: #d42200; color: #eeeae0; border: none; }
     #gb-intro .gb-cta-outline { background: none; color: #d42200; border: 2px solid #d42200; }
+    #gb-intro .gb-cta-explore { background: none; color: rgba(238,234,224,0.55); border: 1px solid rgba(238,234,224,0.18); font-size: 16px; padding: 11px 32px; letter-spacing: 0.12em; }
     /* Skip */
     #gb-skip {
       position: fixed; top: 24px; right: 28px;
@@ -1240,6 +1243,9 @@
       <div class="gb-cta-row">
         <a href="/app.html" class="gb-cta-btn gb-cta-primary">CREATE FREE ACCOUNT</a>
         <a href="/app.html" class="gb-cta-btn gb-cta-outline">ENTER APP</a>
+      </div>
+      <div style="margin-top:20px;">
+        <a href="/" class="gb-cta-btn gb-cta-explore" onclick="localStorage.setItem('gb_intro_seen','true')">EXPLORE GHOSTBUST</a>
       </div>
     </div>
   </div>
