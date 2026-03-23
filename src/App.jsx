@@ -795,7 +795,7 @@ function VerifyTab(props) {
                 </button>
               </>
             ):(
-              <div className="save-success">✓ Saved to tracker as <strong>Researching</strong>. Switch to the Tracker tab to update status.</div>
+              <div className="save-success">✓ Saved to tracker as <strong>Researching</strong>. Switch to the Application Tracker tab to update status.</div>
             )}
           </div>
         </div>
@@ -1195,7 +1195,7 @@ const TUTORIAL_STEPS = [
   {
     icon: "🏁",
     title: "You're Ready",
-    body: "That's everything. Start with Find Jobs, paste any interesting listing into the Ghost Detector before applying, and track your progress in the Tracker. Good luck out there.",
+    body: "That's everything. Start with Find Jobs, paste any interesting listing into the Ghost Detector before applying, and track your progress in the Application Tracker. Good luck out there.",
     tab: null,
   },
 ];
@@ -1394,11 +1394,11 @@ export default function App() {
             👻 Verify Listing
           </button>
           <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setTab("tracker");}}>
-            📋 Tracker
+            📋 Application Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
           <button className={"tab-btn"+(tab==="resume"?" active":"")} onClick={function(){setTab("resume");}}>
-            📄 Resume
+            📄 Career HQ
           </button>
           <span style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <UserSearch />
