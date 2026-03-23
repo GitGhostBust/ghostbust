@@ -205,6 +205,21 @@ const STYLE = `
     .ra-fit-score-display { flex-direction: column; align-items: flex-start; gap: 12px; }
     .ra-score-bar-wrap { width: 100%; max-width: 100%; }
   }
+
+  /* HISTORY DETAIL VIEW — all Space Mono & Libre Baskerville +2pt */
+  .ra-history-detail .ra-history-back { font-size: 11px; }
+  .ra-history-detail .ra-mode-badge { font-size: 10px; }
+  .ra-history-detail .ra-score-card-label { font-size: 11px; }
+  .ra-history-detail .ra-score-card-sub { font-size: 14px; }
+  .ra-history-detail .ra-section-label { font-size: 11px; }
+  .ra-history-detail .ra-feedback-title { font-size: 11px; }
+  .ra-history-detail .ra-prose { font-size: 15px; }
+  .ra-history-detail .ra-bullet-side-label { font-size: 10px; }
+  .ra-history-detail .ra-bullet-text { font-size: 14px; }
+  .ra-history-detail .ra-pill { font-size: 12px; }
+  .ra-history-detail .ra-copy-btn { font-size: 11px; }
+  .ra-history-detail .ra-cover-letter { font-size: 15px; }
+  .ra-history-detail .ra-cl-trigger { font-size: 12px; }
 `;
 
 /* ================================================================
@@ -1364,9 +1379,9 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       {innerTab === "history" && (
         <div>
           {selectedAnalysis ? (
-            <div>
+            <div className="ra-history-detail">
               <button className="ra-history-back" onClick={function () { setSelectedAnalysis(null); setCopied(false); }}>← Back to History</button>
-              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: "rgba(238,234,224,0.65)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 13, color: "rgba(238,234,224,0.65)", letterSpacing: "0.1em", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
                 <span className={"ra-mode-badge " + (selectedAnalysis.mode === "general" ? "general" : "job")}>{selectedAnalysis.mode === "general" ? "General Review" : "Job-Specific"}</span>
                 {formatDateTime(selectedAnalysis.created_at)}
                 {selectedAnalysis.job_title && <span>· {selectedAnalysis.job_title}</span>}
