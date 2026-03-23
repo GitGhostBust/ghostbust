@@ -131,6 +131,43 @@ const STYLE = `
   .tip-row { display: flex; gap: 10px; font-size: 13px; color: rgba(238,234,224,0.7); padding: 4px 0; line-height: 1.6; }
   .tip-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
 
+  /* SEARCH — ENHANCED */
+  .search-nudge { background: rgba(0,230,122,0.06); border: 1px solid rgba(0,230,122,0.2); border-left: 3px solid var(--signal); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .search-nudge-icon { font-size: 16px; flex-shrink: 0; color: var(--signal); }
+  .search-nudge-text { font-family: 'Space Mono', monospace; font-size: 12px; color: rgba(0,230,122,0.9); line-height: 1.5; }
+  .search-form-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .search-form-actions .run-btn { flex: 1; margin-top: 0; }
+  .save-search-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; }
+  .save-search-btn:hover:not(:disabled) { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.25); }
+  .save-search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .saved-searches-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .saved-searches-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
+  .saved-search-list { display: flex; flex-direction: column; gap: 6px; }
+  .saved-search-item { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); padding: 9px 12px; cursor: pointer; transition: background 0.15s; }
+  .saved-search-item:hover { background: var(--surface3); }
+  .saved-search-label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper); flex: 1; }
+  .saved-search-meta { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
+  .saved-search-del { background: none; border: none; color: var(--ghost); font-size: 13px; cursor: pointer; padding: 0 4px; transition: color 0.15s; flex-shrink: 0; }
+  .saved-search-del:hover { color: var(--blood); }
+  .ai-refine-btn { width: 100%; margin-top: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 0.08em; border: 1px solid rgba(0,200,230,0.3); padding: 12px; cursor: pointer; background: rgba(0,200,230,0.06); color: var(--ice); transition: background 0.15s; }
+  .ai-refine-btn:hover:not(:disabled) { background: rgba(0,200,230,0.13); }
+  .ai-refine-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .ai-refine-section { margin-top: 16px; background: rgba(0,200,230,0.05); border: 1px solid rgba(0,200,230,0.18); border-top: 3px solid var(--ice); padding: 20px 22px; }
+  .ai-refine-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--ice); margin-bottom: 16px; }
+  .ai-refine-group { margin-bottom: 18px; }
+  .ai-refine-group:last-child { margin-bottom: 0; }
+  .ai-refine-group-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
+  .ai-refine-pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ai-refine-pill { font-family: 'Space Mono', monospace; font-size: 11px; background: rgba(0,200,230,0.09); border: 1px solid rgba(0,200,230,0.25); color: var(--ice); padding: 6px 13px; cursor: pointer; transition: background 0.15s; }
+  .ai-refine-pill:hover { background: rgba(0,200,230,0.18); }
+  .ai-refine-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: rgba(238,234,224,0.65); line-height: 1.55; }
+  .ai-refine-row:last-child { border-bottom: none; }
+  .ai-refine-key { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--paper); flex-shrink: 0; min-width: 94px; }
+  .board-card-actions { display: flex; flex-direction: column; gap: 6px; }
+  .track-role-btn { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal); background: rgba(0,230,122,0.06); border: 1px solid rgba(0,230,122,0.2); padding: 8px; cursor: pointer; transition: background 0.15s; width: 100%; }
+  .track-role-btn:hover:not(:disabled) { background: rgba(0,230,122,0.13); }
+  .track-role-btn.saved { color: var(--ghost); background: rgba(255,255,255,0.03); border-color: var(--border); cursor: default; }
+
   /* VERDICT */
   .verdict-card { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); padding: 26px; margin-top: 24px; }
   .verdict-card.legit { border-top-color: var(--signal); }
@@ -712,33 +749,179 @@ function VerdictCard(props) {
 /* ================================================================
    SEARCH TAB
 ================================================================ */
-function SearchTab() {
-  var [industry,setIndustry] = useState("");
-  var [subfield,setSubfield] = useState("");
-  var [jobType,setJobType] = useState("");
-  var [city,setCity] = useState("");
-  var [usState,setUsState] = useState("");
-  var [radius,setRadius] = useState("25");
-  var [results,setResults] = useState(null);
+function SearchTab({ session, addApp }) {
+  var [industry, setIndustry] = useState("");
+  var [subfield, setSubfield] = useState("");
+  var [jobType, setJobType] = useState("");
+  var [city, setCity] = useState("");
+  var [usState, setUsState] = useState("");
+  var [radius, setRadius] = useState("25");
+  var [results, setResults] = useState(null);
+  var [trackedBoards, setTrackedBoards] = useState({});
 
+  // Feature 2: AI Refine
+  var [aiRefining, setAiRefining] = useState(false);
+  var [aiRefinement, setAiRefinement] = useState(null);
+  var [aiRefineError, setAiRefineError] = useState(null);
+
+  // Feature 5: Saved searches
+  var [savedSearches, setSavedSearches] = useState([]);
+  var [saving, setSaving] = useState(false);
+
+  var userId = session ? session.user.id : null;
   var subfields = industry ? (INDUSTRY_MAP[industry] || []) : [];
+
+  // Feature 5: Load saved searches on login
+  useEffect(function() {
+    if (!userId) { setSavedSearches([]); return; }
+    supabase.from("saved_searches")
+      .select("id, label, query, location, radius, job_type, industry, subfield, saved_at")
+      .eq("user_id", userId)
+      .order("saved_at", { ascending: false })
+      .then(function(res) {
+        if (!res.error) setSavedSearches(res.data || []);
+      });
+  }, [userId]);
+
+  // Feature 4: Daily nudge based on last search date
+  var nudge = null;
+  var lastSearched = localStorage.getItem("ghostbust-last-search");
+  if (lastSearched) {
+    var daysSince = Math.floor((Date.now() - Number(lastSearched)) / 86400000);
+    if (daysSince === 0) nudge = "You searched today — keep the momentum going.";
+    else if (daysSince === 1) nudge = "It's been 1 day since your last search. Consistent daily searching gets results faster.";
+    else if (daysSince <= 3) nudge = "It's been " + daysSince + " days since your last search. Now is a good time to check what's new.";
+    else if (daysSince <= 7) nudge = "It's been " + daysSince + " days. Job boards refresh daily — you may be missing fresh listings.";
+    else nudge = "It's been " + daysSince + " days since your last search. Fresh listings are waiting — let's go.";
+  }
 
   function handleIndustryChange(e) {
     setIndustry(e.target.value);
     setSubfield("");
   }
 
-  function handleSearch() {
-    var q = [subfield||industry, jobType].filter(Boolean).join(" ");
-    var loc = [city.trim(), usState.trim()].filter(Boolean).join(", ");
-    var r = radius;
-    setResults({ q:q, loc:loc, radius:r, boards:BOARDS.map(function(b){return {id:b.id,name:b.name,desc:b.desc,url:b.buildUrl(q,loc,r)};}) });
+  function buildResults(q, loc, r) {
+    setResults({ q: q, loc: loc, radius: r, boards: BOARDS.map(function(b) { return { id: b.id, name: b.name, desc: b.desc, url: b.buildUrl(q, loc, r) }; }) });
+    setTrackedBoards({});
+    localStorage.setItem("ghostbust-last-search", String(Date.now()));
   }
 
-  var canSearch = industry.length>0||city.length>0||usState.length>0||jobType.length>0;
+  function handleSearch() {
+    var q = [subfield || industry, jobType].filter(Boolean).join(" ");
+    var loc = [city.trim(), usState.trim()].filter(Boolean).join(", ");
+    buildResults(q, loc, radius);
+    setAiRefinement(null);
+    setAiRefineError(null);
+  }
+
+  // Feature 3: Log board click to search_history
+  function handleBoardClick(board) {
+    if (!userId || !results) return;
+    supabase.from("search_history").insert({
+      user_id: userId,
+      query: results.q || "",
+      location: results.loc || "",
+      radius: results.radius || "",
+      job_type: jobType,
+      industry: industry,
+      board_id: board.id,
+      board_name: board.name,
+    }).then(function() {});
+  }
+
+  // Feature 1: Track this role
+  function handleTrackRole(board) {
+    if (!addApp || !results) return;
+    var title = subfield || industry || results.q || "Job";
+    addApp({
+      title: title,
+      company: "",
+      status: "Researching",
+      ghostScore: 0,
+      verdict: "UNKNOWN",
+      signalFlags: [],
+      notes: "Saved from " + board.name + " search: " + (results.q || ""),
+      url: board.url,
+      sourceBoard: board.name,
+      appliedDate: "",
+      followupDate: "",
+    });
+    setTrackedBoards(function(prev) { return Object.assign({}, prev, { [board.id]: true }); });
+  }
+
+  // Feature 2: AI-powered search refinement
+  function handleAiRefine() {
+    setAiRefining(true);
+    setAiRefineError(null);
+    var q = results ? results.q : [subfield || industry, jobType].filter(Boolean).join(" ");
+    var loc = results ? results.loc : [city.trim(), usState.trim()].filter(Boolean).join(", ");
+    var prompt = 'You are a job search strategist. The user is searching for: "' + q + '" in "' + (loc || "USA") + '".\n\nProvide targeted search refinement as JSON with exactly these keys:\n{\n  "alternative_titles": ["title1", "title2", "title3"],\n  "board_priorities": [\n    {"board": "Indeed", "reason": "one sentence why this board suits this search"},\n    {"board": "LinkedIn", "reason": "..."},\n    {"board": "Wellfound", "reason": "..."}\n  ],\n  "search_tips": ["tip1", "tip2", "tip3"]\n}\n\nalternative_titles: 3 related job titles that often yield hidden results for this role.\nboard_priorities: top 3 boards for this specific query and location with a brief reason each.\nsearch_tips: 3 specific actionable tips for this exact role and location — not generic advice.\n\nReturn only the JSON object.';
+    apiCall([{ role: "user", content: prompt }])
+      .then(function(text) {
+        var parsed = parseJSON(text);
+        setAiRefinement(parsed);
+        setAiRefining(false);
+      })
+      .catch(function(err) {
+        setAiRefineError(err.message);
+        setAiRefining(false);
+      });
+  }
+
+  // Feature 5: Save current search
+  function handleSaveSearch() {
+    if (!userId || !canSearch) return;
+    setSaving(true);
+    var q = [subfield || industry, jobType].filter(Boolean).join(" ");
+    var loc = [city.trim(), usState.trim()].filter(Boolean).join(", ");
+    var label = [subfield || industry, jobType, loc].filter(Boolean).join(" · ") || "Search";
+    supabase.from("saved_searches").insert({
+      user_id: userId,
+      label: label,
+      query: q,
+      location: loc,
+      radius: radius,
+      job_type: jobType,
+      industry: industry,
+      subfield: subfield,
+    }).select("id, label, query, location, radius, job_type, industry, subfield, saved_at").single()
+      .then(function(res) {
+        setSaving(false);
+        if (!res.error && res.data) setSavedSearches(function(prev) { return [res.data].concat(prev); });
+      });
+  }
+
+  function handleLoadSaved(s) {
+    setIndustry(s.industry || "");
+    setSubfield(s.subfield || "");
+    setJobType(s.job_type || "");
+    var locParts = (s.location || "").split(", ");
+    setCity(locParts[0] || "");
+    setUsState(locParts[1] || "");
+    setRadius(s.radius || "25");
+    setResults(null);
+    setAiRefinement(null);
+  }
+
+  function handleDeleteSaved(e, id) {
+    e.stopPropagation();
+    supabase.from("saved_searches").delete().eq("id", id).then(function() {});
+    setSavedSearches(function(prev) { return prev.filter(function(s) { return s.id !== id; }); });
+  }
+
+  var canSearch = industry.length > 0 || city.length > 0 || usState.length > 0 || jobType.length > 0;
 
   return (
     <div className="panel">
+
+      {/* Feature 4: Daily search nudge */}
+      {nudge && (
+        <div className="search-nudge">
+          <span className="search-nudge-icon">◈</span>
+          <span className="search-nudge-text">{nudge}</span>
+        </div>
+      )}
+
       <div className="form-box green-top">
         <span className="form-label green">Find Real Jobs — Search All Major Boards</span>
         <div className="search-grid">
@@ -746,36 +929,36 @@ function SearchTab() {
             <label className="field-label">Industry</label>
             <select className="f-input" value={industry} onChange={handleIndustryChange}>
               <option value="">Any Industry</option>
-              {Object.keys(INDUSTRY_MAP).map(function(ind){return <option key={ind} value={ind}>{ind}</option>;})}
+              {Object.keys(INDUSTRY_MAP).map(function(ind) { return <option key={ind} value={ind}>{ind}</option>; })}
             </select>
           </div>
           <div>
-            <label className="field-label" style={{color:subfields.length>0?"var(--paper)":"var(--ghost)"}}>
-              Specialisation {subfields.length===0?"— select an industry first":""}
+            <label className="field-label" style={{ color: subfields.length > 0 ? "var(--paper)" : "var(--ghost)" }}>
+              Specialisation {subfields.length === 0 ? "— select an industry first" : ""}
             </label>
-            <select className="f-input" value={subfield} onChange={function(e){setSubfield(e.target.value);}} disabled={subfields.length===0}>
-              <option value="">All {industry||"fields"}</option>
-              {subfields.map(function(s){return <option key={s} value={s}>{s}</option>;})}
+            <select className="f-input" value={subfield} onChange={function(e) { setSubfield(e.target.value); }} disabled={subfields.length === 0}>
+              <option value="">All {industry || "fields"}</option>
+              {subfields.map(function(s) { return <option key={s} value={s}>{s}</option>; })}
             </select>
           </div>
           <div>
             <label className="field-label">Job Type</label>
-            <select className="f-input" value={jobType} onChange={function(e){setJobType(e.target.value);}}>
+            <select className="f-input" value={jobType} onChange={function(e) { setJobType(e.target.value); }}>
               <option value="">Any</option>
               <option>Full-time</option><option>Part-time</option><option>Contract</option><option>Remote</option>
             </select>
           </div>
           <div>
             <label className="field-label">City</label>
-            <input className="f-input" placeholder="e.g. San Francisco, Austin" value={city} onChange={function(e){setCity(e.target.value);}} />
+            <input className="f-input" placeholder="e.g. San Francisco, Austin" value={city} onChange={function(e) { setCity(e.target.value); }} />
           </div>
           <div>
             <label className="field-label">State</label>
-            <input className="f-input" placeholder="e.g. California, TX" value={usState} onChange={function(e){setUsState(e.target.value);}} />
+            <input className="f-input" placeholder="e.g. California, TX" value={usState} onChange={function(e) { setUsState(e.target.value); }} />
           </div>
           <div>
             <label className="field-label">Distance</label>
-            <select className="f-input" value={radius} onChange={function(e){setRadius(e.target.value);}}>
+            <select className="f-input" value={radius} onChange={function(e) { setRadius(e.target.value); }}>
               <option value="5">Within 5 miles</option>
               <option value="10">Within 10 miles</option>
               <option value="25">Within 25 miles</option>
@@ -784,31 +967,123 @@ function SearchTab() {
             </select>
           </div>
         </div>
-        <button className="run-btn green" onClick={handleSearch} disabled={!canSearch}>GENERATE SEARCH LINKS</button>
+        <div className="search-form-actions">
+          <button className="run-btn green" onClick={handleSearch} disabled={!canSearch}>GENERATE SEARCH LINKS</button>
+          {userId && (
+            <button className="save-search-btn" onClick={handleSaveSearch} disabled={saving || !canSearch} title="Save this search for quick reuse">
+              {saving ? "SAVING..." : "SAVE SEARCH"}
+            </button>
+          )}
+        </div>
+
+        {/* Feature 5: Saved searches list */}
+        {userId && savedSearches.length > 0 && (
+          <div className="saved-searches-section">
+            <div className="saved-searches-title">Saved Searches — click to reload</div>
+            <div className="saved-search-list">
+              {savedSearches.map(function(s) {
+                return (
+                  <div key={s.id} className="saved-search-item" onClick={function() { handleLoadSaved(s); }}>
+                    <span className="saved-search-label">{s.label}</span>
+                    <span className="saved-search-meta">{s.location || "USA"}</span>
+                    <button className="saved-search-del" onClick={function(e) { handleDeleteSaved(e, s.id); }} title="Remove">✕</button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
-      {results&&(
+      {results && (
         <div className="boards-section">
           <div className="boards-header">
             <div>
               <div className="boards-title">6 Boards — Pre-Filtered</div>
-              <div className="boards-sub">{results.q?results.q.toUpperCase():"ALL JOBS"}{results.loc?" · "+results.loc.toUpperCase()+(results.radius?" +"+results.radius+"MI":""):" · USA"} · LAST 14 DAYS · DATE SORTED</div>
+              <div className="boards-sub">{results.q ? results.q.toUpperCase() : "ALL JOBS"}{results.loc ? " · " + results.loc.toUpperCase() + (results.radius ? " +" + results.radius + "MI" : "") : " · USA"} · LAST 14 DAYS · DATE SORTED</div>
             </div>
           </div>
           <div className="board-grid">
-            {results.boards.map(function(b){
+            {results.boards.map(function(b) {
               return (
-                <div key={b.id} className={"board-card "+b.id}>
-                  <div className={"board-name "+b.id}>{b.name}</div>
+                <div key={b.id} className={"board-card " + b.id}>
+                  <div className={"board-name " + b.id}>{b.name}</div>
                   <p className="board-desc">{b.desc}</p>
-                  <a className="board-link" href={b.url} target="_blank" rel="noreferrer">Search {b.name} ↗</a>
+                  <div className="board-card-actions">
+                    {/* Feature 3: log click; Feature link */}
+                    <a className="board-link" href={b.url} target="_blank" rel="noreferrer" onClick={function() { handleBoardClick(b); }}>Search {b.name} ↗</a>
+                    {/* Feature 1: Track this role */}
+                    <button
+                      className={"track-role-btn" + (trackedBoards[b.id] ? " saved" : "")}
+                      onClick={function() { if (!trackedBoards[b.id]) handleTrackRole(b); }}
+                      disabled={!!trackedBoards[b.id]}
+                    >
+                      {trackedBoards[b.id] ? "✓ Added to Tracker" : "+ Track This Role"}
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
+
+          {/* Feature 2: AI Refine */}
+          <button className="ai-refine-btn" onClick={handleAiRefine} disabled={aiRefining}>
+            {aiRefining ? "ANALYZING YOUR SEARCH..." : "✦ AI REFINE MY SEARCH"}
+          </button>
+          {aiRefineError && <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: "var(--blood)", marginTop: 8 }}>{aiRefineError}</div>}
+          {aiRefinement && (
+            <div className="ai-refine-section">
+              <div className="ai-refine-title">AI Search Refinement</div>
+              {aiRefinement.alternative_titles && aiRefinement.alternative_titles.length > 0 && (
+                <div className="ai-refine-group">
+                  <div className="ai-refine-group-label">Also Search These Titles</div>
+                  <div className="ai-refine-pill-row">
+                    {aiRefinement.alternative_titles.map(function(t, i) {
+                      return (
+                        <button key={i} className="ai-refine-pill" title="Search with this title" onClick={function() {
+                          var loc = results ? results.loc : [city.trim(), usState.trim()].filter(Boolean).join(", ");
+                          buildResults(t, loc, radius);
+                          setAiRefinement(null);
+                        }}>
+                          {t}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {aiRefinement.board_priorities && aiRefinement.board_priorities.length > 0 && (
+                <div className="ai-refine-group">
+                  <div className="ai-refine-group-label">Top Boards for This Search</div>
+                  {aiRefinement.board_priorities.map(function(bp, i) {
+                    return (
+                      <div key={i} className="ai-refine-row">
+                        <span className="ai-refine-key">{bp.board}</span>
+                        <span>{bp.reason}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {aiRefinement.search_tips && aiRefinement.search_tips.length > 0 && (
+                <div className="ai-refine-group">
+                  <div className="ai-refine-group-label">Tips for This Search</div>
+                  {aiRefinement.search_tips.map(function(tip, i) {
+                    return (
+                      <div key={i} className="ai-refine-row">
+                        <span className="ai-refine-key">{String(i + 1).padStart(2, "0")}</span>
+                        <span>{tip}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="search-tips">
             <div className="search-tips-title">Ghost-Proof Your Search</div>
-            {SEARCH_TIPS.map(function(t,i){return <div key={i} className="tip-row"><span className="tip-n">{String(i+1).padStart(2,"0")}</span><span>{t}</span></div>;})}
+            {SEARCH_TIPS.map(function(t, i) { return <div key={i} className="tip-row"><span className="tip-n">{String(i + 1).padStart(2, "0")}</span><span>{t}</span></div>; })}
           </div>
         </div>
       )}
@@ -1559,7 +1834,7 @@ export default function App() {
         </nav>
 
         <div style={{maxWidth:1280,margin:"0 auto",width:"100%"}}>
-          {tab==="search"&&<SearchTab />}
+          {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
           {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} />}
           {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} />}
           {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
