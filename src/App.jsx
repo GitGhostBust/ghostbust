@@ -418,10 +418,12 @@ function parseJSON(text) {
   throw new Error("Could not parse response: " + t.slice(0,200));
 }
 
+console.log("[GhostBust] VITE_ANTHROPIC_API_KEY prefix:", import.meta.env.VITE_ANTHROPIC_API_KEY ? import.meta.env.VITE_ANTHROPIC_API_KEY.slice(0, 10) + "..." : "UNDEFINED");
+
 function apiCall(messages) {
   var apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return Promise.reject(new Error("VITE_ANTHROPIC_API_KEY is not set. Add it to your .env file."));
+    return Promise.reject(new Error("This service is temporarily unavailable. Please try again later."));
   }
   return fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
