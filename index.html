@@ -1001,9 +1001,11 @@
   <div id="gb-intro">
   <style>
     #gb-intro {
-      position: fixed; inset: 0; background: #070709; z-index: 10000;
+      position: fixed; inset: 0;
+      width: 100vw; height: 100vh;
+      overflow: hidden; z-index: 10000;
+      background: #070709;
       display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
       transition: opacity 400ms ease;
     }
     #gb-intro .gb-slide {
@@ -1288,7 +1290,6 @@
       overlay.style.pointerEvents = 'none';
       setTimeout(function() { overlay.style.display = 'none'; }, 420);
       localStorage.setItem('gbIntroSeen', 'true');
-      document.body.style.overflow = '';
     }
 
     overlay.addEventListener('click', function(e) {
@@ -1321,7 +1322,6 @@
     if (localStorage.getItem('gbIntroSeen')) {
       overlay.style.display = 'none';
     } else {
-      document.body.style.overflow = 'hidden';
       showSlide(0);
     }
   })();
