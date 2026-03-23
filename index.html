@@ -1003,26 +1003,23 @@
     #gb-intro {
       position: fixed; inset: 0; background: #070709; z-index: 10000;
       display: flex; align-items: center; justify-content: center;
-      overflow-x: hidden;
+      overflow: hidden;
       transition: opacity 400ms ease;
     }
     #gb-intro .gb-slide {
       position: absolute; inset: 0;
-      height: 100vh; overflow: hidden;
+      width: 100%; height: 100%;
+      overflow: hidden;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 48px 32px;
       opacity: 0;
-      transform: translateY(10px);
       pointer-events: none;
-      transition: opacity 600ms ease-in-out, transform 600ms ease-in-out;
+      transition: opacity 500ms ease;
       box-sizing: border-box;
     }
     #gb-intro .gb-slide.active {
-      opacity: 1; transform: translateY(0); pointer-events: auto;
-    }
-    #gb-intro .gb-slide.leaving {
-      opacity: 0; transform: translateY(-10px); pointer-events: none;
+      opacity: 1; pointer-events: auto;
     }
     #gb-intro .gb-slide-inner { max-width: 680px; width: 100%; max-width: min(680px, 100%); overflow-x: hidden; text-align: left; }
     #gb-intro #gb-s0 .gb-slide-inner { text-align: center; }
@@ -1124,11 +1121,7 @@
       font-family: 'Space Mono', monospace; font-size: 11px;
       color: rgba(238,234,224,0.58); line-height: 1.4;
     }
-    /* CTA buttons (slide 5) */
-    #gb-intro .gb-cta-row {
-      display: flex; gap: 14px; justify-content: flex-start;
-      margin-top: 36px; flex-wrap: wrap;
-    }
+    /* CTA button (slide 5) */
     #gb-intro .gb-cta-btn {
       font-family: 'Bebas Neue', sans-serif; font-size: 19px;
       letter-spacing: 0.08em; padding: 12px 36px;
@@ -1136,8 +1129,6 @@
       transition: opacity 150ms; display: inline-block;
     }
     #gb-intro .gb-cta-btn:hover { opacity: 0.82; }
-    #gb-intro .gb-cta-primary { background: #d42200; color: #eeeae0; border: none; }
-    #gb-intro .gb-cta-outline { background: none; color: #d42200; border: 2px solid #d42200; }
     #gb-intro .gb-cta-explore { background: none; color: rgba(238,234,224,0.55); border: 1px solid rgba(238,234,224,0.18); font-size: 16px; padding: 11px 32px; letter-spacing: 0.12em; }
     /* Skip */
     #gb-skip {
@@ -1240,12 +1231,8 @@
     <div class="gb-slide-inner">
       <h2 class="gb-heading">YOU&rsquo;RE EARLY. THAT MATTERS.</h2>
       <p class="gb-body">GhostBust is building the first proprietary dataset of ghost job patterns &mdash; powered by real job seekers like you. Every scan you run and every outcome you log becomes a data point that sharpens the platform for everyone who comes after you. This is what it looks like to be part of something from the beginning.</p>
-      <div class="gb-cta-row">
-        <a href="/app.html" class="gb-cta-btn gb-cta-primary">CREATE FREE ACCOUNT</a>
-        <a href="/app.html" class="gb-cta-btn gb-cta-outline">ENTER APP</a>
-      </div>
-      <div style="margin-top:20px;">
-        <a href="/" class="gb-cta-btn gb-cta-explore" onclick="localStorage.setItem('gb_intro_seen','true')">EXPLORE GHOSTBUST</a>
+      <div style="margin-top:32px;">
+        <a href="/" class="gb-cta-btn gb-cta-explore" onclick="localStorage.setItem('gbIntroSeen','true')">EXPLORE GHOSTBUST</a>
       </div>
     </div>
   </div>
@@ -1266,35 +1253,23 @@
 
   <script>
   (function() {
-    var overlay   = document.getElementById('gb-intro');
-    var slides    = overlay.querySelectorAll('.gb-slide');
-    var skipBtn   = document.getElementById('gb-skip');
-    var dotsWrap  = document.getElementById('gb-dots');
-    var dots      = dotsWrap.querySelectorAll('.gb-dot');
-    var current   = 0;
-    var busy      = false;
+    var overlay  = document.getElementById('gb-intro');
+    var slides   = overlay.querySelectorAll('.gb-slide');
+    var skipBtn  = document.getElementById('gb-skip');
+    var dotsWrap = document.getElementById('gb-dots');
+    var dots     = dotsWrap.querySelectorAll('.gb-dot');
+    var current  = 0;
+    var busy     = false;
 
     function showSlide(n) {
-      var prev = current;
-
-      // Outgoing slide exits upward
-      if (slides[prev] && prev !== n) {
-        slides[prev].classList.remove('active');
-        slides[prev].classList.add('leaving');
-        (function(s) {
-          setTimeout(function() { s.classList.remove('leaving'); }, 660);
-        })(slides[prev]);
-      }
-
-      // Incoming slide rises from below to center
-      slides[n].classList.remove('leaving');
+      // Pure opacity swap — no transforms, no movement
+      slides[current].classList.remove('active');
       slides[n].classList.add('active');
 
-      // Chrome: skip + dots hidden on slide 0
       var chrome = n > 0;
-      skipBtn.style.opacity      = chrome ? '1' : '0';
+      skipBtn.style.opacity       = chrome ? '1' : '0';
       skipBtn.style.pointerEvents = chrome ? 'auto' : 'none';
-      dotsWrap.style.opacity     = chrome ? '1' : '0';
+      dotsWrap.style.opacity      = chrome ? '1' : '0';
       dots.forEach(function(d, i) { d.classList.toggle('active', i === n); });
 
       current = n;
@@ -1303,16 +1278,16 @@
     function advance() {
       if (busy) return;
       busy = true;
-      setTimeout(function() { busy = false; }, 660);
+      setTimeout(function() { busy = false; }, 520);
       if (current < slides.length - 1) { showSlide(current + 1); }
       else { dismiss(); }
     }
 
     function dismiss() {
-      overlay.style.opacity      = '0';
+      overlay.style.opacity       = '0';
       overlay.style.pointerEvents = 'none';
       setTimeout(function() { overlay.style.display = 'none'; }, 420);
-      localStorage.setItem('gb_intro_seen', 'true');
+      localStorage.setItem('gbIntroSeen', 'true');
     }
 
     overlay.addEventListener('click', function(e) {
@@ -1332,17 +1307,17 @@
     });
 
     window.gbOpenIntro = function() {
-      slides.forEach(function(s) { s.classList.remove('active', 'leaving'); });
+      slides.forEach(function(s) { s.classList.remove('active'); });
       current = 0;
       busy = false;
-      overlay.style.display      = 'flex';
-      overlay.style.opacity      = '1';
+      overlay.style.display       = 'flex';
+      overlay.style.opacity       = '1';
       overlay.style.pointerEvents = 'auto';
-      void overlay.offsetWidth; // force reflow before activating slide 0
+      void overlay.offsetWidth;
       showSlide(0);
     };
 
-    if (localStorage.getItem('gb_intro_seen')) {
+    if (localStorage.getItem('gbIntroSeen')) {
       overlay.style.display = 'none';
     } else {
       showSlide(0);
