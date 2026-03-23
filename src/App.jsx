@@ -503,10 +503,11 @@ function changestoDb(changes) {
 function useApplications(session) {
   var [apps, setApps] = useState([]);
   var [loaded, setLoaded] = useState(false);
+  var userId = session ? session.user.id : null;
 
   useEffect(function() {
-    if (!session) {
-      // Not signed in — fall back to localStorage so the UI still works
+    if (!userId) {
+      // Not signed in — fall back to localStorage
       try {
         var stored = localStorage.getItem(STORAGE_KEY);
         if (stored) { try { setApps(JSON.parse(stored)); } catch(e) { setApps([]); } }
@@ -515,12 +516,15 @@ function useApplications(session) {
       return;
     }
 
-    var userId = session.user.id;
-
     // Load existing rows from Supabase
     supabase.from("applications").select("*").eq("user_id", userId)
       .order("created_at", { ascending: false })
       .then(function(res) {
+        if (res.error) {
+          console.error("[applications] load error:", res.error);
+          setLoaded(true);
+          return;
+        }
         var dbApps = (res.data || []).map(appFromDb);
 
         // One-time localStorage migration
@@ -532,33 +536,29 @@ function useApplications(session) {
               var rows = local.map(function(a) { return appToDb(a, userId); });
               supabase.from("applications").insert(rows).select()
                 .then(function(ins) {
-                  var migrated = (ins.data || []).map(appFromDb);
-                  setApps(migrated.concat(dbApps));
-                  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-                  setLoaded(true);
-                })
-                .catch(function() {
-                  // Migration failed — use DB data, leave localStorage intact
-                  setApps(dbApps);
+                  if (ins.error) {
+                    console.error("[applications] migration insert error:", ins.error);
+                    setApps(dbApps);
+                  } else {
+                    var migrated = (ins.data || []).map(appFromDb);
+                    setApps(migrated.concat(dbApps));
+                    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                  }
                   setLoaded(true);
                 });
               return;
             }
-            // localStorage exists but empty — clear it
             try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
           }
         } catch(e) {}
 
         setApps(dbApps);
         setLoaded(true);
-      })
-      .catch(function() {
-        setLoaded(true);
       });
-  }, [session]);
+  }, [userId]);
 
   var addApp = useCallback(function(app) {
-    if (!session) {
+    if (!userId) {
       setApps(function(prev) {
         var next = [app].concat(prev);
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch(e) {}
@@ -566,44 +566,57 @@ function useApplications(session) {
       });
       return;
     }
-    var row = appToDb(app, session.user.id);
+    var row = appToDb(app, userId);
+    console.log("[applications] inserting row:", row);
     supabase.from("applications").insert(row).select().single()
       .then(function(res) {
-        if (res.data) setApps(function(prev) { return [appFromDb(res.data)].concat(prev); });
+        if (res.error) {
+          console.error("[applications] insert error:", res.error);
+          return;
+        }
+        console.log("[applications] insert ok, id:", res.data.id);
+        setApps(function(prev) { return [appFromDb(res.data)].concat(prev); });
       });
-  }, [session]);
+  }, [userId]);
 
   var updateApp = useCallback(function(id, changes) {
     // Optimistic update
     setApps(function(prev) {
       return prev.map(function(a) { return a.id === id ? Object.assign({}, a, changes) : a; });
     });
-    if (!session) return;
+    if (!userId) return;
     var db = changestoDb(changes);
     if (Object.keys(db).length > 0) {
-      supabase.from("applications").update(db).eq("id", id).eq("user_id", session.user.id)
-        .then(function() {});
+      supabase.from("applications").update(db).eq("id", id).eq("user_id", userId)
+        .then(function(res) {
+          if (res.error) console.error("[applications] update error:", res.error);
+        });
     }
-  }, [session]);
+  }, [userId]);
 
   var deleteApp = useCallback(function(id) {
     setApps(function(prev) { return prev.filter(function(a) { return a.id !== id; }); });
-    if (!session) return;
-    supabase.from("applications").delete().eq("id", id).eq("user_id", session.user.id)
-      .then(function() {});
-  }, [session]);
+    if (!userId) return;
+    supabase.from("applications").delete().eq("id", id).eq("user_id", userId)
+      .then(function(res) {
+        if (res.error) console.error("[applications] delete error:", res.error);
+      });
+  }, [userId]);
 
   var save = useCallback(function(newApps) {
     // Only called by handleClearAll (newApps === [])
     setApps(newApps);
-    if (!session) {
+    if (!userId) {
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newApps)); } catch(e) {}
       return;
     }
     if (newApps.length === 0) {
-      supabase.from("applications").delete().eq("user_id", session.user.id).then(function() {});
+      supabase.from("applications").delete().eq("user_id", userId)
+        .then(function(res) {
+          if (res.error) console.error("[applications] clear error:", res.error);
+        });
     }
-  }, [session]);
+  }, [userId]);
 
   return { apps: apps, loaded: loaded, addApp: addApp, updateApp: updateApp, deleteApp: deleteApp, save: save };
 }
