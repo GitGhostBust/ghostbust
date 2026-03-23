@@ -44,7 +44,7 @@ Configured in `vite.config.js` via `rollupOptions.input`. `index.html` is a self
 
 - **`App.jsx`** — monolithic main app. All CSS in `const STYLE`. Handles auth session, tab routing (Find Jobs / Verify Listing / Tracker / Resume), application tracker, Claude API calls for ghost job scoring, and RegionModal first-login flow. Tab content panels are constrained to `max-width: 1280px; margin: 0 auto`.
 
-- **`ResumeAdvisor.jsx`** — standalone Resume tab component (used inside App.jsx). Three inner tabs: My Resume (upload + preview), AI Advisor (two-mode analysis), History. Pro-gated (`founding_member = true`).
+- **`ResumeAdvisor.jsx`** — standalone Career HQ tab component (used inside App.jsx). Three inner tabs: My Resume (upload + preview), AI Advisor (four-mode analysis), History. Pro-gated (`founding_member = true`). Four modes: General Review, Job-Specific Analysis, Job Search Advisor, Career Coach. All four are live.
 
 - **`Profile.jsx`** — monolithic profile page. Reads `?user=` query param. Handles own-profile edit vs. read-only view, follow/unfollow, inbox, avatar/banner uploads, ghost avatar customisation, RegionModal.
 
@@ -196,7 +196,7 @@ Stored in `profiles`. Used to contextualise AI prompts in `ResumeAdvisor.jsx` an
 
 Two places call the Anthropic API directly from the browser:
 
-1. **`App.jsx`** — ghost job scoring. API key provided by user at runtime in component state.
+1. **`App.jsx`** — ghost job scoring. API key read from `import.meta.env.VITE_ANTHROPIC_API_KEY`.
 2. **`ResumeAdvisor.jsx`** — resume analysis and cover letter generation. API key read from `import.meta.env.VITE_ANTHROPIC_API_KEY`.
 
 Required headers for direct browser calls:
@@ -228,6 +228,8 @@ Model: `claude-sonnet-4-20250514`, `max_tokens: 4000`.
 **AI Advisor modes:**
 - **General Review** — no job listing required. Produces: strength score, formatting, writing quality, missing sections, industry alignment, career trajectory, red flags, top 3 next steps. Optional cover letter generator (needs job title input).
 - **Job-Specific Analysis** — requires pasted job listing. Adds: fit score, keyword gaps, bullet rewrites, ATS feedback, auto cover letter.
+- **Job Search Advisor** — search strategy, target role guidance, and market positioning advice.
+- **Career Coach** — career trajectory planning, skill gap analysis, and long-term development guidance.
 
 ---
 
@@ -245,11 +247,11 @@ Do not use `position: fixed` on navbars. Use `position: sticky`.
 
 ## Application Data Storage
 
-The job tracker stores application data in **localStorage** under key `ghostbust-applications`. Client-only — not synced to Supabase. Managed by the `useApplications()` hook in `App.jsx`.
+The job tracker stores application data in Supabase (`applications` table). Fully migrated from localStorage.
 
 ---
 
-## Phase 2 Status (as of 2026-03-22)
+## Phase 2 Status (as of 2026-03-23)
 
 **Completed:**
 - Supabase Storage for avatar and banner photos (Profile.jsx)
@@ -259,23 +261,30 @@ The job tracker stores application data in **localStorage** under key `ghostbust
 - Community board (`CommunityPage.jsx`, `CommunityBoard.jsx`)
 - User search dropdown (`UserSearch.jsx`)
 - Inbox/messaging system (`InboxDrawer.jsx`)
+- Career HQ tab (formerly RESUME) — renamed and live
 - Resume Advisor (`ResumeAdvisor.jsx`) — Phase 2 flagship feature:
   - Private resume upload (PDF/DOCX) to Supabase Storage
   - PDF canvas preview via pdfjs-dist
   - DOCX HTML preview via mammoth.js
   - General Resume Review mode (8 feedback sections)
   - Job-Specific Analysis mode (fit score + keywords + bullets + ATS + cover letter)
+  - Job Search Advisor mode (Mode 3) — live
+  - Career Coach mode (Mode 4) — live
   - Analysis history saved to Supabase
   - Admin delete permissions for GhostBustOfficial
+- Application Tracker migrated to Supabase (`applications` table)
+- Find Jobs tab upgrades: saved searches, search history, AI refinement, one-click save to tracker
+- Ghost detector API key reads from `VITE_ANTHROPIC_API_KEY` (no longer user-provided at runtime)
+- Cinematic intro overlay added to `index.html` (6-slide first-visit experience)
 - Page entrance animations (`gbFadeIn`) on all four pages
 - Tab content constrained to `max-width: 1280px`
 
 **Pending / known issues:**
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
-- Migrations `20260322_*.sql` must be run manually in Supabase SQL editor
-- App.jsx ghost job scoring still uses user-provided API key at runtime (not env var)
-- Application Tracker migration from localStorage to Supabase is pending (Phase 2 item)
-- Job Search Advisor mode (Mode 3) and Career Coach mode (Mode 4) in ResumeAdvisor are not yet built
-- RESUME tab rename to CAREER is pending until all Career Suite modes are live
+- Migrations `20260322_*.sql` and `20260323_*.sql` must be run manually in Supabase SQL editor
+- Intro overlay: scroll drift fix, final slide single EXPLORE GHOSTBUST button, HOW IT WORKS footer button → REPLAY INTRO
+- Email capture on landing page not yet built
+- Onboarding email sequence (Resend) not yet built
 - Terms of Service and Privacy Policy pages not yet built
+- UI overhaul for app.html and profile.html pending (after landing page work)
 - Landing page update (accounts CTA, founding member pitch, new features) pending
