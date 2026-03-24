@@ -1828,6 +1828,9 @@ export default function App() {
   var [showTutorial, setShowTutorial] = useState(function() {
     try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
   });
+  var [showHero, setShowHero] = useState(function() {
+    try { return !localStorage.getItem("gb_visited"); } catch(e) { return true; }
+  });
 
   // Scroll reveal — panel fades in on each tab switch
   useEffect(function() {
@@ -1839,6 +1842,10 @@ export default function App() {
     document.querySelectorAll('.panel, .ra-panel').forEach(function(el) { el.classList.add('reveal'); observer.observe(el); });
     return function() { observer.disconnect(); };
   }, [tab]);
+
+  useEffect(function() {
+    try { localStorage.setItem("gb_visited", "1"); } catch(e) {}
+  }, []);
 
   function closeTutorial() {
     try { localStorage.setItem("gb_tutorial_done", "1"); } catch(e) {}
@@ -1886,15 +1893,17 @@ export default function App() {
         <button className="app-nav-signout" onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}}>{session?"Sign Out":"Sign In"}</button>
       </nav>
       <div className="app">
-        <header className="header">
-          <div>
-            <div className="logo-eyebrow">AI-powered job intelligence</div>
-            <a href="/" style={{display:"inline-block",marginTop:8,marginBottom:4,fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.15em",color:"var(--paper)",background:"var(--blood)",padding:"6px 14px",textDecoration:"none",cursor:"pointer"}}>← BACK TO GHOSTBUST.US</a>
-            <h1 className="logo-title">Ghost<em>Bust</em></h1>
-            <p className="logo-sub">Find real jobs. Expose ghost listings. Track every application. The only job search tool built to fight back against a broken market.</p>
-          </div>
-          <div className="ghost-float">👻</div>
-        </header>
+        {showHero && (
+          <header className="header">
+            <div>
+              <div className="logo-eyebrow">AI-powered job intelligence</div>
+              <a href="/" style={{display:"inline-block",marginTop:8,marginBottom:4,fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.15em",color:"var(--paper)",background:"var(--blood)",padding:"6px 14px",textDecoration:"none",cursor:"pointer"}}>← BACK TO GHOSTBUST.US</a>
+              <h1 className="logo-title">Ghost<em>Bust</em></h1>
+              <p className="logo-sub">Find real jobs. Expose ghost listings. Track every application. The only job search tool built to fight back against a broken market.</p>
+            </div>
+            <div className="ghost-float">👻</div>
+          </header>
+        )}
 
         <nav className="tabs">
           <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setTab("search");}}>
