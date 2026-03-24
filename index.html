@@ -767,6 +767,112 @@
     </div>
   </section>
 
+  <!-- EMAIL CAPTURE -->
+  <section class="email-capture-section">
+    <div class="email-capture-inner">
+      <div class="email-capture-label">Free Weekly Newsletter</div>
+      <h2 class="email-capture-heading">GET THE WEEKLY<br/>GHOST JOB REPORT</h2>
+      <p class="email-capture-sub">Regional ghost job data, straight to your inbox. No spam. Unsubscribe anytime.</p>
+      <form class="email-capture-form" onsubmit="gbSubscribe(event)">
+        <input type="email" class="email-capture-input" placeholder="your@email.com" required />
+        <button type="submit" class="email-capture-btn">SUBSCRIBE</button>
+      </form>
+      <div class="email-capture-msg" id="gb-sub-msg"></div>
+    </div>
+  </section>
+  <style>
+    .email-capture-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 48px;
+      text-align: center;
+    }
+    .email-capture-inner { max-width: 560px; margin: 0 auto; }
+    .email-capture-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--blood); margin-bottom: 16px;
+    }
+    .email-capture-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      letter-spacing: 0.04em; line-height: 1.05;
+      color: var(--paper); margin-bottom: 16px;
+    }
+    .email-capture-sub {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 14px; color: var(--muted);
+      line-height: 1.6; margin-bottom: 32px;
+    }
+    .email-capture-form {
+      display: flex; gap: 0; max-width: 440px; margin: 0 auto;
+    }
+    .email-capture-input {
+      flex: 1; background: #0a0a0e;
+      border: 1px solid rgba(255,255,255,0.14); border-right: none;
+      color: var(--paper); font-family: 'Space Mono', monospace;
+      font-size: 13px; padding: 13px 16px; outline: none;
+      transition: border-color 150ms;
+    }
+    .email-capture-input:focus { border-color: rgba(255,255,255,0.35); }
+    .email-capture-input::placeholder { color: rgba(238,234,224,0.28); }
+    .email-capture-btn {
+      font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+      letter-spacing: 0.12em; background: var(--blood); color: var(--paper);
+      border: none; padding: 13px 28px; cursor: pointer;
+      transition: background 150ms; white-space: nowrap;
+    }
+    .email-capture-btn:hover { background: #e02600; }
+    .email-capture-msg {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      letter-spacing: 0.1em; margin-top: 14px; min-height: 18px;
+    }
+    @media (max-width: 600px) {
+      .email-capture-section { padding: 48px 20px; }
+      .email-capture-form { flex-direction: column; }
+      .email-capture-input { border-right: 1px solid rgba(255,255,255,0.14); border-bottom: none; }
+      .email-capture-btn { padding: 13px; }
+    }
+  </style>
+  <script>
+  async function gbSubscribe(e) {
+    e.preventDefault();
+    var input = e.target.querySelector('input[type="email"]');
+    var btn = e.target.querySelector('button');
+    var msg = document.getElementById('gb-sub-msg');
+    var email = input.value.trim();
+    btn.disabled = true;
+    btn.textContent = 'SUBSCRIBING...';
+    msg.style.color = 'rgba(238,234,224,0.5)';
+    msg.textContent = '';
+    try {
+      var res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+      var data = await res.json();
+      if (res.ok) {
+        msg.style.color = '#00e67a';
+        msg.textContent = "YOU'RE IN. CHECK YOUR INBOX.";
+        input.value = '';
+        btn.textContent = 'SUBSCRIBED';
+      } else {
+        msg.style.color = '#d42200';
+        msg.textContent = (data.error || 'SOMETHING WENT WRONG. TRY AGAIN.').toUpperCase();
+        btn.disabled = false;
+        btn.textContent = 'SUBSCRIBE';
+      }
+    } catch (err) {
+      msg.style.color = '#d42200';
+      msg.textContent = 'SOMETHING WENT WRONG. TRY AGAIN.';
+      btn.disabled = false;
+      btn.textContent = 'SUBSCRIBE';
+    }
+  }
+  </script>
+
   <!-- FEATURES -->
   <section>
     <div class="section-label">What You Get</div>
