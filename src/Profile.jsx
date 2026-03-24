@@ -168,6 +168,14 @@ const STYLE = `
   .skills-card-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.06em; }
   .skills-card-body { padding: 16px 24px; }
 
+  /* Activity tab */
+  .activity-section { margin-bottom: 32px; }
+  .activity-section-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .activity-table { width: 100%; border-collapse: collapse; }
+  .activity-table th { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+  .activity-table td { font-size: 12px; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .activity-empty { font-size: 13px; color: var(--ghost); font-style: italic; padding: 16px 0; }
+
   .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
   .avatar-wrap { position: relative; margin-top: -48px; }
   .avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: default; box-shadow: 0 0 0 1px var(--border); }
@@ -507,6 +515,34 @@ export default function Profile() {
     });
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== "activity") return;
+    if (activityLoaded) return;
+    if (!profile) return;
+    setActivityLoading(true);
+    Promise.all([
+      isOwnProfile
+        ? supabase.from("ghost_scans")
+            .select("company, title, ghost_score, created_at")
+            .eq("user_id", profile.id)
+            .order("created_at", { ascending: false })
+            .limit(5)
+        : Promise.resolve({ data: [] }),
+      (isOwnProfile || profile.show_tracked_jobs)
+        ? supabase.from("applications")
+            .select("title, company, status, saved_at")
+            .eq("user_id", profile.id)
+            .order("saved_at", { ascending: false })
+            .limit(5)
+        : Promise.resolve({ data: [] }),
+    ]).then(([scansRes, appsRes]) => {
+      setActivityScans(scansRes.data || []);
+      setActivityApps(appsRes.data || []);
+      setActivityLoaded(true);
+      setActivityLoading(false);
+    });
+  }, [activeTab, profile]);
 
   async function loadProfile(uid) {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).single();
@@ -946,7 +982,73 @@ export default function Profile() {
     );
   };
 
-  const ActivityTab = () => null;
+  const ActivityTab = () => {
+    if (activityLoading) return <div style={{ padding: "32px 0", color: "var(--muted)", fontFamily: "Space Mono, monospace", fontSize: 12 }}>Loading...</div>;
+
+    const showScans = isOwnProfile;
+    const showApps = isOwnProfile || profile?.show_tracked_jobs;
+    const formatDate = (iso) => iso ? new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
+
+    return (
+      <>
+        {showScans && (
+          <div className="activity-section">
+            <div className="activity-section-title">Recent Ghost Scans</div>
+            {activityScans.length === 0 ? (
+              <div className="activity-empty">No scans yet.</div>
+            ) : (
+              <table className="activity-table">
+                <thead>
+                  <tr>
+                    <th>Company</th><th>Title</th><th>Ghost Score</th><th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activityScans.map((s, i) => (
+                    <tr key={i}>
+                      <td>{s.company || "—"}</td>
+                      <td>{s.title || "—"}</td>
+                      <td>{s.ghost_score != null ? s.ghost_score : "—"}</td>
+                      <td>{formatDate(s.created_at)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+        {showApps && (
+          <div className="activity-section">
+            <div className="activity-section-title">Recent Applications</div>
+            {activityApps.length === 0 ? (
+              <div className="activity-empty">No applications tracked yet.</div>
+            ) : (
+              <table className="activity-table">
+                <thead>
+                  <tr>
+                    <th>Title</th><th>Company</th><th>Status</th><th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activityApps.map((a, i) => (
+                    <tr key={i}>
+                      <td>{a.title || "—"}</td>
+                      <td>{a.company || "—"}</td>
+                      <td>{a.status || "—"}</td>
+                      <td>{formatDate(a.saved_at)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+        {!showScans && !showApps && (
+          <div className="activity-empty">No activity to show.</div>
+        )}
+      </>
+    );
+  };
 
   return (
     <div className="profile-root">
