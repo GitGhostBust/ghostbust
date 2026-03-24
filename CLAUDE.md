@@ -251,7 +251,38 @@ The job tracker stores application data in Supabase (`applications` table). Full
 
 ---
 
-## Phase 2 Status (as of 2026-03-23)
+## Additional Pages
+
+| File | Purpose |
+|---|---|
+| `tos.html` | Terms of Service — static, included in Vite build |
+| `privacy.html` | Privacy Policy — static, included in Vite build |
+| `api/subscribe.js` | Vercel serverless function — adds email to Resend audience |
+
+---
+
+## Footer Standard
+
+All pages share an identical footer: **GhostBust · TOS · Privacy · ghostbustofficial@gmail.com**
+
+- `index.html` — inline styles in footer element
+- `App.jsx` — `.footer` CSS class, centered flex row
+- `CommunityPage.jsx` — `.cp-footer` CSS class
+- `Profile.jsx` — `.profile-footer` CSS class
+
+---
+
+## index.html — Landing Page Features
+
+- Cinematic intro overlay (6 slides, first-visit only, `gbIntroSeen` localStorage key)
+- `window.gbOpenIntro()` — reopens overlay; REPLAY INTRO button in hero CTA row triggers it
+- Email capture section ("The GhostBust Monthly") — POSTs to `/api/subscribe` (Resend)
+- Profile navbar link — shows auth modal if not logged in (checks `sb-awhqwqhntgxjvvawzkog-auth-token` in localStorage)
+- Four-card features grid (2×2), Founding Member section, demo scan section
+
+---
+
+## Phase 2 Status (as of 2026-03-24)
 
 **Completed:**
 - Supabase Storage for avatar and banner photos (Profile.jsx)
@@ -275,16 +306,18 @@ The job tracker stores application data in Supabase (`applications` table). Full
 - Application Tracker migrated to Supabase (`applications` table)
 - Find Jobs tab upgrades: saved searches, search history, AI refinement, one-click save to tracker
 - Ghost detector API key reads from `VITE_ANTHROPIC_API_KEY` (no longer user-provided at runtime)
-- Cinematic intro overlay added to `index.html` (6-slide first-visit experience)
-- Page entrance animations (`gbFadeIn`) on all four pages
+- Cinematic intro overlay on `index.html` (6-slide first-visit experience, scroll-locked)
+- Landing page overhaul: hero CTA row, features grid (4 cards 2×2), Founding Member section
+- Email capture section — "The GhostBust Monthly" newsletter, `/api/subscribe` serverless endpoint
+- Terms of Service (`tos.html`) and Privacy Policy (`privacy.html`) pages
+- Standardized footer across all pages (GhostBust · TOS · Privacy · Contact)
+- Profile navbar link auth modal on all pages
+- Page entrance animations (`gbFadeIn`) on all pages
 - Tab content constrained to `max-width: 1280px`
 
 **Pending / known issues:**
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
+- `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
 - Migrations `20260322_*.sql` and `20260323_*.sql` must be run manually in Supabase SQL editor
-- Intro overlay: scroll drift fix, final slide single EXPLORE GHOSTBUST button, HOW IT WORKS footer button → REPLAY INTRO
-- Email capture on landing page not yet built
 - Onboarding email sequence (Resend) not yet built
-- Terms of Service and Privacy Policy pages not yet built
-- UI overhaul for app.html and profile.html pending (after landing page work)
-- Landing page update (accounts CTA, founding member pitch, new features) pending
+- UI overhaul for app.html and profile.html pending
