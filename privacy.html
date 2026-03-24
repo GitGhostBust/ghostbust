@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — GhostBust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void: #070709;
+      --surface: #0e0e12;
+      --paper: #eeeae0;
+      --muted: rgba(238,234,224,0.45);
+      --blood: #d42200;
+      --bile: #c99a00;
+      --signal: #00e67a;
+      --ice: #00c8e6;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--paper);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,7,9,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.6rem;
+      color: var(--paper);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--blood); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--paper); }
+
+    /* ── HERO BANNER ── */
+    .legal-hero {
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .legal-hero::before {
+      content: 'PRIVACY';
+      position: absolute;
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(6rem, 16vw, 14rem);
+      color: rgba(0,200,230,0.04);
+      right: -2rem;
+      bottom: -1rem;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .legal-hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .legal-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--ice);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .legal-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--paper);
+      margin-bottom: 1.5rem;
+    }
+
+    .legal-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LAYOUT ── */
+    .legal-layout {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR TOC ── */
+    .toc {
+      position: sticky;
+      top: 72px;
+    }
+
+    .toc-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ice);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+    }
+
+    .toc ol li {
+      counter-increment: toc-counter;
+      margin-bottom: 0.5rem;
+    }
+
+    .toc ol li::before {
+      content: counter(toc-counter, decimal-leading-zero) '. ';
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--ice);
+    }
+
+    .toc ol li a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+      line-height: 1.4;
+    }
+
+    .toc ol li a:hover { color: var(--paper); }
+
+    /* ── CONTENT ── */
+    .legal-content section {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .legal-content section:last-child {
+      border-bottom: none;
+    }
+
+    .section-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--ice);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.9rem;
+      letter-spacing: 0.04em;
+      color: var(--paper);
+      margin-bottom: 1.2rem;
+      line-height: 1;
+    }
+
+    .legal-content p {
+      color: rgba(238,234,224,0.82);
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+
+    .legal-content ul {
+      margin: 1rem 0 1rem 1.5rem;
+    }
+
+    .legal-content ul li {
+      color: rgba(238,234,224,0.75);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .legal-content ul li::marker {
+      color: var(--ice);
+    }
+
+    .highlight-box {
+      background: var(--surface);
+      border-left: 3px solid var(--ice);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--paper);
+    }
+
+    .highlight-box.green {
+      border-left-color: var(--signal);
+    }
+
+    a.inline-link {
+      color: var(--ice);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── DATA TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      background: var(--surface);
+      color: var(--ice);
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 0.7rem 1rem;
+      color: rgba(238,234,224,0.75);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-logo span { color: var(--blood); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--paper); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .legal-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .toc { position: static; }
+      .data-table { font-size: 0.68rem; }
+    }
+
+    /* ── ENTRANCE ANIMATION ── */
+    .legal-hero-inner, .legal-layout {
+      animation: fadeUp 0.6s ease both;
+    }
+    .legal-layout { animation-delay: 0.15s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">GHOST<span>BUST</span></a>
+    <ul class="nav-links">
+      <li><a href="/">HOME</a></li>
+      <li><a href="/app.html">APP</a></li>
+      <li><a href="/tos.html">TERMS</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="legal-hero">
+    <div class="legal-hero-inner">
+      <div class="legal-eyebrow">// LEGAL DOCUMENT</div>
+      <h1 class="legal-title">Privacy<br>Policy</h1>
+      <div class="legal-meta">EFFECTIVE DATE: MARCH 24, 2026 &nbsp;·&nbsp; LAST UPDATED: MARCH 24, 2026 &nbsp;·&nbsp; GHOSTBUST.US</div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="legal-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="toc">
+      <div class="toc-label">// Contents</div>
+      <ol>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#collect">What We Collect</a></li>
+        <li><a href="#use">How We Use Data</a></li>
+        <li><a href="#storage">Data Storage</a></li>
+        <li><a href="#sharing">Data Sharing</a></li>
+        <li><a href="#ai">AI Processing</a></li>
+        <li><a href="#email">Email Communications</a></li>
+        <li><a href="#cookies">Cookies &amp; Tracking</a></li>
+        <li><a href="#rights">Your Rights</a></li>
+        <li><a href="#children">Children's Privacy</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#changes">Policy Changes</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="legal-content">
+
+      <section id="overview">
+        <div class="section-number">// 01</div>
+        <h2 class="section-title">Overview</h2>
+        <p>GhostBust ("we," "us," "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use ghostbust.us and its associated services.</p>
+        <div class="highlight-box green">
+          <p>The short version: We collect what we need to run the platform. We do not sell your data. We do not share your personal information with advertisers. You can request deletion of your data at any time.</p>
+        </div>
+      </section>
+
+      <section id="collect">
+        <div class="section-number">// 02</div>
+        <h2 class="section-title">What We Collect</h2>
+        <p>We collect information in the following categories:</p>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>CATEGORY</th>
+              <th>EXAMPLES</th>
+              <th>HOW COLLECTED</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Account Info</td>
+              <td>Email address, username, password (hashed)</td>
+              <td>Registration form</td>
+            </tr>
+            <tr>
+              <td>Profile Data</td>
+              <td>Display name, bio, location/region, avatar, banner image</td>
+              <td>Profile settings</td>
+            </tr>
+            <tr>
+              <td>Usage Data</td>
+              <td>Ghost scans, search history, saved searches, application records</td>
+              <td>Platform activity</td>
+            </tr>
+            <tr>
+              <td>Community Content</td>
+              <td>Posts, comments, direct messages</td>
+              <td>User-submitted</td>
+            </tr>
+            <tr>
+              <td>Resume Data</td>
+              <td>Uploaded resume files and AI analysis results</td>
+              <td>Career HQ uploads</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>Newsletter subscriptions</td>
+              <td>Landing page form</td>
+            </tr>
+            <tr>
+              <td>Technical Data</td>
+              <td>IP address, browser type, device info, page views</td>
+              <td>Automatic / Vercel logs</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="use">
+        <div class="section-number">// 03</div>
+        <h2 class="section-title">How We Use Data</h2>
+        <p>We use your data to:</p>
+        <ul>
+          <li>Provide and operate the GhostBust platform and its features</li>
+          <li>Authenticate your account and enforce usage limits by tier</li>
+          <li>Process job listing data through AI for ghost score analysis</li>
+          <li>Deliver Career HQ AI features (resume review, coaching, job analysis)</li>
+          <li>Send transactional emails (account confirmation, password reset)</li>
+          <li>Send newsletter and onboarding emails (only if you opted in)</li>
+          <li>Improve platform features and fix bugs using aggregated usage patterns</li>
+          <li>Comply with legal obligations</li>
+        </ul>
+        <p>We do not use your data to serve you ads, build advertising profiles, or sell insights to third parties.</p>
+      </section>
+
+      <section id="storage">
+        <div class="section-number">// 04</div>
+        <h2 class="section-title">Data Storage</h2>
+        <p>Your data is stored using <strong>Supabase</strong>, a secure cloud database platform hosted on AWS infrastructure. Specific storage details:</p>
+        <ul>
+          <li><strong>Profile avatars and banners:</strong> Stored in Supabase Storage (public bucket)</li>
+          <li><strong>Resume files:</strong> Stored in Supabase Storage (private bucket — accessible only by you and our AI processing)</li>
+          <li><strong>Account and usage data:</strong> Stored in Supabase PostgreSQL database</li>
+          <li><strong>Messages and community content:</strong> Stored in Supabase PostgreSQL database</li>
+        </ul>
+        <p>Our platform is hosted on <strong>Vercel</strong>. Vercel may retain standard server logs for operational and security purposes in accordance with their own privacy policy.</p>
+      </section>
+
+      <section id="sharing">
+        <div class="section-number">// 05</div>
+        <h2 class="section-title">Data Sharing</h2>
+        <p>We do not sell, rent, or trade your personal information. We share data only in the following limited circumstances:</p>
+        <ul>
+          <li><strong>Service Providers:</strong> We share necessary data with Supabase (database/storage), Vercel (hosting), Resend (email delivery), and Stripe (payment processing) to operate the platform. Each of these providers is bound by their own privacy and security obligations.</li>
+          <li><strong>AI Processing:</strong> Job listing text and resume content you submit for analysis is sent to Anthropic's API for processing. See Section 6 for details.</li>
+          <li><strong>Legal Requirements:</strong> We may disclose data if required by law, subpoena, or to protect the rights and safety of our users or the public.</li>
+          <li><strong>Business Transfer:</strong> If GhostBust is acquired or merges with another entity, your data may be transferred. We will notify users before this occurs.</li>
+        </ul>
+      </section>
+
+      <section id="ai">
+        <div class="section-number">// 06</div>
+        <h2 class="section-title">AI Processing</h2>
+        <p>GhostBust uses Anthropic's Claude AI to power ghost job detection and Career HQ features. When you use these features:</p>
+        <ul>
+          <li>Job posting text you submit is sent to Anthropic's API for analysis</li>
+          <li>Resume content you upload may be sent to Anthropic's API for Career HQ analysis</li>
+          <li>Anthropic processes this data in accordance with their <a href="https://www.anthropic.com/privacy" class="inline-link" target="_blank">Privacy Policy</a></li>
+        </ul>
+        <div class="highlight-box">
+          <p>We do not permanently store the raw text you submit for AI analysis beyond what is necessary to display your results. AI outputs (ghost scores, analysis summaries) are stored in your account to provide scan history.</p>
+        </div>
+        <p>Anthropic's enterprise API usage policy prohibits the use of API inputs and outputs to train their models without consent. Your submitted content is not used to train AI models.</p>
+      </section>
+
+      <section id="email">
+        <div class="section-number">// 07</div>
+        <h2 class="section-title">Email Communications</h2>
+        <p>We use <strong>Resend</strong> to manage and send emails. We send the following types of emails:</p>
+        <ul>
+          <li><strong>Transactional:</strong> Account creation confirmations, password resets. These cannot be opted out of.</li>
+          <li><strong>Onboarding sequence:</strong> A series of welcome emails sent in the days after you create an account. You can unsubscribe at any time using the link in any email.</li>
+          <li><strong>The GhostBust Monthly:</strong> Our newsletter, sent only to users who explicitly subscribed via the landing page form.</li>
+        </ul>
+        <p>All marketing emails include an unsubscribe link. We honor unsubscribe requests promptly.</p>
+      </section>
+
+      <section id="cookies">
+        <div class="section-number">// 08</div>
+        <h2 class="section-title">Cookies &amp; Tracking</h2>
+        <p>GhostBust uses minimal cookies. Specifically:</p>
+        <ul>
+          <li><strong>Authentication cookies:</strong> Set by Supabase to keep you logged in. These are strictly necessary and cannot be disabled without breaking the platform.</li>
+          <li><strong>Session storage:</strong> Used to store temporary UI state (e.g., current tab, search inputs) within your browser session only.</li>
+        </ul>
+        <p>We do not use third-party advertising cookies, cross-site tracking pixels, or analytics services that build personal profiles.</p>
+      </section>
+
+      <section id="rights">
+        <div class="section-number">// 09</div>
+        <h2 class="section-title">Your Rights</h2>
+        <p>You have the following rights regarding your personal data:</p>
+        <ul>
+          <li><strong>Access:</strong> You can view your profile data, scan history, and application records within the platform at any time.</li>
+          <li><strong>Correction:</strong> You can update your profile information at any time through your profile settings.</li>
+          <li><strong>Deletion:</strong> You can delete your account through your profile settings. Upon deletion, your personal data will be removed from our active databases within 30 days. Some data may be retained in backups for up to 90 days.</li>
+          <li><strong>Data Portability:</strong> You may request a copy of your data by contacting us at the email below.</li>
+          <li><strong>Opt-out of emails:</strong> Use the unsubscribe link in any marketing email, or contact us directly.</li>
+        </ul>
+        <p>If you are located in the European Union or California, you may have additional rights under GDPR or CCPA respectively. Contact us to exercise these rights.</p>
+      </section>
+
+      <section id="children">
+        <div class="section-number">// 10</div>
+        <h2 class="section-title">Children's Privacy</h2>
+        <p>GhostBust is not directed at children under 13 years of age. We do not knowingly collect personal information from children under 13. If we become aware that we have inadvertently collected such information, we will delete it promptly. If you believe a child under 13 has created an account, please contact us immediately.</p>
+      </section>
+
+      <section id="security">
+        <div class="section-number">// 11</div>
+        <h2 class="section-title">Security</h2>
+        <p>We implement reasonable security measures to protect your data, including:</p>
+        <ul>
+          <li>All data transmitted between your browser and our servers is encrypted via HTTPS/TLS</li>
+          <li>Passwords are hashed and never stored in plaintext (handled by Supabase Auth)</li>
+          <li>Resume files are stored in a private Supabase Storage bucket, inaccessible to other users</li>
+          <li>API keys and sensitive credentials are stored as environment variables; where client-side AI features are used, keys are scoped to read-only API access with no access to user data or billing</li>
+        </ul>
+        <p>No system is completely secure. In the event of a data breach that affects your personal information, we will notify you and relevant authorities as required by applicable law.</p>
+      </section>
+
+      <section id="changes">
+        <div class="section-number">// 12</div>
+        <h2 class="section-title">Policy Changes</h2>
+        <p>We may update this Privacy Policy from time to time. When we make material changes, we will update the "Last Updated" date at the top of this page and notify registered users via email. Your continued use of GhostBust after changes take effect constitutes acceptance of the revised policy.</p>
+      </section>
+
+      <section id="contact">
+        <div class="section-number">// 13</div>
+        <h2 class="section-title">Contact</h2>
+        <p>For privacy-related questions, data requests, or to exercise your rights, contact us at:</p>
+        <div class="highlight-box green">
+          <p><strong>GhostBust — Privacy</strong><br>
+          Email: <a href="mailto:ghostbustofficial@gmail.com" class="inline-link">ghostbustofficial@gmail.com</a><br>
+          Website: <a href="https://ghostbust.us" class="inline-link">ghostbust.us</a></p>
+        </div>
+        <p>We will respond to all privacy requests within 30 days.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">GHOST<span>BUST</span></div>
+    <ul class="footer-links">
+      <li><a href="/">HOME</a></li>
+      <li><a href="/app.html">APP</a></li>
+      <li><a href="/tos.html">TERMS</a></li>
+      <li><a href="/privacy.html">PRIVACY</a></li>
+      <li><a href="mailto:ghostbustofficial@gmail.com">CONTACT</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>

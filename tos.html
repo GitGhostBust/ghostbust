@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — GhostBust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void: #070709;
+      --surface: #0e0e12;
+      --paper: #eeeae0;
+      --muted: rgba(238,234,224,0.45);
+      --blood: #d42200;
+      --bile: #c99a00;
+      --signal: #00e67a;
+      --ice: #00c8e6;
+      --border: rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--paper);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,7,9,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.6rem;
+      color: var(--paper);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--blood); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--paper); }
+
+    /* ── HERO BANNER ── */
+    .legal-hero {
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .legal-hero::before {
+      content: 'TERMS';
+      position: absolute;
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(8rem, 20vw, 18rem);
+      color: rgba(212,34,0,0.04);
+      right: -2rem;
+      bottom: -1rem;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .legal-hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .legal-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--blood);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .legal-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--paper);
+      margin-bottom: 1.5rem;
+    }
+
+    .legal-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LAYOUT ── */
+    .legal-layout {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR TOC ── */
+    .toc {
+      position: sticky;
+      top: 72px;
+    }
+
+    .toc-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--blood);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+    }
+
+    .toc ol li {
+      counter-increment: toc-counter;
+      margin-bottom: 0.5rem;
+    }
+
+    .toc ol li::before {
+      content: counter(toc-counter, decimal-leading-zero) '. ';
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--blood);
+    }
+
+    .toc ol li a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+      line-height: 1.4;
+    }
+
+    .toc ol li a:hover { color: var(--paper); }
+
+    /* ── CONTENT ── */
+    .legal-content section {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .legal-content section:last-child {
+      border-bottom: none;
+    }
+
+    .section-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--blood);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.9rem;
+      letter-spacing: 0.04em;
+      color: var(--paper);
+      margin-bottom: 1.2rem;
+      line-height: 1;
+    }
+
+    .legal-content p {
+      color: rgba(238,234,224,0.82);
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+
+    .legal-content ul {
+      margin: 1rem 0 1rem 1.5rem;
+    }
+
+    .legal-content ul li {
+      color: rgba(238,234,224,0.75);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .legal-content ul li::marker {
+      color: var(--blood);
+    }
+
+    .highlight-box {
+      background: var(--surface);
+      border-left: 3px solid var(--blood);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--paper);
+    }
+
+    a.inline-link {
+      color: var(--ice);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-logo span { color: var(--blood); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--paper); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .legal-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .toc { position: static; }
+    }
+
+    /* ── ENTRANCE ANIMATION ── */
+    .legal-hero-inner, .legal-layout {
+      animation: fadeUp 0.6s ease both;
+    }
+    .legal-layout { animation-delay: 0.15s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">GHOST<span>BUST</span></a>
+    <ul class="nav-links">
+      <li><a href="/">HOME</a></li>
+      <li><a href="/app.html">APP</a></li>
+      <li><a href="/privacy.html">PRIVACY</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="legal-hero">
+    <div class="legal-hero-inner">
+      <div class="legal-eyebrow">// LEGAL DOCUMENT</div>
+      <h1 class="legal-title">Terms of<br>Service</h1>
+      <div class="legal-meta">EFFECTIVE DATE: MARCH 24, 2026 &nbsp;·&nbsp; LAST UPDATED: MARCH 24, 2026 &nbsp;·&nbsp; GHOSTBUST.US</div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="legal-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="toc">
+      <div class="toc-label">// Contents</div>
+      <ol>
+        <li><a href="#acceptance">Acceptance of Terms</a></li>
+        <li><a href="#description">Service Description</a></li>
+        <li><a href="#eligibility">Eligibility</a></li>
+        <li><a href="#accounts">User Accounts</a></li>
+        <li><a href="#tiers">Free &amp; Paid Tiers</a></li>
+        <li><a href="#conduct">Acceptable Use</a></li>
+        <li><a href="#ip">Intellectual Property</a></li>
+        <li><a href="#ai">AI &amp; Data Accuracy</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#termination">Termination</a></li>
+        <li><a href="#disclaimer">Disclaimers</a></li>
+        <li><a href="#liability">Limitation of Liability</a></li>
+        <li><a href="#changes">Changes to Terms</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="legal-content">
+
+      <section id="acceptance">
+        <div class="section-number">// 01</div>
+        <h2 class="section-title">Acceptance of Terms</h2>
+        <p>By accessing or using GhostBust (ghostbust.us), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.</p>
+        <div class="highlight-box">
+          <p>These Terms constitute a legally binding agreement between you and GhostBust. Please read them carefully before using the platform.</p>
+        </div>
+      </section>
+
+      <section id="description">
+        <div class="section-number">// 02</div>
+        <h2 class="section-title">Service Description</h2>
+        <p>GhostBust is an AI-powered job seeker intelligence platform that helps users identify potentially fraudulent, inactive, or misleading job postings — commonly known as "ghost jobs." Our services include:</p>
+        <ul>
+          <li>Ghost job detection and scoring via AI analysis</li>
+          <li>Application tracking and management tools</li>
+          <li>Career HQ — AI-assisted resume review, job analysis, career coaching, and job search advisory</li>
+          <li>Community features including posts, comments, and direct messaging</li>
+          <li>Job search tools with saved searches and search history</li>
+        </ul>
+        <p>GhostBust is provided as an informational and productivity tool. We do not guarantee employment outcomes or the accuracy of any individual ghost job assessment.</p>
+      </section>
+
+      <section id="eligibility">
+        <div class="section-number">// 03</div>
+        <h2 class="section-title">Eligibility</h2>
+        <p>You must be at least 13 years of age to use GhostBust. By creating an account, you represent and warrant that you meet this requirement. Users under 18 should have parental or guardian consent.</p>
+        <p>GhostBust is intended for personal job seeking use. Users may not use the platform to bulk-scrape data, resell GhostBust features, or operate competing services — unless you hold an active Enterprise account. Sharing your own work, portfolio, or professional background in the community is welcome.</p>
+      </section>
+
+      <section id="accounts">
+        <div class="section-number">// 04</div>
+        <h2 class="section-title">User Accounts</h2>
+        <p>To access certain features, you must create an account. You are responsible for:</p>
+        <ul>
+          <li>Maintaining the confidentiality of your account credentials</li>
+          <li>All activity that occurs under your account</li>
+          <li>Providing accurate and up-to-date information during registration</li>
+          <li>Notifying us immediately of any unauthorized use of your account</li>
+        </ul>
+        <p>You may not share your account with others or create multiple accounts to circumvent usage limits. GhostBust reserves the right to suspend or terminate accounts that violate these rules.</p>
+      </section>
+
+      <section id="tiers">
+        <div class="section-number">// 05</div>
+        <h2 class="section-title">Free &amp; Paid Tiers</h2>
+        <p>GhostBust is currently free for all users. All features — including ghost job detection, Career HQ, application tracking, and community access — are available at no cost during the founding period.</p>
+        <ul>
+          <li><strong>Founding Member:</strong> Users who join during the founding period receive a permanent Founding Member badge on their profile. When GhostBust introduces paid tiers in the future, Founding Members will be immediately upgraded to the Pro tier at no cost. This status is non-transferable.</li>
+        </ul>
+        <p>GhostBust reserves the right to introduce paid tiers in the future. Registered users will be notified with at least 30 days' notice before any previously free features become paid-only.</p>
+      </section>
+
+      <section id="conduct">
+        <div class="section-number">// 06</div>
+        <h2 class="section-title">Acceptable Use</h2>
+        <p>You agree not to use GhostBust to:</p>
+        <ul>
+          <li>Scrape, crawl, or systematically extract data from the platform</li>
+          <li>Submit false, misleading, or fraudulent job listing information</li>
+          <li>Harass, threaten, or abuse other community members</li>
+          <li>Post spam, advertisements, or unsolicited promotional content</li>
+          <li>Attempt to gain unauthorized access to any part of the platform</li>
+          <li>Reverse-engineer, decompile, or otherwise attempt to extract our source code or AI models</li>
+          <li>Use the platform for any unlawful purpose or in violation of any applicable regulation</li>
+        </ul>
+        <p>Violation of these terms may result in immediate account termination without notice.</p>
+      </section>
+
+      <section id="ip">
+        <div class="section-number">// 07</div>
+        <h2 class="section-title">Intellectual Property</h2>
+        <p>All content, branding, design, code, and AI models on GhostBust are the exclusive property of GhostBust and its founder. This includes but is not limited to: the GhostBust name and logo, ghost scan methodology, Career HQ AI modes, and all platform text and visual assets.</p>
+        <p>You retain ownership of content you submit (including resumes and community posts). By submitting content, you grant GhostBust a limited, non-exclusive, royalty-free license to store, display, and process that content solely for the purpose of delivering services to you.</p>
+        <p>We will never sell your resume or personal content to third parties.</p>
+      </section>
+
+      <section id="ai">
+        <div class="section-number">// 08</div>
+        <h2 class="section-title">AI &amp; Data Accuracy</h2>
+        <p>GhostBust uses large language model AI (powered by Anthropic's Claude) to analyze job postings and provide career guidance. By using these features, you acknowledge:</p>
+        <ul>
+          <li>AI-generated ghost scores and assessments are probabilistic estimates, not definitive facts</li>
+          <li>Career advice generated by AI is informational only and does not constitute professional career counseling</li>
+          <li>GhostBust does not guarantee the accuracy, completeness, or timeliness of any AI output</li>
+          <li>You should use your own judgment and seek professional advice when making significant career decisions</li>
+        </ul>
+        <div class="highlight-box">
+          <p>A ghost score of 85% does not mean a job is definitely fake — it means our AI found patterns consistent with ghost job listings. Always do your own research.</p>
+        </div>
+      </section>
+
+      <section id="privacy">
+        <div class="section-number">// 09</div>
+        <h2 class="section-title">Privacy</h2>
+        <p>Your use of GhostBust is also governed by our <a href="/privacy.html" class="inline-link">Privacy Policy</a>, which is incorporated into these Terms by reference. By using GhostBust, you consent to the data practices described in the Privacy Policy.</p>
+      </section>
+
+      <section id="termination">
+        <div class="section-number">// 10</div>
+        <h2 class="section-title">Termination</h2>
+        <p>You may delete your account at any time through your profile settings. Upon deletion, your personal data will be removed in accordance with our Privacy Policy.</p>
+        <p>GhostBust reserves the right to suspend or terminate your access at any time, with or without cause, including for violations of these Terms. In the event of termination for cause, no refund of any prepaid subscription fees will be issued.</p>
+      </section>
+
+      <section id="disclaimer">
+        <div class="section-number">// 11</div>
+        <h2 class="section-title">Disclaimers</h2>
+        <p>GhostBust is provided "as is" and "as available" without warranties of any kind, either express or implied. We do not warrant that the service will be uninterrupted, error-free, or free of viruses or other harmful components.</p>
+        <p>GhostBust is not affiliated with, endorsed by, or in partnership with any employer, job board, or recruiting platform. Job data analyzed through our platform is publicly available information.</p>
+      </section>
+
+      <section id="liability">
+        <div class="section-number">// 12</div>
+        <h2 class="section-title">Limitation of Liability</h2>
+        <p>To the fullest extent permitted by law, GhostBust and its founder shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of — or inability to use — the platform. This includes, without limitation, any loss of employment opportunity, career decisions made based on AI assessments, or data loss.</p>
+        <p>Our total aggregate liability to you for any claim arising out of these Terms or your use of GhostBust shall not exceed the total amount you paid to GhostBust in the 12 months preceding the claim.</p>
+      </section>
+
+      <section id="changes">
+        <div class="section-number">// 13</div>
+        <h2 class="section-title">Changes to Terms</h2>
+        <p>GhostBust reserves the right to update these Terms at any time. When we make material changes, we will update the "Last Updated" date at the top of this page and, where appropriate, notify registered users via email. Your continued use of the platform after changes take effect constitutes acceptance of the revised Terms.</p>
+      </section>
+
+      <section id="contact">
+        <div class="section-number">// 14</div>
+        <h2 class="section-title">Contact</h2>
+        <p>Questions about these Terms? Reach us at:</p>
+        <div class="highlight-box">
+          <p><strong>GhostBust</strong><br>
+          Email: <a href="mailto:ghostbustofficial@gmail.com" class="inline-link">ghostbustofficial@gmail.com</a><br>
+          Website: <a href="https://ghostbust.us" class="inline-link">ghostbust.us</a></p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">GHOST<span>BUST</span></div>
+    <ul class="footer-links">
+      <li><a href="/">HOME</a></li>
+      <li><a href="/app.html">APP</a></li>
+      <li><a href="/tos.html">TERMS</a></li>
+      <li><a href="/privacy.html">PRIVACY</a></li>
+      <li><a href="mailto:ghostbustofficial@gmail.com">CONTACT</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
