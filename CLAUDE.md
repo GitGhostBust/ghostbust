@@ -42,7 +42,7 @@ Configured in `vite.config.js` via `rollupOptions.input`. `index.html` is a self
 
 ## Key Components
 
-- **`App.jsx`** — monolithic main app. All CSS in `const STYLE`. Handles auth session, tab routing (Find Jobs / Verify Listing / Tracker / Resume), application tracker, Claude API calls for ghost job scoring, and RegionModal first-login flow. Tab content panels are constrained to `max-width: 1280px; margin: 0 auto`.
+- **`App.jsx`** — monolithic main app. All CSS in `const STYLE`. Handles auth session, tab routing (Find Jobs / Verify Listing / Application Tracker / Career HQ), application tracker, Claude API calls for ghost job scoring, and RegionModal first-login flow. Tab content panels are constrained to `max-width: 1280px; margin: 0 auto`.
 
 - **`ResumeAdvisor.jsx`** — standalone Career HQ tab component (used inside App.jsx). Three inner tabs: My Resume (upload + preview), AI Advisor (four-mode analysis), History. Pro-gated (`founding_member = true`). Four modes: General Review, Job-Specific Analysis, Job Search Advisor, Career Coach. All four are live.
 
@@ -263,6 +263,37 @@ The job tracker stores application data in Supabase (`applications` table). Full
 
 ---
 
+## UI Patterns
+
+### Ghost Score Hero (VerdictCard)
+The ghost score is displayed as a large hero number, not a compact box. Structure:
+- **`.score-hero`** — flex row; large number left, meta right
+- **`.score-hero-num`** — 112px Bebas Neue, colored by severity: `sc-green` (≤35), `sc-yellow` (36–60), `sc-red` (>60)
+- **`.severity-bar`** — 3-segment bar: `.sev-seg.low` (green), `.sev-seg.mid` (gold), `.sev-seg.high` (red); only the active segment is `opacity: 1`
+- **`.sub-score-row`** — flex row of 28px Bebas Neue sub-scores: Specificity, Transparency, Process, Confidence (colored by `scoreColor()` — inverse of ghost score coloring)
+- The old 4-box `.score-row` and `.conf-bar-wrap` are replaced by this pattern. Do not revert to them.
+
+### Skeleton Loading (TrackerTab)
+When `!loaded`, render 3 `.skeleton-card` elements instead of a spinner or text. Each card contains three `.skeleton-line` divs with modifier classes `.title`, `.company`, `.chips` controlling width. Shimmer is `@keyframes shimmer` on a `linear-gradient` background with `background-size: 200% 100%`.
+
+### AppCard
+- `.app-title` — Bebas Neue 18px (not body font, not bold)
+- No emojis in meta chips — status chip is plain text (e.g. "Applied"), source board chip has no 📍 prefix
+- Toast label is "GHOSTBUST" (not "SIGNED IN")
+
+### Stat Labels
+`.stat-lbl` — `font-size: 9px`, `letter-spacing: 0.18em`. These are the labels under the large stat numbers in the tracker stats row.
+
+### Board Grid
+`.board-grid` — `repeat(2, 1fr)` on desktop, `1fr` on mobile (≤720px). Was previously 3-col.
+
+### Profile Avatar
+- `.avatar` — 96px × 96px
+- `.avatar-wrap` — `margin-top: -48px`
+- `.follow-stat-num` — 28px Bebas Neue
+
+---
+
 ## Footer Standard
 
 All pages share an identical footer: **GhostBust · TOS · Privacy · ghostbustofficial@gmail.com**
@@ -352,6 +383,8 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - Page entrance animations (`gbFadeIn`) on all pages
 - Tab content constrained to `max-width: 1280px`
 
+- Full UI overhaul of app.html and profile.html (see UI Patterns below)
+
 **Pending / known issues:**
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
 - `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
@@ -359,4 +392,3 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - `20260324_email_sends.sql` migration must be run in Supabase SQL editor before cron goes live
 - Sending domain must be verified in Resend before `RESEND_FROM_EMAIL` will work
 - Migrations `20260322_*.sql` and `20260323_*.sql` must be run manually in Supabase SQL editor
-- UI overhaul for app.html and profile.html pending
