@@ -251,6 +251,10 @@ const STYLE = `
   /* PAGE ENTRANCE */
   @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .profile-root { animation: gbFadeIn 0.6s ease both; }
+  .profile-footer { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 60px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+  .profile-footer a { color: inherit; text-decoration: none; transition: color 150ms; }
+  .profile-footer a:hover { color: rgba(255,255,255,0.75); }
+  .profile-footer-sep { opacity: 0.3; }
 `;
 
 const TICKER_ITEMS = [
@@ -922,6 +926,15 @@ export default function Profile() {
           </div>
         </div>
       )}
+      <footer className="profile-footer">
+        <span>GhostBust</span>
+        <span className="profile-footer-sep">·</span>
+        <a href="/tos.html">TOS</a>
+        <span className="profile-footer-sep">·</span>
+        <a href="/privacy.html">Privacy</a>
+        <span className="profile-footer-sep">·</span>
+        <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer">ghostbustofficial@gmail.com</a>
+      </footer>
     </div>
   );
 }

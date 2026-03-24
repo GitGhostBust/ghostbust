@@ -43,7 +43,10 @@ const STYLE = `
   .cp-body { width: 100%; padding: 0 24px 120px; box-sizing: border-box; }
 
   /* FOOTER */
-  .cp-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 60px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ghost); }
+  .cp-footer { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 60px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+  .cp-footer a { color: inherit; text-decoration: none; transition: color 150ms; }
+  .cp-footer a:hover { color: rgba(255,255,255,0.75); }
+  .cp-footer-sep { opacity: 0.3; }
 
   /* AUTH MODAL */
   .cp-auth-modal { position: fixed; inset: 0; background: rgba(7,7,9,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
@@ -189,9 +192,13 @@ export default function CommunityPage() {
           onRequestSignIn={function(){ setShowAuth(true); }}
         />
         <footer className="cp-footer">
-          <span>GhostBust · 2026</span>
-          <span><a href="/tos.html" style={{color:"inherit",textDecoration:"none"}}>Terms of Service</a> · <a href="/privacy.html" style={{color:"inherit",textDecoration:"none"}}>Privacy Policy</a></span>
-          <span>ghostbustofficial@gmail.com</span>
+          <span>GhostBust</span>
+          <span className="cp-footer-sep">·</span>
+          <a href="/tos.html">TOS</a>
+          <span className="cp-footer-sep">·</span>
+          <a href="/privacy.html">Privacy</a>
+          <span className="cp-footer-sep">·</span>
+          <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer">ghostbustofficial@gmail.com</a>
         </footer>
       </div>
 

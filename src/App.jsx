@@ -270,7 +270,10 @@ const STYLE = `
   .notes-input:focus { border-color: var(--border-hi); }
   .notes-input::placeholder { color: var(--ghost); }
 
-  .footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: rgba(255,255,255,0.55); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .footer { margin-top: 80px; padding: 20px 0 8px; border-top: 1px solid var(--border); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.38); display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .footer a { color: inherit; text-decoration: none; transition: color 150ms; }
+  .footer a:hover { color: rgba(255,255,255,0.75); }
+  .footer-sep { opacity: 0.3; }
 
   /* MANUAL ADD */
   .add-form { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ice); padding: 22px; margin-bottom: 28px; }
@@ -1849,9 +1852,13 @@ export default function App() {
           {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
         </div>
         <footer className="footer">
-          <span>GHOSTBUST · 2026</span>
-          <span><a href="/tos.html" style={{color:"inherit",textDecoration:"none"}}>TERMS OF SERVICE</a> · <a href="/privacy.html" style={{color:"inherit",textDecoration:"none"}}>PRIVACY POLICY</a></span>
-          <span>CONTACT: <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer" style={{color:"var(--paper)",textDecoration:"none"}}>ghostbustofficial@gmail.com</a></span>
+          <span>GhostBust</span>
+          <span className="footer-sep">·</span>
+          <a href="/tos.html">TOS</a>
+          <span className="footer-sep">·</span>
+          <a href="/privacy.html">Privacy</a>
+          <span className="footer-sep">·</span>
+          <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer">ghostbustofficial@gmail.com</a>
         </footer>
       </div>
     </div>
