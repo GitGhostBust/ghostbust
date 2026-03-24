@@ -102,8 +102,8 @@ const STYLE = `
   .profile-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px 24px; }
 
   .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
-  .avatar-wrap { position: relative; margin-top: -44px; }
-  .avatar { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: default; box-shadow: 0 0 0 1px var(--border); }
+  .avatar-wrap { position: relative; margin-top: -48px; }
+  .avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: default; box-shadow: 0 0 0 1px var(--border); }
   .avatar.editable { cursor: pointer; }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
@@ -219,7 +219,7 @@ const STYLE = `
   /* ---- follow system ---- */
   .follow-row { display: flex; align-items: center; gap: 20px; margin: 4px 0 10px; }
   .follow-stat { display: flex; flex-direction: column; align-items: flex-start; background: none; border: none; cursor: pointer; padding: 0; }
-  .follow-stat-num { font-family: "Bebas Neue", sans-serif; font-size: 22px; line-height: 1.1; color: var(--paper); transition: color 0.15s; }
+  .follow-stat-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1.1; color: var(--paper); transition: color 0.15s; }
   .follow-stat-lbl { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
   .follow-stat:hover .follow-stat-num { color: var(--ice); }
   .btn-follow { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 18px; border: 1px solid var(--ice); color: var(--ice); background: none; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; }

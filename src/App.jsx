@@ -23,7 +23,7 @@ const STYLE = `
   }
   html, body { width: 100%; max-width: 100%; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { background: var(--void); color: var(--paper); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+  body { background: var(--void); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; min-height: 100vh; overflow-x: hidden; }
   @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .app-root { width: 100vw; max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; overflow-x: hidden; animation: gbFadeIn 0.6s ease both; }
   .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
@@ -107,7 +107,7 @@ const STYLE = `
   .boards-header { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
   .boards-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; }
   .boards-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 4px; }
-  .board-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .board-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .board-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ghost); padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: background 0.15s; }
   .board-card:hover { background: var(--surface2); }
   .board-card.indeed { border-top-color: #2557a7; }
@@ -196,6 +196,36 @@ const STYLE = `
   .action-tips { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 16px; margin-top: 18px; }
   .action-tips-title { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 10px; }
 
+  /* SCORE HERO */
+  .score-hero { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 20px; }
+  .score-hero-num { font-family: 'Bebas Neue', sans-serif; font-size: 112px; line-height: 0.85; letter-spacing: -0.02em; }
+  .score-hero-num.sc-red { color: var(--blood); }
+  .score-hero-num.sc-yellow { color: var(--bile); }
+  .score-hero-num.sc-green { color: var(--signal); }
+  .score-hero-meta { display: flex; flex-direction: column; gap: 6px; padding-bottom: 10px; }
+  .score-hero-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); }
+  .score-hero-verdict { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; line-height: 1; }
+  .severity-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-bottom: 20px; }
+  .sev-seg { height: 4px; border-radius: 1px; opacity: 0.25; transition: opacity 0.3s; }
+  .sev-seg.active { opacity: 1; }
+  .sev-seg.low { background: var(--signal); }
+  .sev-seg.mid { background: var(--bile); }
+  .sev-seg.high { background: var(--blood); }
+  .sev-labels { display: flex; justify-content: space-between; margin-top: 4px; margin-bottom: 18px; }
+  .sev-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ghost); }
+  .sub-score-row { display: flex; gap: 20px; margin-bottom: 18px; flex-wrap: wrap; }
+  .sub-score-item { display: flex; flex-direction: column; gap: 3px; }
+  .sub-score-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; }
+  .sub-score-lbl { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ghost); }
+
+  /* SKELETON LOADING */
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  .skeleton-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--surface2); margin-bottom: 10px; padding: 16px 18px; }
+  .skeleton-line { background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite; border-radius: 2px; }
+  .skeleton-line.title { height: 14px; width: 55%; margin-bottom: 10px; }
+  .skeleton-line.company { height: 10px; width: 35%; margin-bottom: 12px; }
+  .skeleton-line.chips { height: 10px; width: 75%; }
+
   /* SAVE TO TRACKER */
   .save-bar { margin-top: 20px; background: var(--surface2); border: 1px solid var(--border-hi); padding: 18px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
   .save-bar-title { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ice); margin-bottom: 14px; width: 100%; }
@@ -211,7 +241,7 @@ const STYLE = `
   .stat-box:hover { background: var(--surface2); }
   .stat-box.active-filter { border-color: var(--border-hi); background: var(--surface2); }
   .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1; }
-  .stat-lbl { font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-top: 3px; }
+  .stat-lbl { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-top: 3px; }
   .stat-saved { color: var(--paper); }
   .stat-researching { color: var(--bile); }
   .stat-applied { color: var(--ice); }
@@ -238,7 +268,7 @@ const STYLE = `
   .app-card.status-ghosted { border-left-color: var(--ghost); }
   .app-card.status-rejected { border-left-color: var(--blood); }
   .app-card.status-offer { border-left-color: var(--bile); }
-  .app-title { font-size: 14px; font-weight: 600; color: var(--paper); margin-bottom: 3px; line-height: 1.3; }
+  .app-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.03em; color: var(--paper); margin-bottom: 3px; line-height: 1.2; }
   .app-company { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.06em; margin-bottom: 8px; }
   .app-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .app-chip { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--border); color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.03); }
@@ -327,7 +357,7 @@ const STYLE = `
   .report-close:hover { color: var(--paper); }
 
   @media (max-width: 720px) {
-    .board-grid { grid-template-columns: 1fr 1fr; }
+    .board-grid { grid-template-columns: 1fr; }
     .tracker-stats { grid-template-columns: repeat(3, 1fr); }
     .search-grid, .two-col { grid-template-columns: 1fr; }
     .score-row { grid-template-columns: 1fr 1fr; }
@@ -691,28 +721,42 @@ function LoadingBlock(props) {
 function VerdictCard(props) {
   var r = props.result;
   var v = r.verdict;
-  var fillCls = v==="LEGIT"?"fill-legit":v==="SUSPICIOUS"?"fill-suspicious":"fill-ghost";
   var cardCls = "verdict-card"+(v==="LEGIT"?" legit":v==="SUSPICIOUS"?" suspicious":"");
-  var headCls = "v-headline "+(v==="LEGIT"?"vh-legit":v==="SUSPICIOUS"?"vh-suspicious":"vh-ghost");
-  var headText = v==="LEGIT"?"✓ Appears Legitimate":v==="SUSPICIOUS"?"◈ Suspicious — Proceed With Caution":"⚠ Ghost Listing Detected";
+  var headText = v==="LEGIT"?"Appears Legitimate":v==="SUSPICIOUS"?"Suspicious — Proceed With Caution":"Ghost Listing Detected";
+  var headCls = v==="LEGIT"?"vh-legit":v==="SUSPICIOUS"?"vh-suspicious":"vh-ghost";
+  var gs = r.ghostScore||0;
+  var heroColorCls = gsColor(gs);
   var sc = r.scores||{};
+  var sevLevel = gs>60?"high":gs>35?"mid":"low";
   return (
     <div className={cardCls}>
-      <div className={headCls}>{headText}</div>
-      <div className="score-row">
-        {[["Ghost Score",r.ghostScore,true],["Specificity",sc.specificityScore,false],["Transparency",sc.transparencyScore,false],["Process",sc.processScore,false]].map(function(item){
-          var label=item[0]; var val=item[1]; var inv=item[2];
+      <div className="score-hero">
+        <div className={"score-hero-num "+heroColorCls}>{gs}</div>
+        <div className="score-hero-meta">
+          <div className="score-hero-label">Ghost Score</div>
+          <div className={"score-hero-verdict "+headCls}>{headText}</div>
+        </div>
+      </div>
+      <div className="severity-bar">
+        <div className={"sev-seg low"+(sevLevel==="low"?" active":"")} />
+        <div className={"sev-seg mid"+(sevLevel==="mid"?" active":"")} />
+        <div className={"sev-seg high"+(sevLevel==="high"?" active":"")} />
+      </div>
+      <div className="sev-labels">
+        <span className="sev-label">Low Risk</span>
+        <span className="sev-label">Moderate</span>
+        <span className="sev-label">High Risk</span>
+      </div>
+      <div className="sub-score-row">
+        {[["Specificity",sc.specificityScore],["Transparency",sc.transparencyScore],["Process",sc.processScore],["Confidence",r.confidence]].map(function(item){
+          var label=item[0]; var val=item[1];
           return (
-            <div key={label} className="score-box">
-              <div className={"score-num "+(inv?gsColor(val||0):scoreColor(val||0))}>{val!=null?val:"—"}</div>
-              <div className="score-lbl">{label}</div>
+            <div key={label} className="sub-score-item">
+              <div className={"sub-score-num "+scoreColor(val||0)}>{val!=null?val:"—"}</div>
+              <div className="sub-score-lbl">{label}</div>
             </div>
           );
         })}
-      </div>
-      <div className="conf-bar-wrap">
-        <div className="conf-bar-label"><span>Detection Confidence</span><span>{r.confidence||0}%</span></div>
-        <div className="conf-bar-track"><div className={"conf-bar-fill "+fillCls} style={{width:(r.confidence||0)+"%"}} /></div>
       </div>
       <p className="v-summary">{r.summary}</p>
       {r.flags&&r.flags.length>0&&(
@@ -1282,8 +1326,8 @@ function AppCard(props) {
         <div className="app-meta" style={{marginTop:6}}>
           <span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>
           <span className="app-chip">{app.verdict}</span>
-          <span className="app-chip">{STATUS_EMOJI[app.status]} {app.status}</span>
-          {app.sourceBoard&&<span className="app-chip" style={{color:"var(--ice)"}}>📍 {app.sourceBoard}</span>}
+          <span className="app-chip">{app.status}</span>
+          {app.sourceBoard&&<span className="app-chip" style={{color:"var(--ice)"}}>{app.sourceBoard}</span>}
           <span className="app-date">{formatDate(app.savedAt)}</span>
         </div>
         <div className="followup-row">
@@ -1464,7 +1508,19 @@ function TrackerTab(props) {
   }
 
   if (!loaded) {
-    return <div className="panel"><div style={{textAlign:"center",padding:"60px 0",fontFamily:"'Space Mono',monospace",fontSize:12,color:"rgba(255,255,255,0.5)"}}>Loading...</div></div>;
+    return (
+      <div className="panel">
+        {[1,2,3].map(function(i){
+          return (
+            <div key={i} className="skeleton-card">
+              <div className="skeleton-line title" />
+              <div className="skeleton-line company" />
+              <div className="skeleton-line chips" />
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   return (
@@ -1802,7 +1858,7 @@ export default function App() {
     <div className="app-root">
       <style>{STYLE}</style>
           {resetMode&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36}}>{resetDone?(<div style={{textAlign:"center"}}><div style={{fontSize:40,marginBottom:12}}>✓</div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,marginBottom:8}}>Password Updated</div><p style={{fontSize:13,color:"var(--muted)"}}>Your password has been changed. You are now signed in.</p><button className="run-btn red" style={{marginTop:16}} onClick={function(){setResetMode(false);setResetDone(false);}}>Continue</button></div>):(<div><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>SET NEW PASSWORD</div><input className="f-input" style={{marginBottom:10,width:"100%"}} type="password" placeholder="New password (min 6 characters)" value={newPassword} onChange={function(e){setNewPassword(e.target.value);}}/>{resetError&&<div style={{color:"var(--blood)",fontSize:12,marginBottom:8}}>{resetError}</div>}<button className="run-btn red" onClick={async function(){if(newPassword.length<6){setResetError("Password must be at least 6 characters.");return;}setResetError(null);var res=await supabase.auth.updateUser({password:newPassword});if(res.error){setResetError(res.error.message);return;}setResetDone(true);}} disabled={!newPassword}>SET PASSWORD</button></div>)}</div></div>)}
-  {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>SIGNED IN</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
+  {toast&&(<div style={{position:"fixed",bottom:24,right:24,zIndex:99999,background:"var(--surface)",border:"1px solid var(--signal)",borderLeft:"4px solid var(--signal)",padding:"14px 40px 14px 18px",maxWidth:340}}><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--signal)",letterSpacing:"0.2em",marginBottom:4}}>GHOSTBUST</div><div style={{fontSize:13,color:"var(--paper)"}}>{toast}</div><button onClick={function(){setToast(null);}} style={{position:"absolute",top:8,right:10,background:"none",border:"none",color:"var(--ghost)",cursor:"pointer",fontSize:14}}>✕</button></div>)}
 {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} onClose={function(){setShowAuth(false);}} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       {showRegionModal && session && <RegionModal userId={session.user.id} onClose={function(){setShowRegionModal(false);}} />}
@@ -1842,17 +1898,17 @@ export default function App() {
 
         <nav className="tabs">
           <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setTab("search");}}>
-            🔍 Find Jobs
+            Find Jobs
           </button>
           <button className={"tab-btn"+(tab==="verify"?" active":"")} onClick={function(){setTab("verify");}}>
-            👻 Verify Listing
+            Verify Listing
           </button>
           <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setTab("tracker");}}>
-            📋 Application Tracker
+            Application Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
           <button className={"tab-btn"+(tab==="resume"?" active":"")} onClick={function(){setTab("resume");}}>
-            📄 Career HQ
+            Career HQ
           </button>
           <span style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
             <UserSearch />
