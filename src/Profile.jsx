@@ -101,6 +101,12 @@ const STYLE = `
 
   .profile-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px 24px; }
 
+  .tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); padding: 0 32px; gap: 0; }
+  .tab-btn { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--ghost); cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-bottom: -1px; }
+  .tab-btn:hover { color: var(--paper); }
+  .tab-btn.active { color: var(--paper); border-bottom-color: var(--blood); }
+  .tab-content { padding: 32px 0 0; }
+
   .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
   .avatar-wrap { position: relative; margin-top: -48px; }
   .avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: default; box-shadow: 0 0 0 1px var(--border); }
@@ -563,6 +569,11 @@ export default function Profile() {
 
   if (loading) return <><style>{STYLE}</style><div className="loading">LOADING...</div></>;
 
+  // Tab render functions — stubs expanded in Tasks 4, 5, 6
+  const OverviewTab = () => null;
+  const CareerProfileTab = () => null;
+  const ActivityTab = () => null;
+
   return (
     <div className="profile-root">
       <style>{STYLE}</style>
@@ -737,7 +748,7 @@ export default function Profile() {
           )}
 
           {/* IDENTITY */}
-          {profile && !editing ? (
+          {profile && (
             <>
               <div className="profile-name-row">
                 {displayName && <span className="profile-displayname">{displayName}</span>}
@@ -762,7 +773,9 @@ export default function Profile() {
               {isOwnProfile && <div className="profile-email">{session?.user?.email}</div>}
               {profile.bio
                 ? <p className="profile-bio">{profile.bio}</p>
-                : <p className="profile-bio empty">No bio yet — click Edit Profile to add one.</p>
+                : isOwnProfile
+                  ? <p className="profile-bio empty">No bio yet — edit in Career Profile.</p>
+                  : null
               }
               {((profile.show_employment_status && profile.employment_status) ||
                 (profile.show_current_job && profile.current_job) ||
@@ -780,162 +793,29 @@ export default function Profile() {
                 Member since {session && new Date(session.user.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
               </div>}
             </>
-          ) : (
-            <div style={{ paddingTop: 4 }}>
-              <div className="profile-email">{session?.user?.email}</div>
-            </div>
           )}
         </div>
 
-        {/* BODY */}
-        <div className="body-grid">
-
-          {/* LEFT */}
-          <div className="main-col">
-            {profile && !editing ? (
-              <div className="card">
-                <div className="card-title">Details</div>
-                <div className="details-grid">
-                  {[
-                    ["Industry", profile.industry],
-                    ["Current Role", profile.current_job],
-                    ["Education", profile.education],
-                    ["Status", profile.employment_status],
-                  ].map(([label, val]) => (
-                    <div key={label}>
-                      <div className="detail-label">{label}</div>
-                      <div className={`detail-value${val ? "" : " empty"}`}>{val || "Not set"}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="edit-card">
-                <div className="card-title">Edit Profile</div>
-
-                <div className="f-group">
-                  <label className="f-label">Username *</label>
-                  <input className="f-input" placeholder="e.g. jobhunter99" value={form.username} onChange={e => setField("username", e.target.value)} />
-                </div>
-
-                <div className="f-group">
-                  <label className="f-label">Bio</label>
-                  <textarea className="f-textarea" placeholder="Tell other GhostBusters about yourself and your job search..." value={form.bio} onChange={e => setField("bio", e.target.value)} />
-                </div>
-
-                <div className="f-row">
-                  <div>
-                    <label className="f-label">Full Name</label>
-                    <input className="f-input" placeholder="Optional" value={form.full_name} onChange={e => setField("full_name", e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="f-label">Education</label>
-                    <input className="f-input" placeholder="e.g. B.S. Economics" value={form.education} onChange={e => setField("education", e.target.value)} />
-                  </div>
-                </div>
-
-                <div className="f-row">
-                  <div>
-                    <label className="f-label">Current / Recent Role</label>
-                    <input className="f-input" placeholder="e.g. Marketing Manager" value={form.current_job} onChange={e => setField("current_job", e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="f-label">Industry</label>
-                    <input className="f-input" placeholder="e.g. Finance, Tech, Healthcare" value={form.industry} onChange={e => setField("industry", e.target.value)} />
-                  </div>
-                </div>
-
-                <div className="f-group">
-                  <label className="f-label">Employment Status</label>
-                  <select className="f-input" value={form.employment_status} onChange={e => setField("employment_status", e.target.value)}>
-                    <option value="">Select...</option>
-                    {EMPLOYMENT_OPTIONS.map(o => <option key={o}>{o}</option>)}
-                  </select>
-                </div>
-
-                <div className="divider" />
-
-                <div className="card-title" style={{ marginBottom: 14 }}>Privacy</div>
-                <div className="privacy-section">
-                  {[
-                    ["show_full_name", "Show full name on profile"],
-                    ["show_education", "Show education"],
-                    ["show_current_job", "Show current job & industry"],
-                    ["show_employment_status", "Show employment status"],
-                    ["show_tracked_jobs", "Show recently tracked jobs"],
-                  ].map(([key, label]) => (
-                    <div key={key} className="toggle-row">
-                      <span className="toggle-label">{label}</span>
-                      <label className="toggle">
-                        <input type="checkbox" checked={form[key]} onChange={e => setField(key, e.target.checked)} />
-                        <span className="toggle-slider" />
-                      </label>
-                    </div>
-                  ))}
-                </div>
-
-                {error && <div className="err-msg">{error}</div>}
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <button className="btn-primary" onClick={saveProfile} disabled={saving || !form.username.trim()}>
-                    {saving ? "Saving..." : "Save Profile"}
-                  </button>
-                  {profile && (
-                    <button className="btn-secondary" onClick={() => { setEditing(false); setError(null); setShowAvatarPicker(false); }}>
-                      Cancel
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* SIDEBAR */}
-          <div className="side-col">
-            {isOwnProfile && <div className="card">
-              <div className="card-title">Activity</div>
-              <div className="stat-list">
-                <div className="stat-row">
-                  <span className="stat-label">Scans Run</span>
-                  <span className="stat-value" style={{ color: "var(--paper)" }}>{stats.scans}</span>
-                </div>
-                <div className="stat-row">
-                  <span className="stat-label">Jobs Tracked</span>
-                  <span className="stat-value" style={{ color: "var(--paper)" }}>{stats.apps}</span>
-                </div>
-                <div className="stat-row">
-                  <span className="stat-label">Avg Ghost Score</span>
-                  <span className="stat-value" style={{ color: scoreColor }}>{stats.avgScore || "—"}</span>
-                </div>
-              </div>
-              {stats.scans > 0 && (
-                <div className="score-bar-section">
-                  <div className="score-bar-head">
-                    <span className="score-bar-lbl">Ghost Risk Level</span>
-                    <span className="score-bar-lbl" style={{ color: scoreColor }}>{stats.avgScore}/100</span>
-                  </div>
-                  <div className="score-bar-track">
-                    <div className="score-bar-fill" style={{ width: `${stats.avgScore}%`, background: scoreColor }} />
-                  </div>
-                </div>
-              )}
-            </div>}
-
-            <div className="card">
-              <div className="card-title">Tools</div>
-              {[
-                ["/app.html", "Ghost Detector"],
-                ["/app.html", "Application Tracker"],
-                ["/app.html", "Job Search"],
-              ].map(([href, label]) => (
-                <a key={label} href={href} className="quick-link">
-                  <span className="quick-link-arrow">→</span>
-                  {label}
-                </a>
-              ))}
-            </div>
-          </div>
-
+        {/* TAB BAR */}
+        <div className="tab-bar">
+          {["overview", "career", "activity"].map(tab => (
+            <button
+              key={tab}
+              className={`tab-btn${activeTab === tab ? " active" : ""}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === "overview" ? "Overview" : tab === "career" ? "Career Profile" : "Activity"}
+            </button>
+          ))}
         </div>
+
+        {/* TAB CONTENT */}
+        <div className="tab-content">
+          {activeTab === "overview" && <OverviewTab />}
+          {activeTab === "career" && <CareerProfileTab />}
+          {activeTab === "activity" && <ActivityTab />}
+        </div>
+
       </div>
 
       {/* FOLLOW MODAL */}
