@@ -1750,6 +1750,25 @@ export default function App() {
   },[session]);
   var [tab,setTab] = useState("search");
   var storage = useApplications(session);
+
+  // Handle one-click status updates from nudge emails (?tab=tracker&appId=xxx&markAs=Ghosted).
+  useEffect(function() {
+    if (!session || !storage.loaded) return;
+    var params = new URLSearchParams(window.location.search);
+    var appId  = params.get("appId");
+    var markAs = params.get("markAs");
+    var tabParam = params.get("tab");
+    if (tabParam) setTab(tabParam);
+    if (appId && markAs && ["Ghosted","Rejected","Applied","Interviewing"].includes(markAs)) {
+      storage.updateApp(appId, { status: markAs, updatedAt: Date.now() });
+      setToast("Marked as " + markAs);
+      setTimeout(function() { setToast(null); }, 3000);
+    }
+    if (tabParam || appId) {
+      // Clean up URL params without triggering a reload.
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, [session, storage.loaded]);
   var [showTutorial, setShowTutorial] = useState(function() {
     try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
   });
