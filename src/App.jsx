@@ -65,13 +65,13 @@ const STYLE = `
   /* SHARED FORM */
   .panel { padding: 32px 0; }
   .form-box { background: var(--surface); border: 1px solid var(--border); padding: 26px; }
-  .form-box.green-top { border-top: 3px solid var(--signal); }
+  .form-box.green-top { border-top: 3px solid var(--blood); }
   .form-box.red-top { border-top: 3px solid var(--blood); }
-  .form-box.ice-top { border-top: 3px solid var(--ice); }
+  .form-box.ice-top { border-top: 3px solid var(--blood); }
   .form-label { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px; display: block; }
   .form-label.green { color: var(--paper); }
   .form-label.red { color: var(--blood); }
-  .form-label.ice { color: var(--ice); }
+  .form-label.ice { color: var(--muted); }
   .field-label { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 8px; display: block; }
   .field-label.red { color: var(--blood); }
   .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
@@ -84,8 +84,8 @@ const STYLE = `
   .paste-area::placeholder { color: var(--ghost); font-style: italic; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
   .run-btn { width: 100%; margin-top: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 0.08em; border: none; padding: 15px; cursor: pointer; transition: background 0.15s; }
-  .run-btn.green { background: var(--signal); color: #050a07; }
-  .run-btn.green:hover:not(:disabled) { background: #00ff88; }
+  .run-btn.green { background: var(--blood); color: var(--paper); }
+  .run-btn.green:hover:not(:disabled) { background: #e52600; }
   .run-btn.red { background: var(--blood); color: var(--paper); }
   .run-btn.red:hover:not(:disabled) { background: #e52600; }
   .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -131,9 +131,9 @@ const STYLE = `
   .tip-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
 
   /* SEARCH — ENHANCED */
-  .search-nudge { background: rgba(0,230,122,0.06); border: 1px solid rgba(0,230,122,0.2); border-left: 3px solid var(--signal); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-  .search-nudge-icon { font-size: 16px; flex-shrink: 0; color: var(--signal); }
-  .search-nudge-text { font-family: 'Space Mono', monospace; font-size: 12px; color: rgba(0,230,122,0.9); line-height: 1.5; }
+  .search-nudge { background: rgba(255,255,255,0.03); border: 1px solid var(--border-hi); border-left: 3px solid var(--border-hi); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .search-nudge-icon { font-size: 16px; flex-shrink: 0; color: var(--muted); }
+  .search-nudge-text { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); line-height: 1.5; }
   .search-form-actions { display: flex; gap: 8px; margin-top: 12px; }
   .search-form-actions .run-btn { flex: 1; margin-top: 0; }
   .save-search-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; }
@@ -148,23 +148,23 @@ const STYLE = `
   .saved-search-meta { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
   .saved-search-del { background: none; border: none; color: var(--ghost); font-size: 13px; cursor: pointer; padding: 0 4px; transition: color 0.15s; flex-shrink: 0; }
   .saved-search-del:hover { color: var(--blood); }
-  .ai-refine-btn { width: 100%; margin-top: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 0.08em; border: 1px solid rgba(0,200,230,0.3); padding: 12px; cursor: pointer; background: rgba(0,200,230,0.06); color: var(--ice); transition: background 0.15s; }
-  .ai-refine-btn:hover:not(:disabled) { background: rgba(0,200,230,0.13); }
+  .ai-refine-btn { width: 100%; margin-top: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 0.08em; border: 1px solid var(--border-hi); padding: 12px; cursor: pointer; background: none; color: var(--muted); transition: background 0.15s, color 0.15s; }
+  .ai-refine-btn:hover:not(:disabled) { background: rgba(255,255,255,0.05); color: var(--paper); }
   .ai-refine-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .ai-refine-section { margin-top: 16px; background: rgba(0,200,230,0.05); border: 1px solid rgba(0,200,230,0.18); border-top: 3px solid var(--ice); padding: 20px 22px; }
-  .ai-refine-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--ice); margin-bottom: 16px; }
+  .ai-refine-section { margin-top: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-hi); border-top: 3px solid var(--border-hi); padding: 20px 22px; }
+  .ai-refine-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 16px; }
   .ai-refine-group { margin-bottom: 18px; }
   .ai-refine-group:last-child { margin-bottom: 0; }
   .ai-refine-group-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
   .ai-refine-pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
-  .ai-refine-pill { font-family: 'Space Mono', monospace; font-size: 11px; background: rgba(0,200,230,0.09); border: 1px solid rgba(0,200,230,0.25); color: var(--ice); padding: 6px 13px; cursor: pointer; transition: background 0.15s; }
-  .ai-refine-pill:hover { background: rgba(0,200,230,0.18); }
+  .ai-refine-pill { font-family: 'Space Mono', monospace; font-size: 11px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--muted); padding: 6px 13px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .ai-refine-pill:hover { background: rgba(255,255,255,0.09); color: var(--paper); }
   .ai-refine-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; color: rgba(238,234,224,0.65); line-height: 1.55; }
   .ai-refine-row:last-child { border-bottom: none; }
   .ai-refine-key { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--paper); flex-shrink: 0; min-width: 94px; }
   .board-card-actions { display: flex; flex-direction: column; gap: 6px; }
-  .track-role-btn { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal); background: rgba(0,230,122,0.06); border: 1px solid rgba(0,230,122,0.2); padding: 8px; cursor: pointer; transition: background 0.15s; width: 100%; }
-  .track-role-btn:hover:not(:disabled) { background: rgba(0,230,122,0.13); }
+  .track-role-btn { display: flex; align-items: center; justify-content: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--border-hi); padding: 8px; cursor: pointer; transition: background 0.15s, color 0.15s; width: 100%; }
+  .track-role-btn:hover:not(:disabled) { background: rgba(255,255,255,0.05); color: var(--paper); }
   .track-role-btn.saved { color: var(--ghost); background: rgba(255,255,255,0.03); border-color: var(--border); cursor: default; }
 
   /* VERDICT */
@@ -227,10 +227,10 @@ const STYLE = `
 
   /* SAVE TO TRACKER */
   .save-bar { margin-top: 20px; background: var(--surface2); border: 1px solid var(--border-hi); padding: 18px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
-  .save-bar-title { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ice); margin-bottom: 14px; width: 100%; }
+  .save-bar-title { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; width: 100%; }
   .save-bar .f-input { flex: 1; min-width: 160px; }
-  .save-btn { background: var(--ice); color: #050a09; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
-  .save-btn:hover { background: #00e8ff; }
+  .save-btn { background: var(--blood); color: var(--paper); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
+  .save-btn:hover { background: #e52600; }
   .save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .save-success { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--paper); padding: 10px 0; width: 100%; }
 
@@ -305,19 +305,19 @@ const STYLE = `
   .footer-sep { opacity: 0.3; }
 
   /* MANUAL ADD */
-  .add-form { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ice); padding: 22px; margin-bottom: 28px; }
+  .add-form { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 22px; margin-bottom: 28px; }
   .add-form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
   .add-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-  .add-submit { background: var(--ice); color: #050a09; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; transition: background 0.15s; width: 100%; margin-top: 6px; }
-  .add-submit:hover:not(:disabled) { background: #00e8ff; }
+  .add-submit { background: var(--blood); color: var(--paper); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.08em; border: none; padding: 11px 22px; cursor: pointer; transition: background 0.15s; width: 100%; margin-top: 6px; }
+  .add-submit:hover:not(:disabled) { background: #e52600; }
   .add-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-  .toggle-add-btn { background: none; border: 1px solid var(--ice); color: var(--ice); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s; }
-  .toggle-add-btn:hover { background: var(--ice-dim); }
+  .toggle-add-btn { background: none; border: 1px solid var(--border-hi); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 14px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .toggle-add-btn:hover { background: rgba(255,255,255,0.05); color: var(--paper); }
 
   /* EDIT MODE ON CARD */
   .edit-inline { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; }
   .edit-inline input { background: rgba(255,255,255,0.06); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 4px 8px; outline: none; flex: 1; }
-  .edit-save-btn { background: var(--signal); color: #050a07; font-family: 'Space Mono', monospace; font-size: 10px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
+  .edit-save-btn { background: var(--blood); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
 
   /* FOLLOW-UP DATE */
   .followup-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
@@ -1256,7 +1256,7 @@ function VerifyTab(props) {
         <div ref={resultRef}>
           <VerdictCard result={result} />
           <div className="save-bar">
-            <div className="save-bar-title">📌 Save to Tracker — starts as <span style={{color:"var(--ice)"}}>Researching</span></div>
+            <div className="save-bar-title">Save to Tracker — starts as Researching</div>
             {!saved?(
               <>
                 <input className="f-input" style={{flex:1,minWidth:160}} placeholder="Job title (e.g. Product Designer)" value={jobTitle} onChange={function(e){setJobTitle(e.target.value);}} />
@@ -1326,7 +1326,7 @@ function AppCard(props) {
           <span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>
           <span className="app-chip">{app.verdict}</span>
           <span className="app-chip">{app.status}</span>
-          {app.sourceBoard&&<span className="app-chip" style={{color:"var(--ice)"}}>{app.sourceBoard}</span>}
+          {app.sourceBoard&&<span className="app-chip" style={{color:"var(--muted)"}}>{app.sourceBoard}</span>}
           <span className="app-date">{formatDate(app.savedAt)}</span>
         </div>
         <div className="followup-row">
@@ -1574,21 +1574,21 @@ function TrackerTab(props) {
           <span className="form-label ice">+ Add Application Manually</span>
           <div className="add-form-grid">
             <div>
-              <label className="field-label" style={{color:"var(--ice)"}}>Job Title *</label>
+              <label className="field-label" style={{color:"var(--muted)"}}>Job Title *</label>
               <input className="f-input" placeholder="e.g. Product Designer" value={addTitle} onChange={function(e){setAddTitle(e.target.value);}} />
             </div>
             <div>
-              <label className="field-label" style={{color:"var(--ice)"}}>Company</label>
+              <label className="field-label" style={{color:"var(--muted)"}}>Company</label>
               <input className="f-input" placeholder="e.g. Acme Corp" value={addCompany} onChange={function(e){setAddCompany(e.target.value);}} />
             </div>
             <div>
-              <label className="field-label" style={{color:"var(--ice)"}}>Status</label>
+              <label className="field-label" style={{color:"var(--muted)"}}>Status</label>
               <select className="f-input" value={addStatus} onChange={function(e){setAddStatus(e.target.value);}}>
                 {STATUSES.map(function(s){return <option key={s}>{s}</option>;})}
               </select>
             </div>
             <div>
-              <label className="field-label" style={{color:"var(--ice)"}}>Source Job Board</label>
+              <label className="field-label" style={{color:"var(--muted)"}}>Source Job Board</label>
               <select className="f-input" value={addSourceBoard} onChange={function(e){setAddSourceBoard(e.target.value);}}>
                 <option value="">Select board...</option>
                 <option>Indeed</option>
@@ -1604,16 +1604,16 @@ function TrackerTab(props) {
           </div>
           <div className="add-form-row">
             <div>
-              <label className="field-label" style={{color:"var(--ice)"}}>Job URL</label>
+              <label className="field-label" style={{color:"var(--muted)"}}>Job URL</label>
               <input className="f-input" placeholder="https://..." value={addUrl} onChange={function(e){setAddUrl(e.target.value);}} />
             </div>
             <div>
-              <label className="field-label" style={{color:"var(--ice)"}}>Follow-up Date</label>
+              <label className="field-label" style={{color:"var(--muted)"}}>Follow-up Date</label>
               <input type="date" className="f-input followup-date" style={{width:"100%"}} value={addFollowup} onChange={function(e){setAddFollowup(e.target.value);}} />
             </div>
           </div>
           <div>
-            <label className="field-label" style={{color:"var(--ice)"}}>Notes</label>
+            <label className="field-label" style={{color:"var(--muted)"}}>Notes</label>
             <input className="f-input" placeholder="Recruiter name, salary discussed, anything relevant..." value={addNotes} onChange={function(e){setAddNotes(e.target.value);}} />
           </div>
           <button className="add-submit" onClick={handleManualAdd} disabled={!addTitle.trim()}>ADD TO TRACKER</button>
@@ -1624,7 +1624,7 @@ function TrackerTab(props) {
         <div className="empty-state">
           <div className="empty-icon">📋</div>
           <div className="empty-title">Your tracker is empty</div>
-          <p className="empty-sub">Go to the Ghost Detector tab, paste a listing, get your analysis — then save it here with one click. Or hit <strong style={{color:"var(--ice)"}}>+ Add Manually</strong> above to log any job you're tracking, no analysis needed.</p>
+          <p className="empty-sub">Go to the Ghost Detector tab, paste a listing, get your analysis — then save it here with one click. Or hit <strong style={{color:"var(--paper)"}}>+ Add Manually</strong> above to log any job you're tracking, no analysis needed.</p>
           <div style={{marginTop:24,padding:"16px",background:"rgba(201,154,0,0.08)",border:"1px solid rgba(201,154,0,0.15)",maxWidth:380,margin:"24px auto 0"}}>
             <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.2em",textTransform:"uppercase",color:"var(--bile)",marginBottom:8}}>📊 Ghost Report</div>
             <p style={{fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.7}}>Once you start tracking applications, you can generate your personal Ghost Report — your response rate, active pipeline, and average Ghost Score across all your saved listings.</p>
