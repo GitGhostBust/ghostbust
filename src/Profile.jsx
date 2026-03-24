@@ -221,9 +221,9 @@ const STYLE = `
   .follow-stat { display: flex; flex-direction: column; align-items: flex-start; background: none; border: none; cursor: pointer; padding: 0; }
   .follow-stat-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1.1; color: var(--paper); transition: color 0.15s; }
   .follow-stat-lbl { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
-  .follow-stat:hover .follow-stat-num { color: var(--ice); }
-  .btn-follow { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 18px; border: 1px solid var(--ice); color: var(--ice); background: none; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; }
-  .btn-follow:hover { background: var(--ice); color: var(--void); }
+  .follow-stat:hover .follow-stat-num { color: var(--paper); }
+  .btn-follow { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 18px; border: 1px solid var(--blood); color: var(--blood); background: none; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; }
+  .btn-follow:hover { background: var(--blood); color: var(--paper); }
   .btn-follow.following { border-color: var(--border-md); color: var(--ghost); }
   .btn-follow.following:hover { border-color: #ff4422; color: #ff4422; }
 

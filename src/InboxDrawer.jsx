@@ -239,7 +239,7 @@ const STYLE = `
   .inbox-thread-toggle {
     background: none; border: none; cursor: pointer;
     font-family: "Space Mono", monospace; font-size: 9px;
-    color: var(--ice); letter-spacing: 0.08em;
+    color: var(--muted); letter-spacing: 0.08em;
     padding: 4px 0; text-align: left; transition: color 0.15s;
   }
   .inbox-thread-toggle:hover { color: var(--paper); }

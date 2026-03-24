@@ -18,10 +18,10 @@ const STYLE = `
   .cb-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
   .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px 28px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .cb-new-btn:hover { background: #e52600; }
-  .cb-region-badge { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--ice); background: var(--ice-dim); border: 1px solid rgba(0,200,230,0.25); padding: 5px 10px; white-space: nowrap; }
-  .cb-region-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ice); flex-shrink: 0; }
-  .cb-region-change { background: none; border: none; color: rgba(0,200,230,0.5); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; transition: color 0.15s; }
-  .cb-region-change:hover { color: var(--ice); }
+  .cb-region-badge { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border-hi); padding: 5px 10px; white-space: nowrap; }
+  .cb-region-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .cb-region-change { background: none; border: none; color: var(--ghost); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; transition: color 0.15s; }
+  .cb-region-change:hover { color: var(--paper); }
   .cb-no-region { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
 
   /* FILTER BAR */
@@ -32,7 +32,7 @@ const STYLE = `
   .cb-filter-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
   .cb-region-toggle { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 5px 12px; border: 1px solid var(--border); background: none; color: var(--ghost); cursor: pointer; transition: all 0.15s; }
   .cb-region-toggle:hover { color: var(--paper); border-color: var(--border-hi); }
-  .cb-region-toggle.active { color: var(--ice); border-color: var(--ice); }
+  .cb-region-toggle.active { color: var(--paper); border-color: var(--border-hi); background: rgba(255,255,255,0.05); }
   .cb-search-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 5px 12px; outline: none; min-width: 160px; transition: border-color 0.2s; }
   .cb-search-input:focus { border-color: var(--border-hi); }
   .cb-search-input::placeholder { color: var(--ghost); }
@@ -92,12 +92,12 @@ const STYLE = `
   .cb-comment-input { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 9px 12px; outline: none; transition: border-color 0.2s; }
   .cb-comment-input:focus { border-color: var(--border-hi); }
   .cb-comment-input::placeholder { color: var(--ghost); }
-  .cb-comment-submit { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; background: var(--ice); color: #050a09; border: none; padding: 9px 18px; cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0; }
-  .cb-comment-submit:hover:not(:disabled) { background: #00e8ff; }
+  .cb-comment-submit { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; background: var(--blood); color: var(--paper); border: none; padding: 9px 18px; cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0; }
+  .cb-comment-submit:hover:not(:disabled) { background: #e52600; }
   .cb-comment-submit:disabled { opacity: 0.4; cursor: not-allowed; }
   .cb-no-comments { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); padding: 16px 0; text-align: center; }
   .cb-sign-in-prompt { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); padding: 12px 0; }
-  .cb-sign-in-link { color: var(--ice); cursor: pointer; text-decoration: underline; }
+  .cb-sign-in-link { color: var(--paper); cursor: pointer; text-decoration: underline; }
 
   /* NEW POST MODAL */
   .cb-modal { position: fixed; inset: 0; background: rgba(7,7,9,0.92); z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 24px; }

@@ -63,7 +63,7 @@ const STYLE = `
   .af-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .af-error { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--blood); margin-bottom: 10px; }
   .af-toggle { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--ghost); margin-top: 14px; text-align: center; }
-  .af-toggle span { color: var(--ice); cursor: pointer; text-decoration: underline; }
+  .af-toggle span { color: var(--paper); cursor: pointer; text-decoration: underline; }
 
   /* SCROLL REVEAL */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
