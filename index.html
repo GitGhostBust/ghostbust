@@ -1253,7 +1253,7 @@
       overlay.style.pointerEvents = 'none';
       setTimeout(function() { overlay.style.display = 'none'; }, 420);
       localStorage.setItem('gbIntroSeen', 'true');
-      document.documentElement.style.overflow = '';
+      document.documentElement.style.overflow = ''; document.body.style.overflow = '';
     }
 
     overlay.addEventListener('click', function(e) {
@@ -1280,14 +1280,14 @@
       overlay.style.opacity       = '1';
       overlay.style.pointerEvents = 'auto';
       void overlay.offsetWidth;
-      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
       showSlide(0);
     };
 
     if (localStorage.getItem('gbIntroSeen')) {
       overlay.style.display = 'none';
     } else {
-      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
       showSlide(0);
     }
   })();
