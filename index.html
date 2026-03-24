@@ -269,6 +269,11 @@
       padding: 72px 48px;
       border-bottom: 1px solid var(--border);
     }
+    .hero, section:not(.cta-band), .founding-section, footer {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     .section-label {
       font-family: 'Space Mono', monospace;
@@ -722,7 +727,9 @@
       <div class="hero-cta-row" style="gap:16px;">
         <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">START FREE — NO ACCOUNT REQUIRED →</a>
         <a href="/community.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">COMMUNITY →</a>
-        <button onclick="window.scrollTo(0,0); localStorage.removeItem('gbIntroSeen'); setTimeout(function(){ location.reload(); }, 300);" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">REPLAY INTRO</button>
+      </div>
+      <div style="margin-top:16px;">
+        <button onclick="window.gbOpenIntro();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.3);cursor:pointer;padding:0;transition:color 150ms;" onmouseover="this.style.color='rgba(238,234,224,0.65)'" onmouseout="this.style.color='rgba(238,234,224,0.3)'">▶ Watch Intro</button>
       </div>
     </div>
     <div class="hero-stat-card">
@@ -1535,12 +1542,8 @@
       showSlide(0);
     };
 
-    if (localStorage.getItem('gbIntroSeen')) {
-      overlay.style.display = 'none';
-    } else {
-      document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden';
-      showSlide(0);
-    }
+    // Intro is opt-in only — never auto-shown. Trigger via window.gbOpenIntro().
+    overlay.style.display = 'none';
   })();
   </script>
 
