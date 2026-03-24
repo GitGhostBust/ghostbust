@@ -26,7 +26,6 @@ const STYLE = `
   body { background: var(--void); color: var(--paper); font-family: 'Libre Baskerville', Georgia, serif; min-height: 100vh; overflow-x: hidden; }
   @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .app-root { width: 100vw; max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; overflow-x: hidden; animation: gbFadeIn 0.6s ease both; }
-  .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
   .app { width: 100%; max-width: 100%; margin: 0; padding: 0 24px 120px; box-sizing: border-box; }
 
   /* TICKER */
@@ -1875,7 +1874,6 @@ export default function App() {
           <AuthForm supabase={supabase} onClose={function(){ setShowProfileModal(false); window.location.href="/profile.html"; }} />
         </div>
       </div>}
-      <div className="scanlines" />
       <div className="ticker-wrap">
         <div className="ticker-track">
           {TICKER_ITEMS.concat(TICKER_ITEMS).map(function(t,i){return <span key={i} className="ticker-item">{t} ◆ </span>;})}

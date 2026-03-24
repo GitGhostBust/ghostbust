@@ -19,7 +19,6 @@ const STYLE = `
   html { scroll-behavior: smooth; }
   body { background: var(--void); color: var(--paper); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
 
-  .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 9000; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px); }
 
   /* TICKER */
   .ticker-wrap { background: var(--blood); overflow: hidden; padding: 8px 0; line-height: 1.5; }
@@ -161,7 +160,6 @@ export default function CommunityPage() {
   return (
     <div className="community-root" style={{width:"100%",maxWidth:"100%",margin:0,padding:0,boxSizing:"border-box",overflowX:"hidden"}}>
       <style>{STYLE}</style>
-      <div className="scanlines" />
 
       <div className="ticker-wrap">
         <div className="ticker-track">
