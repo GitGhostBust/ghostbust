@@ -97,32 +97,59 @@
 
     /* NAV */
     nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--void);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 20px 48px;
-      border-bottom: 1px solid var(--border);
+      gap: 12px;
+      padding: 0 24px;
+      height: 56px;
     }
     .nav-brand {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      letter-spacing: 0.04em;
+      font-size: 24px;
+      letter-spacing: 0.02em;
       color: var(--paper);
       text-decoration: none;
+      flex-shrink: 0;
     }
     .nav-brand em { color: var(--blood); font-style: normal; }
+    .nav-links { display: flex; gap: 4px; align-items: center; }
+    .nav-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border: 1px solid transparent;
+      background: none;
+      color: #72728a;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.15s, border-color 0.15s;
+      border-radius: 2px;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .nav-btn:hover { color: var(--paper); border-color: var(--border); }
+    .nav-btn.active { color: var(--paper); border-color: var(--border-hi); }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .nav-cta {
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
+      font-size: 10px;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       background: var(--blood);
       color: var(--paper);
       border: none;
-      padding: 10px 22px;
+      padding: 8px 16px;
       cursor: pointer;
       text-decoration: none;
       transition: background 0.15s;
+      white-space: nowrap;
     }
     .nav-cta:hover { background: #e02600; }
 
@@ -672,8 +699,16 @@
 
   <!-- NAV -->
   <nav>
-    <a href="#" class="nav-brand">Ghost<em>Bust</em></a>
-    <div style="display:flex;gap:12px;align-items:center;"><a href="/community.html" class="nav-cta" style="background:transparent;border:1px solid rgba(240,236,224,0.4);">🗣️ Community</a><a href="/profile.html" class="nav-cta" style="background:transparent;border:1px solid rgba(240,236,224,0.4);" onclick="return gbProfileClick(event)">My Profile</a><a href="/app.html" class="nav-cta">Open the App →</a></div>
+    <a href="/" class="nav-brand">Ghost<em>Bust</em></a>
+    <div class="nav-links">
+      <span class="nav-btn active">Home</span>
+      <a href="/app.html" class="nav-btn">App</a>
+      <a href="/community.html" class="nav-btn">Community</a>
+      <a href="/profile.html" class="nav-btn" onclick="return gbProfileClick(event)">Profile</a>
+    </div>
+    <div class="nav-right">
+      <a href="/app.html" class="nav-cta">Open the App →</a>
+    </div>
   </nav>
 
   <!-- HERO -->
