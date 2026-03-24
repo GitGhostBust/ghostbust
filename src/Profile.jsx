@@ -107,6 +107,18 @@ const STYLE = `
   .tab-btn.active { color: var(--paper); border-bottom-color: var(--blood); }
   .tab-content { padding: 32px 0 0; }
 
+  /* Overview tab */
+  .overview-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
+  .overview-card-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 16px; }
+  .career-detail-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .career-detail-row:last-child { border-bottom: none; }
+  .career-detail-label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); min-width: 160px; padding-top: 2px; }
+  .career-detail-value { font-size: 13px; color: var(--paper); flex: 1; line-height: 1.5; }
+  .skills-tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-tag-ro { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.08em; padding: 4px 10px; background: var(--surface3); border: 1px solid var(--border); color: var(--muted); }
+  .overview-private-note { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 16px; }
+  .overview-empty-state { font-size: 13px; color: var(--muted); font-style: italic; padding: 24px 0; }
+
   .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
   .avatar-wrap { position: relative; margin-top: -48px; }
   .avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: default; box-shadow: 0 0 0 1px var(--border); }
@@ -312,6 +324,60 @@ const GhostIcon = ({ size = 64, color = "#eeeae0" }) => (
     <circle cx="19" cy="14" r="2" fill="#d42200"/>
   </svg>
 );
+
+const CAREER_FIELD_LABELS = [
+  ["employment_status", "Employment Status"],
+  ["current_job", "Current / Recent Role"],
+  ["industry", "Industry"],
+  ["education", "Education"],
+  ["experience_years", "Experience"],
+  ["seniority_level", "Seniority Level"],
+  ["work_arrangement", "Work Arrangement"],
+  ["target_roles", "Target Roles"],
+  ["target_salary_band", "Salary Target"],
+  ["search_duration", "Search Duration"],
+  ["career_goal", "Career Goal"],
+  ["skills", "Skills"],
+];
+
+const VISIBILITY_KEY = {
+  employment_status: "show_employment_status",
+  current_job: "show_current_job",
+  industry: "show_industry",
+  education: "show_education",
+  experience_years: "show_experience_years",
+  seniority_level: "show_seniority_level",
+  work_arrangement: "show_work_arrangement",
+  target_roles: "show_target_roles",
+  target_salary_band: "show_target_salary_band",
+  search_duration: "show_search_duration",
+  career_goal: "show_career_goal",
+  skills: "show_skills",
+};
+
+const SELECT_OPTIONS = {
+  employment_status: ["Actively Looking", "Open to Opportunities", "Employed — Not Looking", "Freelancing", "Student", "On a Career Break"],
+  experience_years: ["Under 1 year", "1–2 years", "3–5 years", "6–10 years", "10+ years"],
+  seniority_level: ["Intern", "Entry-level", "Mid-level", "Senior", "Lead", "Principal", "Executive"],
+  work_arrangement: ["Remote only", "Remote or Hybrid", "Hybrid", "In-office", "Flexible", "No preference"],
+  target_salary_band: ["Under $40k", "$40k–$60k", "$60k–$80k", "$80k–$100k", "$100k–$130k", "$130k–$160k", "$160k–$200k", "$200k+", "Prefer not to say"],
+  search_duration: ["Just started (< 1 month)", "1–3 months", "3–6 months", "6–12 months", "Over a year", "Not actively searching"],
+};
+
+const FIELD_TYPE = {
+  employment_status: "select",
+  current_job: "input",
+  industry: "input",
+  education: "input",
+  experience_years: "select",
+  seniority_level: "select",
+  work_arrangement: "select",
+  target_roles: "tags",
+  target_salary_band: "select",
+  search_duration: "select",
+  career_goal: "textarea",
+  skills: "skills-card",
+};
 
 export default function Profile() {
   const [session, setSession] = useState(null);
@@ -569,8 +635,73 @@ export default function Profile() {
 
   if (loading) return <><style>{STYLE}</style><div className="loading">LOADING...</div></>;
 
-  // Tab render functions — stubs expanded in Tasks 4, 5, 6
-  const OverviewTab = () => null;
+  const OverviewTab = () => {
+    const src = isOwnProfile ? form : profile;
+    if (!src) return null;
+
+    const publicFields = CAREER_FIELD_LABELS.filter(([key]) => {
+      const visKey = VISIBILITY_KEY[key];
+      return src[visKey] && src[key] && String(src[key]).trim();
+    });
+
+    const filledPrivateCount = isOwnProfile ? CAREER_FIELD_LABELS.filter(([key]) => {
+      const visKey = VISIBILITY_KEY[key];
+      return !src[visKey] && src[key] && String(src[key]).trim();
+    }).length : 0;
+
+    const showSkillsCard = src.show_skills && src.skills && src.skills.trim();
+    const skillsForDisplay = showSkillsCard
+      ? src.skills.split(",").map(s => s.trim()).filter(Boolean)
+      : [];
+
+    const detailFields = publicFields.filter(([key]) => key !== "skills");
+    const hasAnything = detailFields.length > 0 || showSkillsCard;
+
+    if (!hasAnything) {
+      if (isOwnProfile) {
+        return (
+          <div className="overview-card">
+            <div className="overview-empty-state">
+              Nothing public yet — go to Career Profile to add details and choose what to show.
+            </div>
+          </div>
+        );
+      }
+      return null;
+    }
+
+    return (
+      <>
+        {detailFields.length > 0 && (
+          <div className="overview-card">
+            <div className="overview-card-title">Career Details</div>
+            {detailFields.map(([key, label]) => (
+              <div key={key} className="career-detail-row">
+                <span className="career-detail-label">{label}</span>
+                <span className="career-detail-value">{src[key]}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {showSkillsCard && (
+          <div className="overview-card">
+            <div className="overview-card-title">Skills</div>
+            <div className="skills-tag-list">
+              {skillsForDisplay.map(tag => (
+                <span key={tag} className="skill-tag-ro">{tag}</span>
+              ))}
+            </div>
+          </div>
+        )}
+        {isOwnProfile && filledPrivateCount > 0 && (
+          <div className="overview-private-note">
+            {filledPrivateCount} field{filledPrivateCount !== 1 ? "s" : ""} set to private — edit in Career Profile tab
+          </div>
+        )}
+      </>
+    );
+  };
+
   const CareerProfileTab = () => null;
   const ActivityTab = () => null;
 
