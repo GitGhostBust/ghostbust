@@ -1725,6 +1725,7 @@ export default function App() {
   var [resetError, setResetError] = useState(null);
   var [resetDone, setResetDone] = useState(false);
   var [showAuth, setShowAuth] = useState(false);
+  var [showProfileModal, setShowProfileModal] = useState(false);
   var [toast, setToast] = useState(null);
   var [showRegionModal, setShowRegionModal] = useState(false);
   var [userRegion, setUserRegion] = useState(null);
@@ -1783,6 +1784,14 @@ export default function App() {
 {showAuth&&(<div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}><div style={{background:"var(--surface)",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:420,width:"100%",padding:36,position:"relative"}}><button onClick={function(){setShowAuth(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer"}}>X</button><div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:4}}>GhostBust</div><div style={{fontFamily:"Space Mono,monospace",fontSize:11,color:"var(--blood)",letterSpacing:"0.2em",marginBottom:24}}>FREE ACCOUNT</div><AuthForm supabase={supabase} onClose={function(){setShowAuth(false);}} /></div></div>)}
       {showTutorial && <TutorialOverlay onClose={closeTutorial} onTabSwitch={setTab} />}
       {showRegionModal && session && <RegionModal userId={session.user.id} onClose={function(){setShowRegionModal(false);}} />}
+      {showProfileModal && <div onClick={function(e){if(e.target===e.currentTarget)setShowProfileModal(false);}} style={{position:"fixed",inset:0,zIndex:9500,background:"rgba(7,7,9,0.82)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <div style={{background:"#0e0e12",border:"1px solid rgba(255,255,255,0.07)",padding:"40px 36px",maxWidth:400,width:"calc(100% - 48px)",position:"relative",textAlign:"center"}}>
+          <button onClick={function(){setShowProfileModal(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"rgba(238,234,224,0.35)",fontFamily:"'Space Mono',monospace",fontSize:18,cursor:"pointer",lineHeight:1}}>&#x00D7;</button>
+          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,letterSpacing:"0.04em",color:"#eeeae0",marginBottom:16}}>Ghost<span style={{color:"#d42200"}}>Bust</span></div>
+          <p style={{fontFamily:"'Libre Baskerville',Georgia,'serif'",fontSize:14,color:"rgba(238,234,224,0.7)",lineHeight:1.6,marginBottom:28}}>Sign in to view your profile.</p>
+          <a href="/app.html" style={{display:"block",fontFamily:"'Bebas Neue',sans-serif",fontSize:17,letterSpacing:"0.1em",background:"#d42200",color:"#eeeae0",padding:"13px 28px",textDecoration:"none"}}>SIGN IN / SIGN UP</a>
+        </div>
+      </div>}
       <div className="scanlines" />
       <div className="ticker-wrap">
         <div className="ticker-track">
@@ -1795,7 +1804,7 @@ export default function App() {
           <a href="/" className="app-nav-btn">Home</a>
           <span className="app-nav-btn active">App</span>
           <a href="/community.html" className="app-nav-btn">Community</a>
-          <a href="/profile.html" className="app-nav-btn">Profile</a>
+          <a href="/profile.html" className="app-nav-btn" onClick={function(e){if(!session){e.preventDefault();setShowProfileModal(true);}}}> Profile</a>
         </div>
         <UserSearch />
         <button className="app-nav-signout" onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}}>{session?"Sign Out":"Sign In"}</button>
