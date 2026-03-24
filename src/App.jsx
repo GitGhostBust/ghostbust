@@ -1850,7 +1850,7 @@ export default function App() {
         </div>
         <footer className="footer">
           <span>GHOSTBUST · 2026</span>
-          <span>POWERED BY CLAUDE AI</span>
+          <span><a href="/tos.html" style={{color:"inherit",textDecoration:"none"}}>TERMS OF SERVICE</a> · <a href="/privacy.html" style={{color:"inherit",textDecoration:"none"}}>PRIVACY POLICY</a></span>
           <span>CONTACT: <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer" style={{color:"var(--paper)",textDecoration:"none"}}>ghostbustofficial@gmail.com</a></span>
         </footer>
       </div>

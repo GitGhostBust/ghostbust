@@ -190,7 +190,7 @@ export default function CommunityPage() {
         />
         <footer className="cp-footer">
           <span>GhostBust · 2026</span>
-          <span>Powered by Claude AI</span>
+          <span><a href="/tos.html" style={{color:"inherit",textDecoration:"none"}}>Terms of Service</a> · <a href="/privacy.html" style={{color:"inherit",textDecoration:"none"}}>Privacy Policy</a></span>
           <span>ghostbustofficial@gmail.com</span>
         </footer>
       </div>
