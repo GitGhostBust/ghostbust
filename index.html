@@ -1113,24 +1113,98 @@
   </footer>
 
   <!-- PROFILE AUTH MODAL -->
-  <div id="gb-profile-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(7,7,9,0.82);align-items:center;justify-content:center;">
-    <div style="background:#0e0e12;border:1px solid rgba(255,255,255,0.07);padding:40px 36px;max-width:400px;width:calc(100% - 48px);position:relative;text-align:center;">
-      <button onclick="document.getElementById('gb-profile-modal').style.display='none'" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(238,234,224,0.35);font-family:'Space Mono',monospace;font-size:18px;cursor:pointer;line-height:1;" onmouseover="this.style.color='rgba(238,234,224,0.8)'" onmouseout="this.style.color='rgba(238,234,224,0.35)'">&times;</button>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.04em;color:#eeeae0;margin-bottom:16px;">Ghost<span style="color:#d42200;">Bust</span></div>
-      <p style="font-family:'Libre Baskerville',Georgia,serif;font-size:14px;color:rgba(238,234,224,0.7);line-height:1.6;margin-bottom:28px;">Sign in to view your profile.</p>
-      <a href="/app.html" style="display:block;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.1em;background:#d42200;color:#eeeae0;padding:13px 28px;text-decoration:none;transition:background 150ms;" onmouseover="this.style.background='#e02600'" onmouseout="this.style.background='#d42200'">SIGN IN / SIGN UP</a>
+  <div id="gb-profile-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(7,7,9,0.92);align-items:center;justify-content:center;">
+    <div style="background:#0e0e12;border:1px solid rgba(255,255,255,0.07);border-top:4px solid #d42200;max-width:420px;width:calc(100% - 48px);padding:36px;position:relative;">
+      <button onclick="gbCloseProfileModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#4a4a60;font-size:18px;cursor:pointer;line-height:1;">✕</button>
+      <div id="gb-auth-form"></div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
+  var _gbSupabase = window.supabase.createClient(
+    'https://awhqwqhntgxjvvawzkog.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3aHF3cWhudGd4anZ2YXd6a29nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5OTQ0NTgsImV4cCI6MjA4OTU3MDQ1OH0.qJFtHMmhPjrYWXEDIO2LPcEBNiYLDX_nv7QPuRfI1Tc'
+  );
+
+  var _gbAuthMode = 'signin';
+
+  function gbRenderAuthForm() {
+    var el = document.getElementById('gb-auth-form');
+    el.innerHTML = [
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:28px;margin-bottom:4px;color:#eeeae0;">GhostBust</div>',
+      '<div style="font-family:\'Space Mono\',monospace;font-size:11px;color:#d42200;letter-spacing:0.2em;margin-bottom:24px;">',
+        _gbAuthMode === 'signin' ? 'SIGN IN' : 'CREATE FREE ACCOUNT',
+      '</div>',
+      '<div id="gb-auth-error" style="font-family:\'Space Mono\',monospace;font-size:12px;color:#d42200;margin-bottom:10px;display:none;"></div>',
+      '<input id="gb-auth-email" type="email" placeholder="Email address" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);color:#eeeae0;font-family:\'Space Mono\',monospace;font-size:13px;padding:11px 14px;outline:none;margin-bottom:10px;box-sizing:border-box;" />',
+      '<input id="gb-auth-pw" type="password" placeholder="Password" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);color:#eeeae0;font-family:\'Space Mono\',monospace;font-size:13px;padding:11px 14px;outline:none;margin-bottom:10px;box-sizing:border-box;" />',
+      '<button id="gb-auth-submit" onclick="gbSubmitAuth()" style="width:100%;font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:0.08em;background:#d42200;color:#eeeae0;border:none;padding:13px;cursor:pointer;margin-top:4px;">',
+        _gbAuthMode === 'signin' ? 'Sign In' : 'Create Account',
+      '</button>',
+      '<div style="font-family:\'Space Mono\',monospace;font-size:12px;color:#4a4a60;margin-top:14px;text-align:center;">',
+        _gbAuthMode === 'signin'
+          ? 'No account? <span onclick="gbSwitchAuthMode(\'signup\')" style="color:#00c8e6;cursor:pointer;text-decoration:underline;">Sign up free</span>'
+          : 'Have an account? <span onclick="gbSwitchAuthMode(\'signin\')" style="color:#00c8e6;cursor:pointer;text-decoration:underline;">Sign in</span>',
+      '</div>'
+    ].join('');
+    document.getElementById('gb-auth-pw').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') gbSubmitAuth();
+    });
+  }
+
+  function gbSwitchAuthMode(mode) {
+    _gbAuthMode = mode;
+    gbRenderAuthForm();
+  }
+
+  async function gbSubmitAuth() {
+    var email = document.getElementById('gb-auth-email').value.trim();
+    var pw = document.getElementById('gb-auth-pw').value;
+    var errEl = document.getElementById('gb-auth-error');
+    var btn = document.getElementById('gb-auth-submit');
+    errEl.style.display = 'none';
+    btn.textContent = '...';
+    btn.disabled = true;
+    try {
+      if (_gbAuthMode === 'signin') {
+        var res = await _gbSupabase.auth.signInWithPassword({ email: email, password: pw });
+        if (res.error) throw res.error;
+        window.location.href = '/profile.html';
+      } else {
+        var res2 = await _gbSupabase.auth.signUp({ email: email, password: pw });
+        if (res2.error) throw res2.error;
+        document.getElementById('gb-auth-form').innerHTML = [
+          '<div style="text-align:center;">',
+          '<div style="font-size:40px;margin-bottom:12px;">✉️</div>',
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:28px;color:#eeeae0;margin-bottom:8px;">Check Your Email</div>',
+          '<p style="font-family:\'Space Mono\',monospace;font-size:12px;color:#4a4a60;line-height:1.7;">We sent a confirmation link to <strong style="color:#eeeae0;">' + email + '</strong>. Click it to activate your account.</p>',
+          '<button onclick="gbCloseProfileModal()" style="width:100%;font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:0.08em;background:#d42200;color:#eeeae0;border:none;padding:13px;cursor:pointer;margin-top:20px;">Done</button>',
+          '</div>'
+        ].join('');
+      }
+    } catch(err) {
+      errEl.textContent = err.message || 'Something went wrong.';
+      errEl.style.display = 'block';
+      btn.textContent = _gbAuthMode === 'signin' ? 'Sign In' : 'Create Account';
+      btn.disabled = false;
+    }
+  }
+
+  function gbCloseProfileModal() {
+    document.getElementById('gb-profile-modal').style.display = 'none';
+  }
+
   function gbProfileClick(e) {
     var session = null;
     try { session = JSON.parse(localStorage.getItem('sb-awhqwqhntgxjvvawzkog-auth-token')); } catch(err) {}
     if (session && session.access_token) { return true; }
     e.preventDefault();
+    _gbAuthMode = 'signin';
+    gbRenderAuthForm();
     var modal = document.getElementById('gb-profile-modal');
     modal.style.display = 'flex';
     modal.addEventListener('click', function(ev) {
-      if (ev.target === modal) modal.style.display = 'none';
+      if (ev.target === modal) gbCloseProfileModal();
     }, { once: true });
     return false;
   }
