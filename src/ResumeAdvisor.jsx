@@ -1078,7 +1078,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
     // 1. Full profile
     try {
       var { data: profile } = await supabase.from("profiles")
-        .select("display_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country")
+        .select("full_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country, experience_years, seniority_level, work_arrangement, target_roles, target_salary_band, search_duration, career_goal, skills")
         .eq("id", session.user.id).single();
       if (profile) {
         var p = [];
@@ -1087,6 +1087,14 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         if (profile.industry) p.push("Industry: " + profile.industry);
         if (profile.job_market_region) p.push("Job market: " + profile.job_market_region + (profile.job_market_country ? ", " + profile.job_market_country : ""));
         if (profile.bio) p.push("Bio: " + profile.bio.slice(0, 300));
+        if (profile.experience_years) p.push("Experience: " + profile.experience_years);
+        if (profile.seniority_level) p.push("Seniority: " + profile.seniority_level);
+        if (profile.target_roles) p.push("Target roles: " + profile.target_roles);
+        if (profile.target_salary_band) p.push("Salary target: " + profile.target_salary_band);
+        if (profile.search_duration) p.push("Search duration: " + profile.search_duration);
+        if (profile.work_arrangement) p.push("Work preference: " + profile.work_arrangement);
+        if (profile.career_goal) p.push("Career goal: " + profile.career_goal);
+        if (profile.skills) p.push("Skills: " + profile.skills);
         if (p.length) lines.push("PROFILE: " + p.join(" | "));
       }
     } catch (e) {
@@ -1156,7 +1164,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         supabase.from("resumes").select("extracted_text, id").eq("user_id", session.user.id)
           .order("uploaded_at", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("profiles")
-          .select("display_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country, education")
+          .select("full_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country, education, experience_years, seniority_level, work_arrangement, target_roles, target_salary_band, search_duration, career_goal, skills")
           .eq("id", session.user.id).single(),
         supabase.from("ghost_scans").select("company, title, ghost_score, outcome")
           .eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(10),
@@ -1177,6 +1185,14 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       if (profile.education) ctxLines.push("Education: " + profile.education);
       if (profile.job_market_region) ctxLines.push("Market: " + profile.job_market_region + (profile.job_market_state ? ", " + profile.job_market_state : "") + (profile.job_market_country ? ", " + profile.job_market_country : ""));
       if (profile.bio) ctxLines.push("Bio: " + profile.bio.slice(0, 300));
+      if (profile.experience_years) ctxLines.push("Experience: " + profile.experience_years);
+      if (profile.seniority_level) ctxLines.push("Seniority: " + profile.seniority_level);
+      if (profile.target_roles) ctxLines.push("Target roles: " + profile.target_roles);
+      if (profile.target_salary_band) ctxLines.push("Salary target: " + profile.target_salary_band);
+      if (profile.search_duration) ctxLines.push("Search duration: " + profile.search_duration);
+      if (profile.work_arrangement) ctxLines.push("Work preference: " + profile.work_arrangement);
+      if (profile.career_goal) ctxLines.push("Career goal: " + profile.career_goal);
+      if (profile.skills) ctxLines.push("Skills: " + profile.skills);
       if (scans.length) {
         var scanSummary = scans.map(function (s) {
           return (s.title || "?") + (s.company ? " at " + s.company : "") + " (ghost score: " + (s.ghost_score != null ? s.ghost_score : "?") + (s.outcome ? ", " + s.outcome : "") + ")";
@@ -1247,7 +1263,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         supabase.from("resumes").select("extracted_text, id").eq("user_id", session.user.id)
           .order("uploaded_at", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("profiles")
-          .select("display_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country")
+          .select("full_name, bio, industry, employment_status, current_job, job_market_region, job_market_state, job_market_country, experience_years, seniority_level, work_arrangement, target_roles, target_salary_band, search_duration, career_goal, skills")
           .eq("id", session.user.id).single(),
         supabase.from("ghost_scans").select("company, title, ghost_score, outcome")
           .eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(10),
@@ -1267,6 +1283,14 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       if (profile.industry) ctxLines.push("Industry: " + profile.industry);
       if (profile.job_market_region) ctxLines.push("Market: " + profile.job_market_region + (profile.job_market_state ? ", " + profile.job_market_state : "") + (profile.job_market_country ? ", " + profile.job_market_country : ""));
       if (profile.bio) ctxLines.push("Bio: " + profile.bio.slice(0, 300));
+      if (profile.experience_years) ctxLines.push("Experience: " + profile.experience_years);
+      if (profile.seniority_level) ctxLines.push("Seniority: " + profile.seniority_level);
+      if (profile.target_roles) ctxLines.push("Target roles: " + profile.target_roles);
+      if (profile.target_salary_band) ctxLines.push("Salary target: " + profile.target_salary_band);
+      if (profile.search_duration) ctxLines.push("Search duration: " + profile.search_duration);
+      if (profile.work_arrangement) ctxLines.push("Work preference: " + profile.work_arrangement);
+      if (profile.career_goal) ctxLines.push("Career goal: " + profile.career_goal);
+      if (profile.skills) ctxLines.push("Skills: " + profile.skills);
       if (scans.length) {
         var scanSummary = scans.map(function (s) {
           return (s.title || "?") + (s.company ? " at " + s.company : "") + " (ghost score: " + (s.ghost_score != null ? s.ghost_score : "?") + (s.outcome ? ", " + s.outcome : "") + ")";
