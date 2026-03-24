@@ -310,7 +310,18 @@ const GhostIcon = ({ size = 64, color = "#eeeae0" }) => (
 export default function Profile() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [editing, setEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [activityLoaded, setActivityLoaded] = useState(false); // MUST be false — controls lazy-load gate
+  const [activityScans, setActivityScans] = useState([]);
+  const [activityApps, setActivityApps] = useState([]);
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [openEditRow, setOpenEditRow] = useState(null);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [skillTags, setSkillTags] = useState([]);
+  const [targetRolesList, setTargetRolesList] = useState([]);
+  const [roleInput, setRoleInput] = useState("");
+  const [skillInput, setSkillInput] = useState("");
+  const profileSnapshotRef = useRef(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
@@ -342,6 +353,14 @@ export default function Profile() {
     industry: "", employment_status: "", bio: "",
     show_full_name: false, show_education: false, show_current_job: false,
     show_employment_status: false, show_tracked_jobs: false,
+    // 8 new career fields
+    experience_years: "", seniority_level: "", work_arrangement: "",
+    target_roles: "", target_salary_band: "", search_duration: "",
+    career_goal: "", skills: "",
+    // 9 new visibility toggles
+    show_industry: false, show_experience_years: false, show_seniority_level: false,
+    show_work_arrangement: false, show_target_roles: false, show_target_salary_band: false,
+    show_search_duration: false, show_career_goal: false, show_skills: false,
   });
 
   useEffect(() => {
@@ -375,7 +394,7 @@ export default function Profile() {
       try {
         if (!data.region_set && !sessionStorage.getItem("gb_region_skipped")) setShowRegionModal(true);
       } catch(e) {};
-      setForm({
+      const newForm = {
         username: data.username || "",
         full_name: data.full_name || "",
         education: data.education || "",
@@ -388,14 +407,33 @@ export default function Profile() {
         show_current_job: data.show_current_job || false,
         show_employment_status: data.show_employment_status || false,
         show_tracked_jobs: data.show_tracked_jobs || false,
-      });
+        experience_years: data.experience_years ?? "",
+        seniority_level: data.seniority_level ?? "",
+        work_arrangement: data.work_arrangement ?? "",
+        target_roles: data.target_roles ?? "",
+        target_salary_band: data.target_salary_band ?? "",
+        search_duration: data.search_duration ?? "",
+        career_goal: data.career_goal ?? "",
+        skills: data.skills ?? "",
+        show_industry: data.show_industry ?? false,
+        show_experience_years: data.show_experience_years ?? false,
+        show_seniority_level: data.show_seniority_level ?? false,
+        show_work_arrangement: data.show_work_arrangement ?? false,
+        show_target_roles: data.show_target_roles ?? false,
+        show_target_salary_band: data.show_target_salary_band ?? false,
+        show_search_duration: data.show_search_duration ?? false,
+        show_career_goal: data.show_career_goal ?? false,
+        show_skills: data.show_skills ?? false,
+      };
+      setForm(newForm);
+      setSkillTags(data.skills ? data.skills.split(",").map(s => s.trim()).filter(Boolean) : []);
+      setTargetRolesList(data.target_roles ? data.target_roles.split(",").map(s => s.trim()).filter(Boolean) : []);
+      profileSnapshotRef.current = { ...newForm };
       if (data.avatar_color) setAvatarColor(data.avatar_color);
       if (data.ghost_color) setGhostColor(data.ghost_color);
       if (data.avatar_url) setAvatarUrl(data.avatar_url);
       if (data.banner_url) setBannerUrl(data.banner_url);
       await loadFollowData(uid, uid); // own profile: viewer = owner
-    } else {
-      setEditing(true);
     }
     setLoading(false);
   }
@@ -497,21 +535,24 @@ export default function Profile() {
   async function saveProfile() {
     if (!form.username.trim()) { setError("Username is required."); return; }
     setSaving(true); setError(null); setSaved(false);
-    const res = await supabase.from("profiles").upsert({
+    const payload = {
       id: session.user.id,
       ...form,
+      skills: skillTags.join(", "),
+      target_roles: targetRolesList.join(", "),
       username: form.username.trim(),
       avatar_color: avatarColor,
       ghost_color: ghostColor,
       avatar_url: avatarUrl || null,
       banner_url: bannerUrl || null,
-    });
+    };
+    const res = await supabase.from("profiles").upsert(payload);
     if (res.error) {
       setError(res.error.message.includes("unique") ? "That username is already taken." : res.error.message);
       setSaving(false); return;
     }
-    setProfile({ ...form, id: session.user.id, avatar_color: avatarColor, ghost_color: ghostColor, avatar_url: avatarUrl, banner_url: bannerUrl });
-    setEditing(false); setSaving(false); setSaved(true);
+    setProfile({ ...payload });
+    setSaving(false); setSaved(true);
     setShowAvatarPicker(false);
     setTimeout(() => setSaved(false), 3000);
   }
@@ -590,14 +631,14 @@ export default function Profile() {
 
         {/* BANNER */}
         <div
-          className={`banner-area${editing ? " editable" : ""}`}
-          onClick={() => editing && bannerFileRef.current?.click()}
+          className={`banner-area${(isOwnProfile && !!session) ? " editable" : ""}`}
+          onClick={() => (isOwnProfile && !!session) && bannerFileRef.current?.click()}
         >
           {bannerUrl
             ? <img className="banner-img" src={bannerUrl} alt="" />
             : <div className="banner-default" />
           }
-          {editing && (
+          {(isOwnProfile && !!session) && (
             <div className="banner-hover">
               <span className="banner-hover-label">
                 {bannerUrl ? "Change Banner Photo" : "Add Banner Photo"}
@@ -612,15 +653,15 @@ export default function Profile() {
           <div className="avatar-row">
             <div className="avatar-wrap">
               <div
-                className={`avatar${editing ? " editable" : ""}`}
+                className={`avatar${(isOwnProfile && !!session) ? " editable" : ""}`}
                 style={{ background: avatarUrl ? "transparent" : avatarColor }}
-                onClick={() => editing && setShowAvatarPicker(p => !p)}
+                onClick={() => (isOwnProfile && !!session) && setShowAvatarPicker(p => !p)}
               >
                 {avatarUrl
                   ? <img src={avatarUrl} alt="avatar" />
                   : <GhostIcon size={56} color={ghostColor} />
                 }
-                {editing && (
+                {(isOwnProfile && !!session) && (
                   <div className="avatar-hover">
                     <span className="avatar-hover-text">CHANGE<br />PHOTO</span>
                   </div>
@@ -637,14 +678,28 @@ export default function Profile() {
                   {isFollowing ? "Following" : "Follow"}
                 </button>
               )}
-              {profile && !editing && isOwnProfile && (
-                <button className="btn-secondary" onClick={() => setEditing(true)}>Edit Profile</button>
+              {isOwnProfile && !!session && (
+                <>
+                  <button className="btn-secondary" onClick={() => {
+                    const snap = profileSnapshotRef.current;
+                    if (snap) {
+                      setForm({ ...snap });
+                      setSkillTags((snap.skills || "").split(",").map(s => s.trim()).filter(Boolean));
+                      setTargetRolesList((snap.target_roles || "").split(",").map(s => s.trim()).filter(Boolean));
+                    }
+                    setError(null);
+                    setShowAvatarPicker(false);
+                  }}>Cancel</button>
+                  <button className="btn-primary" onClick={saveProfile} disabled={saving || !form.username.trim()}>
+                    {saving ? "Saving..." : "Save"}
+                  </button>
+                </>
               )}
             </div>
           </div>
 
           {/* AVATAR PICKER */}
-          {editing && showAvatarPicker && (
+          {(isOwnProfile && !!session) && showAvatarPicker && (
             <div className="avatar-picker">
               <div className="avatar-picker-title">Profile Photo</div>
               <div className="avatar-picker-row">
