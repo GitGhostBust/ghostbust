@@ -673,7 +673,7 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-brand">Ghost<em>Bust</em></a>
-    <div style="display:flex;gap:12px;align-items:center;"><a href="/community.html" class="nav-cta" style="background:transparent;border:1px solid rgba(240,236,224,0.4);">🗣️ Community</a><a href="/profile.html" class="nav-cta" style="background:transparent;border:1px solid rgba(240,236,224,0.4);">My Profile</a><a href="/app.html" class="nav-cta">Open the App →</a></div>
+    <div style="display:flex;gap:12px;align-items:center;"><a href="/community.html" class="nav-cta" style="background:transparent;border:1px solid rgba(240,236,224,0.4);">🗣️ Community</a><a href="/profile.html" class="nav-cta" style="background:transparent;border:1px solid rgba(240,236,224,0.4);" onclick="return gbProfileClick(event)">My Profile</a><a href="/app.html" class="nav-cta">Open the App →</a></div>
   </nav>
 
   <!-- HERO -->
@@ -957,6 +957,30 @@
       GhostBust Ghost Scores are algorithmic estimates based on patterns in job listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. Ghost job statistics cited on this page are sourced from third-party research and reporting. GhostBust is not affiliated with any of the job boards or hiring platforms referenced. &copy; 2026 GhostBust.
     </div>
   </footer>
+
+  <!-- PROFILE AUTH MODAL -->
+  <div id="gb-profile-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(7,7,9,0.82);align-items:center;justify-content:center;">
+    <div style="background:#0e0e12;border:1px solid rgba(255,255,255,0.07);padding:40px 36px;max-width:400px;width:calc(100% - 48px);position:relative;text-align:center;">
+      <button onclick="document.getElementById('gb-profile-modal').style.display='none'" style="position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(238,234,224,0.35);font-family:'Space Mono',monospace;font-size:18px;cursor:pointer;line-height:1;" onmouseover="this.style.color='rgba(238,234,224,0.8)'" onmouseout="this.style.color='rgba(238,234,224,0.35)'">&times;</button>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.04em;color:#eeeae0;margin-bottom:16px;">Ghost<span style="color:#d42200;">Bust</span></div>
+      <p style="font-family:'Libre Baskerville',Georgia,serif;font-size:14px;color:rgba(238,234,224,0.7);line-height:1.6;margin-bottom:28px;">Sign in to view your profile.</p>
+      <a href="/app.html" style="display:block;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.1em;background:#d42200;color:#eeeae0;padding:13px 28px;text-decoration:none;transition:background 150ms;" onmouseover="this.style.background='#e02600'" onmouseout="this.style.background='#d42200'">SIGN IN / SIGN UP</a>
+    </div>
+  </div>
+  <script>
+  function gbProfileClick(e) {
+    var session = null;
+    try { session = JSON.parse(localStorage.getItem('sb-awhqwqhntgxjvvawzkog-auth-token')); } catch(err) {}
+    if (session && session.access_token) { return true; }
+    e.preventDefault();
+    var modal = document.getElementById('gb-profile-modal');
+    modal.style.display = 'flex';
+    modal.addEventListener('click', function(ev) {
+      if (ev.target === modal) modal.style.display = 'none';
+    }, { once: true });
+    return false;
+  }
+  </script>
 
   <!-- CINEMATIC INTRO OVERLAY -->
   <div id="gb-intro">
