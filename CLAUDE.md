@@ -258,6 +258,8 @@ The job tracker stores application data in Supabase (`applications` table). Full
 | `tos.html` | Terms of Service — static, included in Vite build |
 | `privacy.html` | Privacy Policy — static, included in Vite build |
 | `api/subscribe.js` | Vercel serverless function — adds email to Resend audience |
+| `api/cron/onboarding.js` | Vercel cron — sends onboarding email sequence via Resend |
+| `api/emails/templates.js` | HTML email templates for all 5 onboarding emails |
 
 ---
 
@@ -282,9 +284,44 @@ All pages share an identical footer: **GhostBust · TOS · Privacy · ghostbusto
 
 ---
 
+## Onboarding Email Sequence
+
+Implemented via a Vercel daily cron (`vercel.json` → `api/cron/onboarding.js`) that runs at 8 AM UTC.
+
+### How it works
+1. Fetches all users from Supabase auth admin API (service role key required)
+2. For each of the 5 email types, finds users whose account age falls in the correct 24-hour window
+3. Cross-references `email_sends` table to skip anyone already sent that email
+4. Sends via Resend, records the send — guarantees no duplicates across cron runs
+
+### Sequence
+
+| Email | Delay | Subject |
+|---|---|---|
+| `day_0` | 0 days | You're a Founding Member. Here's what that means. |
+| `day_2` | 2 days | five things that show up in ghost job listings |
+| `day_5` | 5 days | your resume may never reach a human |
+| `day_14` | 14 days | 72% of job seekers say the search damaged their mental health |
+| `day_30` | 30 days | a month in (active) / no pressure — but the market got harder (dormant) |
+
+Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get the active variant; everyone else gets the dormant variant.
+
+### Required env vars (Vercel dashboard)
+- `SUPABASE_SERVICE_ROLE_KEY` — from Supabase → Settings → API → service_role key
+- `CRON_SECRET` — any random string; Vercel injects it as the Bearer token when triggering crons
+- `RESEND_FROM_EMAIL` — verified domain sender, e.g. `GhostBust <onboarding@ghostbust.us>`
+
+### Required migration
+`supabase/migrations/20260324_email_sends.sql` — creates the `email_sends` deduplication table. Must be run in Supabase SQL editor before the cron fires.
+
+---
+
 ## Phase 2 Status (as of 2026-03-24)
 
 **Completed:**
+- Onboarding email sequence (5 emails: Day 0/2/5/14/30) via Vercel cron + Resend
+- Landing page navbar redesigned to match app/community/profile style
+- Profile nav link auth modal fixed on all pages (opens inline sign-in/sign-up form)
 - Supabase Storage for avatar and banner photos (Profile.jsx)
 - Ghost character as default avatar with color picker
 - Ghost body color picker
@@ -318,6 +355,8 @@ All pages share an identical footer: **GhostBust · TOS · Privacy · ghostbusto
 **Pending / known issues:**
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
 - `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
+- Onboarding email cron requires `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `RESEND_FROM_EMAIL` in Vercel dashboard
+- `20260324_email_sends.sql` migration must be run in Supabase SQL editor before cron goes live
+- Sending domain must be verified in Resend before `RESEND_FROM_EMAIL` will work
 - Migrations `20260322_*.sql` and `20260323_*.sql` must be run manually in Supabase SQL editor
-- Onboarding email sequence (Resend) not yet built
 - UI overhaul for app.html and profile.html pending
