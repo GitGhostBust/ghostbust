@@ -21,7 +21,7 @@ const STYLE = `
   .ra-upload-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); letter-spacing: 0.1em; text-transform: uppercase; }
 
   /* Resume card */
-  .ra-resume-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--signal); padding: 18px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .ra-resume-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--blood); padding: 18px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
   .ra-resume-icon { font-size: 28px; flex-shrink: 0; }
   .ra-resume-name { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--paper); font-weight: 700; }
   .ra-resume-date { font-family: 'Space Mono', monospace; font-size: 10px; color: rgba(238,234,224,0.65); margin-top: 3px; }
@@ -105,7 +105,7 @@ const STYLE = `
   .ra-locked-icon { font-size: 52px; margin-bottom: 16px; }
   .ra-locked-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 8px; }
   .ra-locked-sub { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.6); line-height: 1.75; max-width: 400px; margin: 0 auto; }
-  .ra-pro-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 12px; background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.35); color: var(--bile); margin-bottom: 20px; }
+  .ra-pro-badge { display: inline-block; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 4px 12px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--muted); margin-bottom: 20px; }
 
   /* Section header with divider */
   .ra-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
@@ -134,7 +134,7 @@ const STYLE = `
   .ra-preview-docx ul, .ra-preview-docx ol { padding-left: 20px; margin-bottom: 10px; }
   .ra-preview-docx li { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.82); line-height: 1.7; margin-bottom: 3px; }
   .ra-preview-docx strong, .ra-preview-docx b { color: var(--paper); }
-  .ra-preview-docx a { color: var(--ice); text-decoration: none; }
+  .ra-preview-docx a { color: #111; text-decoration: underline; }
   .ra-preview-docx table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
   .ra-preview-docx td, .ra-preview-docx th { font-family: 'Libre Baskerville', Georgia, serif; font-size: 12px; color: rgba(238,234,224,0.75); padding: 5px 8px; border: 1px solid var(--border); vertical-align: top; }
 
@@ -175,11 +175,11 @@ const STYLE = `
   /* COVER LETTER GENERATOR (general mode) */
   .ra-cl-trigger { display: block; width: 100%; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 14px; border: 1px dashed var(--border-hi); background: none; color: rgba(238,234,224,0.65); cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-top: 12px; }
   .ra-cl-trigger:hover { color: var(--paper); border-color: var(--paper); }
-  .ra-cl-form-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 12px; }
+  .ra-cl-form-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 22px; margin-top: 12px; }
   .ra-cl-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 10px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; box-sizing: border-box; }
   .ra-cl-input:focus { border-color: rgba(255,255,255,0.3); }
   .ra-cl-input::placeholder { color: rgba(238,234,224,0.65); }
-  .ra-cl-result-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--bile); padding: 22px; margin-top: 16px; }
+  .ra-cl-result-box { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 22px; margin-top: 16px; }
 
   /* ANALYZING: doc selector (AI Advisor tab) */
   .ra-doc-selector { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 16px 20px; margin-bottom: 24px; }
@@ -791,7 +791,7 @@ function ComprehensiveResults({ data, onCopy, copied, onShowCLForm, showCLForm, 
             <button className="ra-cl-trigger" onClick={onShowCLForm}>+ Generate a Cover Letter from This Resume</button>
           ) : (
             <div className="ra-cl-form-box">
-              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--bile)", marginBottom: 14 }}>Cover Letter Generator</div>
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 14 }}>Cover Letter Generator</div>
               <input className="ra-cl-input" type="text" placeholder="Target job title (required)" value={clJobTitle} onChange={function (e) { onCLJobTitle(e.target.value); }} />
               <input className="ra-cl-input" type="text" placeholder="Company name (optional)" value={clCompany} onChange={function (e) { onCLCompany(e.target.value); }} />
               <button className="run-btn red" style={{ marginTop: 4 }} onClick={onGenerateCL} disabled={generatingCL || !clJobTitle.trim()}>
@@ -801,7 +801,7 @@ function ComprehensiveResults({ data, onCopy, copied, onShowCLForm, showCLForm, 
           )}
           {clResult && (
             <div className="ra-cl-result-box" style={{ marginTop: 16 }}>
-              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--bile)", marginBottom: 12 }}>Cover Letter</div>
+              <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 12 }}>Cover Letter</div>
               <div className="ra-cover-letter">{clResult}</div>
               <button className={"ra-copy-btn" + (copiedCL ? " copied" : "")} onClick={onCopyCL}>{copiedCL ? "✓ Copied!" : "Copy Cover Letter"}</button>
             </div>
