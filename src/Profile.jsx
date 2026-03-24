@@ -119,6 +119,55 @@ const STYLE = `
   .overview-private-note { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 16px; }
   .overview-empty-state { font-size: 13px; color: var(--muted); font-style: italic; padding: 24px 0; }
 
+  /* Career Profile tab */
+  .completeness-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 20px 24px; margin-bottom: 16px; }
+  .completeness-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .completeness-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.1em; color: var(--paper); }
+  .completeness-pct { font-family: "Bebas Neue", sans-serif; font-size: 28px; color: var(--blood); }
+  .completeness-sub { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; line-height: 1.6; }
+  .completeness-bar-track { height: 4px; background: var(--surface3); margin-top: 12px; }
+  .completeness-bar-fill { height: 100%; background: var(--blood); transition: width 0.3s; }
+
+  .privacy-card { background: var(--surface); border: 1px solid var(--border); padding: 16px 24px; margin-bottom: 16px; }
+  .privacy-trigger { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; background: none; border: none; width: 100%; text-align: left; padding: 0; }
+  .privacy-trigger:hover { color: var(--paper); }
+  .privacy-content { margin-top: 16px; }
+  .privacy-list { list-style: none; padding: 0; margin: 0 0 12px 0; }
+  .privacy-list li { font-size: 12px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; line-height: 1.5; }
+  .privacy-list li::before { content: "✕"; color: var(--blood); font-size: 10px; flex-shrink: 0; padding-top: 2px; }
+  .privacy-footer { font-size: 11px; color: var(--ghost); line-height: 1.7; font-style: italic; }
+
+  .public-info-card { background: var(--surface); border: 1px solid var(--border); padding: 0; margin-bottom: 16px; overflow: hidden; }
+  .public-info-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.06em; padding: 18px 24px 14px; border-bottom: 1px solid var(--border); }
+  .toggle-field-row { border-bottom: 1px solid var(--border); }
+  .toggle-field-row:last-child { border-bottom: none; }
+  .toggle-field-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; cursor: pointer; transition: background 0.1s; }
+  .toggle-field-header:hover { background: var(--surface2); }
+  .toggle-field-left { flex: 1; min-width: 0; }
+  .toggle-field-label { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ghost); margin-bottom: 2px; }
+  .toggle-field-value { font-size: 13px; color: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .toggle-field-value.empty { color: var(--ghost); font-style: italic; }
+  .toggle-field-help { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.06em; margin-top: 2px; line-height: 1.4; }
+  .inline-edit-area { padding: 12px 24px 16px; background: var(--surface2); border-top: 1px solid var(--border); }
+  .inline-edit-area .f-input { background: var(--surface3); border: 1px solid var(--border-hi); color: var(--paper); font-size: 13px; padding: 8px 12px; width: 100%; font-family: "Libre Baskerville", serif; box-sizing: border-box; }
+  .inline-edit-area .f-input:focus { outline: none; border-color: var(--blood); }
+  .inline-char-counter { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); text-align: right; margin-top: 4px; letter-spacing: 0.06em; }
+
+  .tag-chip-area { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .tag-chip { display: inline-flex; align-items: center; gap: 6px; font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.06em; padding: 4px 10px; background: var(--surface3); border: 1px solid var(--border-hi); color: var(--paper); }
+  .tag-chip-remove { background: none; border: none; color: var(--ghost); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; }
+  .tag-chip-remove:hover { color: var(--blood); }
+  .tag-chip-helper { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.06em; }
+  .tag-chip-input { background: var(--surface3); border: 1px solid var(--border-hi); color: var(--paper); font-size: 13px; padding: 6px 10px; font-family: "Libre Baskerville", serif; width: 100%; box-sizing: border-box; }
+  .tag-chip-input:focus { outline: none; border-color: var(--blood); }
+  .tag-chip-input:disabled { opacity: 0.4; cursor: not-allowed; }
+  .tag-max-msg { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.06em; margin-top: 4px; }
+
+  .skills-card { background: var(--surface); border: 1px solid var(--border); padding: 0; margin-bottom: 16px; overflow: hidden; }
+  .skills-card-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; border-bottom: 1px solid var(--border); }
+  .skills-card-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.06em; }
+  .skills-card-body { padding: 16px 24px; }
+
   .avatar-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
   .avatar-wrap { position: relative; margin-top: -48px; }
   .avatar { width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--surface); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: default; box-shadow: 0 0 0 1px var(--border); }
@@ -702,7 +751,201 @@ export default function Profile() {
     );
   };
 
-  const CareerProfileTab = () => null;
+  const CareerProfileTab = () => {
+    const filledCount = CAREER_FIELD_LABELS.filter(([key]) => {
+      if (key === "skills") return skillTags.length > 0;
+      if (key === "target_roles") return targetRolesList.length > 0;
+      return form[key] && String(form[key]).trim();
+    }).length;
+    const completenessPercent = Math.round((filledCount / 12) * 100);
+
+    function addRole(val) {
+      const trimmed = val.trim();
+      if (!trimmed || targetRolesList.includes(trimmed) || targetRolesList.length >= 3) return;
+      setTargetRolesList([...targetRolesList, trimmed]);
+      setRoleInput("");
+    }
+    function handleRoleKeyDown(e) {
+      if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addRole(roleInput); }
+    }
+    function addSkill(val) {
+      const trimmed = val.trim();
+      if (!trimmed || skillTags.includes(trimmed) || skillTags.length >= 10) return;
+      setSkillTags([...skillTags, trimmed]);
+      setSkillInput("");
+    }
+    function handleSkillKeyDown(e) {
+      if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addSkill(skillInput); }
+    }
+
+    if (!isOwnProfile) {
+      const src = profile;
+      if (!src) return null;
+      const pubFields = CAREER_FIELD_LABELS.filter(([key]) =>
+        key !== "skills" && src[VISIBILITY_KEY[key]] && src[key] && String(src[key]).trim()
+      );
+      const showSkills = src.show_skills && src.skills && src.skills.trim();
+      const pubSkills = showSkills ? src.skills.split(",").map(s => s.trim()).filter(Boolean) : [];
+      return (
+        <>
+          {pubFields.length > 0 && (
+            <div className="overview-card">
+              <div className="overview-card-title">Career Details</div>
+              {pubFields.map(([key, label]) => (
+                <div key={key} className="career-detail-row">
+                  <span className="career-detail-label">{label}</span>
+                  <span className="career-detail-value">{src[key]}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {showSkills && (
+            <div className="overview-card">
+              <div className="overview-card-title">Skills</div>
+              <div className="skills-tag-list">
+                {pubSkills.map(tag => <span key={tag} className="skill-tag-ro">{tag}</span>)}
+              </div>
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return (
+      <>
+        <div className="completeness-card">
+          <div className="completeness-header">
+            <span className="completeness-title">AI Context Completeness</span>
+            <span className="completeness-pct">{completenessPercent}%</span>
+          </div>
+          <div className="completeness-sub">
+            More context = sharper advice across all four AI modes.<br />
+            Each field you fill in improves your results.
+          </div>
+          <div className="completeness-bar-track">
+            <div className="completeness-bar-fill" style={{ width: completenessPercent + "%" }} />
+          </div>
+        </div>
+
+        <div className="privacy-card">
+          <button className="privacy-trigger" onClick={() => setPrivacyOpen(v => !v)}>
+            <span>GhostBust will never ask for certain information</span>
+            <span>{privacyOpen ? "▲" : "▾"}</span>
+          </button>
+          {privacyOpen && (
+            <div className="privacy-content">
+              <div style={{ fontFamily: "Space Mono, monospace", fontSize: 10, letterSpacing: "0.1em", color: "var(--ghost)", marginBottom: 10, textTransform: "uppercase" }}>We will never ask for:</div>
+              <ul className="privacy-list">
+                <li>Salary history <em style={{ color: "var(--ghost)", fontSize: 11 }}>(target range is fine — history is not)</em></li>
+                <li>Bank account, routing, or financial account numbers</li>
+                <li>Social Security or government ID numbers</li>
+                <li>Passwords or security credentials</li>
+                <li>Health, disability, or medical information</li>
+                <li>Immigration status</li>
+                <li>Home address</li>
+              </ul>
+              <div className="privacy-footer">
+                GhostBust is built for job seekers, not recruiters. All fields you fill in are used by GhostBust AI on your behalf — never sold or shared with employers. Visibility toggles control what appears on your public profile only; the AI always has access to everything you enter here to give you the best advice possible.
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="public-info-card">
+          <div className="public-info-title">Public Info</div>
+          {CAREER_FIELD_LABELS.filter(([key]) => key !== "skills").map(([key, label]) => {
+            const visKey = VISIBILITY_KEY[key];
+            const isOpen = openEditRow === key;
+            const value = key === "target_roles"
+              ? (targetRolesList.length ? targetRolesList.join(", ") : "")
+              : form[key];
+            const fieldType = FIELD_TYPE[key];
+            const helpText = key === "industry" ? "Hides industry from Career Details. Industry may still appear in your role tag above." : null;
+            return (
+              <div key={key} className="toggle-field-row">
+                <div className="toggle-field-header" onClick={() => setOpenEditRow(isOpen ? null : key)}>
+                  <div className="toggle-field-left">
+                    <div className="toggle-field-label">{label}</div>
+                    <div className={`toggle-field-value${!value ? " empty" : ""}`}>{value || "not set"}</div>
+                    {helpText && <div className="toggle-field-help">{helpText}</div>}
+                  </div>
+                  <label className="toggle" onClick={e => { e.stopPropagation(); setField(visKey, !form[visKey]); }}>
+                    <input type="checkbox" checked={form[visKey]} readOnly />
+                    <span className="toggle-slider" />
+                  </label>
+                </div>
+                {isOpen && (
+                  <div className="inline-edit-area">
+                    {fieldType === "select" && (
+                      <select className="f-input" value={form[key]} onChange={e => setField(key, e.target.value)} autoFocus>
+                        <option value="">Select...</option>
+                        {SELECT_OPTIONS[key].map(o => <option key={o}>{o}</option>)}
+                      </select>
+                    )}
+                    {fieldType === "input" && (
+                      <input className="f-input" value={form[key]} onChange={e => setField(key, e.target.value)} autoFocus onKeyDown={e => e.key === "Escape" && setOpenEditRow(null)} />
+                    )}
+                    {fieldType === "tags" && (
+                      <>
+                        <div className="tag-chip-area">
+                          {targetRolesList.map(tag => (
+                            <span key={tag} className="tag-chip">
+                              {tag}
+                              <button className="tag-chip-remove" onClick={() => setTargetRolesList(targetRolesList.filter(t => t !== tag))}>✕</button>
+                            </span>
+                          ))}
+                        </div>
+                        {targetRolesList.length < 3 ? (
+                          <input className="tag-chip-input" placeholder="Add role, press Enter or comma" value={roleInput} onChange={e => setRoleInput(e.target.value)} onKeyDown={handleRoleKeyDown} onBlur={() => { if (roleInput.trim()) addRole(roleInput); }} autoFocus />
+                        ) : (
+                          <div className="tag-max-msg">Maximum 3 roles</div>
+                        )}
+                      </>
+                    )}
+                    {fieldType === "textarea" && (
+                      <>
+                        <textarea className="f-input" value={form[key]} onChange={e => setField(key, e.target.value)} maxLength={200} rows={3} autoFocus onKeyDown={e => e.key === "Escape" && setOpenEditRow(null)} style={{ resize: "vertical" }} />
+                        <div className="inline-char-counter">{form[key].length} / 200</div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="skills-card">
+          <div className="skills-card-header">
+            <span className="skills-card-title">Skills</span>
+            <label className="toggle" onClick={e => { e.stopPropagation(); setField("show_skills", !form.show_skills); }}>
+              <input type="checkbox" checked={form.show_skills} readOnly />
+              <span className="toggle-slider" />
+            </label>
+          </div>
+          <div className="skills-card-body">
+            <div className="tag-chip-area">
+              {skillTags.map(tag => (
+                <span key={tag} className="tag-chip">
+                  {tag}
+                  <button className="tag-chip-remove" onClick={() => setSkillTags(skillTags.filter(t => t !== tag))}>✕</button>
+                </span>
+              ))}
+            </div>
+            {skillTags.length < 10 ? (
+              <input className="tag-chip-input" placeholder="Add skill, press Enter or comma" value={skillInput} onChange={e => setSkillInput(e.target.value)} onKeyDown={handleSkillKeyDown} onBlur={() => { if (skillInput.trim()) addSkill(skillInput); }} />
+            ) : (
+              <div className="tag-max-msg">Maximum 10 skills</div>
+            )}
+            <div className="tag-chip-helper" style={{ marginTop: 8 }}>
+              Up to 10 · used by AI to identify keyword gaps and bullet improvements
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   const ActivityTab = () => null;
 
   return (
