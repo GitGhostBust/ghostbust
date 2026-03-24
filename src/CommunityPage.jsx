@@ -202,12 +202,10 @@ export default function CommunityPage() {
         </footer>
       </div>
 
-      {showProfileModal && <div onClick={function(e){if(e.target===e.currentTarget)setShowProfileModal(false);}} style={{position:"fixed",inset:0,zIndex:9500,background:"rgba(7,7,9,0.82)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-        <div style={{background:"#0e0e12",border:"1px solid rgba(255,255,255,0.07)",padding:"40px 36px",maxWidth:400,width:"calc(100% - 48px)",position:"relative",textAlign:"center"}}>
-          <button onClick={function(){setShowProfileModal(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"rgba(238,234,224,0.35)",fontFamily:"'Space Mono',monospace",fontSize:18,cursor:"pointer",lineHeight:1}}>&#x00D7;</button>
-          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:26,letterSpacing:"0.04em",color:"#eeeae0",marginBottom:16}}>Ghost<span style={{color:"#d42200"}}>Bust</span></div>
-          <p style={{fontFamily:"'Libre Baskerville',Georgia,'serif'",fontSize:14,color:"rgba(238,234,224,0.7)",lineHeight:1.6,marginBottom:28}}>Sign in to view your profile.</p>
-          <a href="/app.html" style={{display:"block",fontFamily:"'Bebas Neue',sans-serif",fontSize:17,letterSpacing:"0.1em",background:"#d42200",color:"#eeeae0",padding:"13px 28px",textDecoration:"none"}}>SIGN IN / SIGN UP</a>
+      {showProfileModal && <div onClick={function(e){if(e.target===e.currentTarget)setShowProfileModal(false);}} style={{position:"fixed",inset:0,zIndex:9500,background:"rgba(7,7,9,0.92)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <div style={{background:"#0e0e12",border:"1px solid rgba(255,255,255,0.07)",borderTop:"4px solid #d42200",maxWidth:420,width:"calc(100% - 48px)",padding:"36px",position:"relative"}}>
+          <button onClick={function(){setShowProfileModal(false);}} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"#4a4a60",fontSize:18,cursor:"pointer",lineHeight:1}}>✕</button>
+          <AuthForm onClose={function(){ setShowProfileModal(false); window.location.href="/profile.html"; }} />
         </div>
       </div>}
 
