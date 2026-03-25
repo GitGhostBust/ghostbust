@@ -492,13 +492,19 @@ function parseJSON(text) {
   throw new Error("Could not parse response: " + t.slice(0,200));
 }
 
-function apiCall(messages) {
+function apiCall(messages, accessToken) {
   return fetch("/api/claude", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "authorization": "Bearer " + (accessToken || ""),
+    },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 4000, messages: messages }),
   })
-  .then(function(r){ return r.json(); })
+  .then(function(r){
+    if (r.status === 429) throw new Error("RATE_LIMIT");
+    return r.json();
+  })
   .then(function(data){
     if (data.error) throw new Error(data.error.type+": "+data.error.message);
     if (!data.content||!data.content.length) throw new Error("Empty API response");
@@ -999,14 +1005,18 @@ function SearchTab({ session, addApp }) {
     var q = results ? results.q : [subfield || industry, jobType].filter(Boolean).join(" ");
     var loc = results ? results.loc : [city.trim(), usState.trim()].filter(Boolean).join(", ");
     var prompt = 'You are a job search strategist. The user is searching for: "' + q + '" in "' + (loc || "USA") + '".\n\nProvide targeted search refinement as JSON with exactly these keys:\n{\n  "alternative_titles": ["title1", "title2", "title3"],\n  "board_priorities": [\n    {"board": "Indeed", "reason": "one sentence why this board suits this search"},\n    {"board": "LinkedIn", "reason": "..."},\n    {"board": "Wellfound", "reason": "..."}\n  ],\n  "search_tips": ["tip1", "tip2", "tip3"]\n}\n\nalternative_titles: 3 related job titles that often yield hidden results for this role.\nboard_priorities: top 3 boards for this specific query and location with a brief reason each.\nsearch_tips: 3 specific actionable tips for this exact role and location — not generic advice.\n\nReturn only the JSON object.';
-    apiCall([{ role: "user", content: prompt }])
+    apiCall([{ role: "user", content: prompt }], session?.access_token)
       .then(function(text) {
         var parsed = parseJSON(text);
         setAiRefinement(parsed);
         setAiRefining(false);
       })
       .catch(function(err) {
-        setAiRefineError(err.message);
+        if (err.message === "RATE_LIMIT") {
+          setAiRefineError("You've reached your limit of 20 analyses per hour. Please try again later.");
+        } else {
+          setAiRefineError(err.message);
+        }
         setAiRefining(false);
       });
   }
@@ -1240,6 +1250,7 @@ function SearchTab({ session, addApp }) {
 function VerifyTab(props) {
   var addApp = props.addApp;
   var onSaved = props.onSaved;
+  var session = props.session;
 
   var [text,setText] = useState("");
   var [company,setCompany] = useState("");
@@ -1263,7 +1274,7 @@ function VerifyTab(props) {
     setLoading(true); setResult(null); setError(null); setSaved(false); setScanId(null); setStep(0);
     var iv = setInterval(function(){setStep(function(s){return Math.min(s+1,VERIFY_STEPS.length-1);});},700);
     var prompt = "You are a ghost job analyst. Analyze this job listing and return ONLY a JSON object.\n\nListing:\n"+text+(company?"\nCompany: "+company:"")+(age?"\nPosted: "+age:"")+"\n\nReturn JSON with: verdict (LEGIT or SUSPICIOUS or GHOST), ghostScore (0-100 where 100=fake), confidence (0-100), summary (2-3 sentences), scores (object: specificityScore, urgencyScore, transparencyScore, processScore each 0-100), flags (array of objects: severity HIGH/MEDIUM/LOW, flag string, explanation string, isPositive boolean), actionTips (array of 3 strings). Only return the JSON object.";
-    apiCall([{role:"user",content:prompt}])
+    apiCall([{role:"user",content:prompt}], session?.access_token)
       .then(function(raw){
         clearInterval(iv); setStep(VERIFY_STEPS.length-1);
         var parsed = parseJSON(raw);
@@ -1272,7 +1283,11 @@ function VerifyTab(props) {
       })
       .catch(function(err){
         clearInterval(iv);
-        setError("Analysis failed: "+err.message);
+        if (err.message === "RATE_LIMIT") {
+          setError("You've reached your limit of 20 analyses per hour. Please try again later.");
+        } else {
+          setError("Analysis failed: "+err.message);
+        }
         setLoading(false); setStep(-1);
       });
   }
@@ -2025,7 +2040,7 @@ export default function App() {
 
         <div style={{maxWidth:1280,margin:"0 auto",width:"100%"}}>
           {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
-          {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} />}
+          {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} session={session} />}
           {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} />}
           {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
         </div>
