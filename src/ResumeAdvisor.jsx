@@ -2160,6 +2160,18 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                         <div className="ra-history-snippet">{snippet}</div>
                         <div className="ra-history-date">{formatDateTime(a.created_at)}</div>
                       </div>
+                      <button
+                        onClick={function(e) {
+                          e.stopPropagation();
+                          var cardResumeName = (resumes.find(function(r) { return r.id === a.resume_id; }) || {}).file_name || "resume";
+                          exportAnalysisToPdf(a, cardResumeName, a.mode);
+                        }}
+                        disabled={pdfExporting === a.id}
+                        title="Download PDF"
+                        style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: pdfExporting === a.id ? "rgba(238,234,224,0.2)" : "rgba(238,234,224,0.35)", background: "transparent", border: "none", cursor: pdfExporting === a.id ? "default" : "pointer", padding: "4px 6px", flexShrink: 0 }}
+                      >
+                        {pdfExporting === a.id ? "…" : "↓"}
+                      </button>
                       <div className="ra-history-arrow">›</div>
                     </div>
                   );
