@@ -1,3 +1,6 @@
+import * as Sentry from "@sentry/node";
+Sentry.init({ dsn: process.env.SENTRY_DSN });
+
 import { applicationNudgeEmail } from '../emails/applicationNudge.js';
 
 const SUPABASE_URL = 'https://awhqwqhntgxjvvawzkog.supabase.co';
@@ -94,6 +97,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json(results);
   } catch (err) {
+    Sentry.captureException(err);
+    await Sentry.flush(2000);
     return res.status(500).json({ error: err.message });
   }
 }
