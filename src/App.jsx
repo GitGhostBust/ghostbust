@@ -1144,6 +1144,7 @@ function VerifyTab(props) {
   var [error,setError] = useState(null);
   var [saving,setSaving] = useState(false);
   var [saved,setSaved] = useState(false);
+  var [scanId,setScanId] = useState(null);
   var resultRef = useRef(null);
 
   useEffect(function(){
@@ -1151,14 +1152,14 @@ function VerifyTab(props) {
   },[result]);
 
   function analyze() {
-    setLoading(true); setResult(null); setError(null); setSaved(false); setStep(0);
+    setLoading(true); setResult(null); setError(null); setSaved(false); setScanId(null); setStep(0);
     var iv = setInterval(function(){setStep(function(s){return Math.min(s+1,VERIFY_STEPS.length-1);});},700);
     var prompt = "You are a ghost job analyst. Analyze this job listing and return ONLY a JSON object.\n\nListing:\n"+text+(company?"\nCompany: "+company:"")+(age?"\nPosted: "+age:"")+"\n\nReturn JSON with: verdict (LEGIT or SUSPICIOUS or GHOST), ghostScore (0-100 where 100=fake), confidence (0-100), summary (2-3 sentences), scores (object: specificityScore, urgencyScore, transparencyScore, processScore each 0-100), flags (array of objects: severity HIGH/MEDIUM/LOW, flag string, explanation string, isPositive boolean), actionTips (array of 3 strings). Only return the JSON object.";
     apiCall([{role:"user",content:prompt}])
       .then(function(raw){
         clearInterval(iv); setStep(VERIFY_STEPS.length-1);
         var parsed = parseJSON(raw);
-        setResult(parsed); try { var anonId = localStorage.getItem("gb_anon_id"); if (!anonId) { anonId = Math.random().toString(36).slice(2); localStorage.setItem("gb_anon_id", anonId); } import("./supabase.js").then(function(m){ m.supabase.from("ghost_scans").insert({ anon_id: anonId, company: company||null, title: jobTitle||null, job_board: sourceBoard||null, ghost_score: parsed.ghostScore||0, signal_flags: parsed.flags||[], assessment: parsed.verdict||null }).then(function(){}).catch(function(){}); }); } catch(e) {}
+        setResult(parsed); try { var anonId = localStorage.getItem("gb_anon_id"); if (!anonId) { anonId = Math.random().toString(36).slice(2); localStorage.setItem("gb_anon_id", anonId); } import("./supabase.js").then(function(m){ m.supabase.from("ghost_scans").insert({ anon_id: anonId, company: company||null, title: jobTitle||null, job_board: sourceBoard||null, ghost_score: parsed.ghostScore||0, signal_flags: parsed.flags||[], assessment: parsed.verdict||null, scores: parsed.scores||null, confidence: parsed.confidence||null, summary: parsed.summary||null }).select("id").single().then(function(res){ if (res.data&&res.data.id) setScanId(res.data.id); }).catch(function(){}); }); } catch(e) {}
         setLoading(false); setStep(-1);
       })
       .catch(function(err){
@@ -1243,7 +1244,7 @@ function VerifyTab(props) {
 
       {result&&(
         <div ref={resultRef}>
-          <VerdictCard result={result} />
+          <VerdictCard result={result} scanId={scanId} company={company} jobTitle={jobTitle} />
           <div className="save-bar">
             <div className="save-bar-title">Save to Tracker — starts as Researching</div>
             {!saved?(
