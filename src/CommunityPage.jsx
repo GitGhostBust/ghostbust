@@ -154,7 +154,8 @@ export default function CommunityPage() {
     supabase.from("profiles").select("job_market_region").eq("id", session.user.id).single()
       .then(function(res){
         if (res.data && res.data.job_market_region) setUserRegion(res.data.job_market_region);
-      });
+      })
+      .catch(function(e){ console.error("[CommunityPage] region fetch failed:", e); });
   }, [session]);
 
   return (
