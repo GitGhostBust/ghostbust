@@ -722,14 +722,25 @@ function VerdictCard(props) {
   var receiptRef = useRef(null);
 
   function handleCopyLink() {
-    if (!scanId) { setShareLabel("Saving…"); setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 1500); return; }
+    if (!scanId) { setShareLabel("Not ready — try again"); setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 2000); return; }
     import("./supabase.js").then(function(m){
       m.supabase.from("ghost_scans").update({ share_enabled: true }).eq("id", scanId).then(function(){
         var url = "https://ghostbust.us/score?id="+scanId;
-        navigator.clipboard.writeText(url).then(function(){
-          setShareLabel("✓ Copied!");
-          setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 2500);
-        });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function(){
+            setShareLabel("✓ Copied!");
+            setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 2500);
+          }).catch(function(){
+            prompt("Copy this link:", url);
+            setShareLabel("🔗 Copy Link");
+          });
+        } else {
+          prompt("Copy this link:", url);
+          setShareLabel("🔗 Copy Link");
+        }
+      }).catch(function(){
+        setShareLabel("Share failed");
+        setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 2000);
       });
     });
   }
