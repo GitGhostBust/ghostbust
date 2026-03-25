@@ -891,6 +891,11 @@
         msg.textContent = "YOU'RE IN. CHECK YOUR INBOX.";
         input.value = '';
         btn.textContent = 'SUBSCRIBED';
+      } else if (res.status === 429) {
+        msg.style.color = '#d42200';
+        msg.textContent = 'TOO MANY ATTEMPTS. PLEASE TRY AGAIN LATER.';
+        btn.disabled = false;
+        btn.textContent = 'SUBSCRIBE';
       } else {
         msg.style.color = '#d42200';
         msg.textContent = (data.error || 'SOMETHING WENT WRONG. TRY AGAIN.').toUpperCase();
