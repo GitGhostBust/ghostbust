@@ -920,7 +920,8 @@ function SearchTab({ session, addApp }) {
       .eq("user_id", userId)
       .order("saved_at", { ascending: false })
       .then(function(res) {
-        if (!res.error) setSavedSearches(res.data || []);
+        if (res.error) { console.error("[saved_searches] load failed:", res.error.message); return; }
+        setSavedSearches(res.data || []);
       });
   }, [userId]);
 
@@ -939,6 +940,7 @@ function SearchTab({ session, addApp }) {
   function handleIndustryChange(e) {
     setIndustry(e.target.value);
     setSubfield("");
+    setResults(null);
   }
 
   function buildResults(q, loc, r) {
