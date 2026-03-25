@@ -118,7 +118,7 @@ const STYLE = `
   .skills-tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
   .skill-tag-ro { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.08em; padding: 4px 10px; background: var(--surface3); border: 1px solid var(--border); color: var(--muted); }
   .overview-private-note { font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-top: 16px; }
-  .overview-empty-state { font-size: 13px; color: var(--muted); font-style: italic; padding: 24px 0; }
+  .overview-empty-state { font-size: 13px; color: var(--muted); font-style: italic; padding: 24px 0 24px 24px; }
 
   /* Career Profile tab */
   .completeness-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 20px 24px; margin-bottom: 16px; }
