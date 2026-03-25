@@ -352,6 +352,7 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   const [replyTo, setReplyTo] = useState(null);
   const [expandedThreads, setExpandedThreads] = useState({});
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState(null);
   const [newMsgMode, setNewMsgMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -370,6 +371,7 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   // ── load conversations ──────────────────────────────────────────────────
   const loadConversations = useCallback(async () => {
     if (!uid) return;
+    try {
     const { data: convs } = await supabase
       .from("conversations")
       .select("*")
@@ -415,6 +417,9 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
     setConversations(enriched);
     const total = enriched.reduce((s, c) => s + c.unreadCount, 0);
     onUnreadChange?.(total);
+    } catch (e) {
+      console.error("[InboxDrawer] loadConversations failed:", e);
+    }
   }, [uid, onUnreadChange]);
 
   // ── open / close ────────────────────────────────────────────────────────
@@ -427,18 +432,22 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   useEffect(() => {
     if (!uid) return;
     (async () => {
-      const { count } = await supabase
-        .from("messages")
-        .select("id", { count: "exact", head: true })
-        .eq("is_read", false)
-        .neq("sender_id", uid)
-        .in("conversation_id",
-          (await supabase.from("conversations")
-            .select("id")
-            .or(`participant_1.eq.${uid},participant_2.eq.${uid}`))
-            .data?.map(c => c.id) || []
-        );
-      onUnreadChange?.(count || 0);
+      try {
+        const { count } = await supabase
+          .from("messages")
+          .select("id", { count: "exact", head: true })
+          .eq("is_read", false)
+          .neq("sender_id", uid)
+          .in("conversation_id",
+            (await supabase.from("conversations")
+              .select("id")
+              .or(`participant_1.eq.${uid},participant_2.eq.${uid}`))
+              .data?.map(c => c.id) || []
+          );
+        onUnreadChange?.(count || 0);
+      } catch (e) {
+        console.error("[InboxDrawer] unread count fetch failed:", e);
+      }
     })();
   }, [uid]);
 
@@ -522,6 +531,7 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
   // ── send message ────────────────────────────────────────────────────────
   async function sendMessage(parentId = null) {
     if (!input.trim() || !selectedConvId || sending) return;
+    setSendError(null);
     setSending(true);
     const body = input.trim();
     setInput("");
@@ -534,14 +544,20 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
       parent_message_id: parentId || null,
     }).select().single();
 
-    if (!error && msg) {
-      setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
-      await supabase.from("conversations")
-        .update({ last_message_at: msg.created_at })
-        .eq("id", selectedConvId);
-      loadConversations();
-      scrollToBottom();
+    if (error || !msg) {
+      setInput(body);
+      setSendError("Message failed to send. Please try again.");
+      setSending(false);
+      mainInputRef.current?.focus();
+      return;
     }
+
+    setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
+    await supabase.from("conversations")
+      .update({ last_message_at: msg.created_at })
+      .eq("id", selectedConvId);
+    loadConversations();
+    scrollToBottom();
     setSending(false);
     mainInputRef.current?.focus();
   }
@@ -844,23 +860,30 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
 
                 {/* Main input (only when not replying inline) */}
                 {!replyTo && (
-                  <div className="inbox-input-row">
-                    <input
-                      ref={mainInputRef}
-                      className="inbox-main-input"
-                      placeholder="Message…"
-                      value={input}
-                      onChange={e => setInput(e.target.value)}
-                      onKeyDown={e => {
-                        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-                      }}
-                    />
-                    <button
-                      className="inbox-send-btn"
-                      onClick={() => sendMessage()}
-                      disabled={sending || !input.trim()}
-                    >↑</button>
-                  </div>
+                  <>
+                    <div className="inbox-input-row">
+                      <input
+                        ref={mainInputRef}
+                        className="inbox-main-input"
+                        placeholder="Message…"
+                        value={input}
+                        onChange={e => { setInput(e.target.value); setSendError(null); }}
+                        onKeyDown={e => {
+                          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+                        }}
+                      />
+                      <button
+                        className="inbox-send-btn"
+                        onClick={() => sendMessage()}
+                        disabled={sending || !input.trim()}
+                      >↑</button>
+                    </div>
+                    {sendError && (
+                      <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "var(--blood)", marginTop: 6, letterSpacing: "0.04em", padding: "0 16px 8px" }}>
+                        {sendError}
+                      </div>
+                    )}
+                  </>
                 )}
               </>
             )}
