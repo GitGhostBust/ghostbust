@@ -63,7 +63,17 @@ Sentry.init({
 });
 ```
 
-- [ ] **Step 3: Verify build**
+- [ ] **Step 3: Add VITE_SENTRY_DSN to .env**
+
+Open `.env` (in the project root) and add this line — using your real DSN from Sentry dashboard → Project → Settings → Client Keys:
+
+```
+VITE_SENTRY_DSN=https://your-key@oXXXXXX.ingest.sentry.io/XXXXXXX
+```
+
+`VITE_SENTRY_DSN` is safe to commit — Sentry DSNs are public by design. If `.env` doesn't exist yet, create it.
+
+- [ ] **Step 4: Verify build**
 
 ```bash
 cd C:/Users/gabri/ghostbust-app && npm run build
@@ -71,10 +81,10 @@ cd C:/Users/gabri/ghostbust-app && npm run build
 
 Expected: `✓ built` with no errors.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
-git add src/sentry.js package.json package-lock.json
+git add src/sentry.js package.json package-lock.json .env
 git commit -m "feat: install Sentry packages and create shared frontend init module"
 ```
 
@@ -233,7 +243,7 @@ export default defineConfig({ plugins: [react()], build: { rollupOptions: { inpu
 
 Replace the entire file. The 7-entry `rollupOptions.input` must be preserved exactly. `sentryVitePlugin` must come AFTER `react()` in the plugins array. `sourcemap: true` must be added to the `build` object alongside `rollupOptions`.
 
-The plugin reads `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` from `process.env` at build time. If these vars are absent (e.g., in local dev without them set), the plugin skips source map upload silently — this is acceptable.
+The plugin reads `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN` from `process.env` at build time. If these vars are absent (e.g., in local dev without them set), the plugin skips source map upload silently — this is acceptable. `sourcemaps.deleteAfterUpload: true` is set explicitly so source maps are always removed from `dist/` after upload — they must not be publicly served.
 
 - [ ] **Step 1: Replace vite.config.js**
 
@@ -251,6 +261,9 @@ export default defineConfig({
       org: process.env.SENTRY_ORG,
       project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
+      sourcemaps: {
+        deleteAfterUpload: true,
+      },
     }),
   ],
   build: {
@@ -293,44 +306,37 @@ git commit -m "feat: add sentryVitePlugin and sourcemap: true to vite.config.js"
 - Modify: `api/claude.js`
 - Modify: `api/subscribe.js`
 
-**Context:** Both files already have a try/catch. Add `import * as Sentry from "@sentry/node"` and `Sentry.init({ dsn: process.env.SENTRY_DSN })` at the very top of each file (before the handler function). In the existing catch block, add `Sentry.captureException(err)` and `await Sentry.flush(2000)` before the `return res.status(500)` call. Do not change anything else.
+**Context:** Both files already have a try/catch. Use targeted find/replace — do NOT rewrite the whole file. Two edits per file: (1) add the Sentry import + init before the handler function, (2) add captureException + flush inside the catch block. Do not change anything else in either file.
 
-- [ ] **Step 1: Replace api/claude.js**
+- [ ] **Step 1: Add Sentry import + init to api/claude.js**
 
-Write `api/claude.js` with this exact content:
+Find in `api/claude.js`:
+```js
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+```
 
+Replace with:
 ```js
 import * as Sentry from "@sentry/node";
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+```
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
+- [ ] **Step 2: Add captureException + flush to api/claude.js catch block**
+
+Find in `api/claude.js`:
+```js
+  } catch (err) {
     return res.status(500).json({ error: "Service temporarily unavailable." });
   }
+}
+```
 
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(req.body),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data.error?.message || "API error" });
-    }
-
-    return res.status(200).json(data);
+Replace with:
+```js
   } catch (err) {
     Sentry.captureException(err);
     await Sentry.flush(2000);
@@ -339,45 +345,35 @@ export default async function handler(req, res) {
 }
 ```
 
-- [ ] **Step 2: Replace api/subscribe.js**
+- [ ] **Step 3: Add Sentry import + init to api/subscribe.js**
 
-Write `api/subscribe.js` with this exact content:
+Find in `api/subscribe.js`:
+```js
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+```
 
+Replace with:
 ```js
 import * as Sentry from "@sentry/node";
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+```
+
+- [ ] **Step 4: Add captureException + flush to api/subscribe.js catch block**
+
+Find in `api/subscribe.js`:
+```js
+  } catch (err) {
+    return res.status(500).json({ error: 'Server error' });
   }
+}
+```
 
-  const { email } = req.body;
-
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Valid email required' });
-  }
-
-  try {
-    const response = await fetch('https://api.resend.com/audiences/' + process.env.RESEND_AUDIENCE_ID + '/contacts', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + process.env.RESEND_API_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        unsubscribed: false
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(400).json({ error: data.message || 'Failed to subscribe' });
-    }
-
-    return res.status(200).json({ success: true });
+Replace with:
+```js
   } catch (err) {
     Sentry.captureException(err);
     await Sentry.flush(2000);
@@ -386,7 +382,7 @@ export default async function handler(req, res) {
 }
 ```
 
-- [ ] **Step 3: Verify build**
+- [ ] **Step 5: Verify build**
 
 ```bash
 cd C:/Users/gabri/ghostbust-app && npm run build
