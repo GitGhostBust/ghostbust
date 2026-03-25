@@ -257,18 +257,9 @@ const STYLE = `
    HELPERS
 ================================================================ */
 function apiCall(messages) {
-  var apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return Promise.reject(new Error("VITE_ANTHROPIC_API_KEY is not set. Add it to your .env file."));
-  }
-  return fetch("https://api.anthropic.com/v1/messages", {
+  return fetch("/api/claude", {
     method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
-    },
+    headers: { "content-type": "application/json" },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 4000, messages }),
   })
     .then(function (r) {

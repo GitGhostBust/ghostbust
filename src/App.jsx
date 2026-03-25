@@ -487,21 +487,10 @@ function parseJSON(text) {
   throw new Error("Could not parse response: " + t.slice(0,200));
 }
 
-console.log("[GhostBust] VITE_ANTHROPIC_API_KEY prefix:", import.meta.env.VITE_ANTHROPIC_API_KEY ? import.meta.env.VITE_ANTHROPIC_API_KEY.slice(0, 10) + "..." : "UNDEFINED");
-
 function apiCall(messages) {
-  var apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return Promise.reject(new Error("This service is temporarily unavailable. Please try again later."));
-  }
-  return fetch("https://api.anthropic.com/v1/messages", {
+  return fetch("/api/claude", {
     method: "POST",
-    headers: {
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
-      "content-type": "application/json",
-    },
+    headers: { "content-type": "application/json" },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 4000, messages: messages }),
   })
   .then(function(r){ return r.json(); })

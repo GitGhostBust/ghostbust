@@ -194,18 +194,13 @@ Stored in `profiles`. Used to contextualise AI prompts in `ResumeAdvisor.jsx` an
 
 ## Claude API Usage
 
-Two places call the Anthropic API directly from the browser:
+All Claude API calls are proxied through a Vercel serverless function:
 
-1. **`App.jsx`** — ghost job scoring. API key read from `import.meta.env.VITE_ANTHROPIC_API_KEY`.
-2. **`ResumeAdvisor.jsx`** — resume analysis and cover letter generation. API key read from `import.meta.env.VITE_ANTHROPIC_API_KEY`.
+- **`api/claude.js`** — POST proxy. Accepts `{ model, max_tokens, messages }`, injects `ANTHROPIC_API_KEY` server-side, forwards to Anthropic, returns response.
+- **`App.jsx`** — ghost job scoring. Calls `POST /api/claude`.
+- **`ResumeAdvisor.jsx`** — resume analysis and cover letter generation. Calls `POST /api/claude`.
 
-Required headers for direct browser calls:
-```
-x-api-key: <key>
-anthropic-version: 2023-06-01
-anthropic-dangerous-direct-browser-access: true
-content-type: application/json
-```
+The API key is **never exposed to the browser**. Set `ANTHROPIC_API_KEY` (not `VITE_ANTHROPIC_API_KEY`) in Vercel dashboard environment variables.
 
 Model: `claude-sonnet-4-20250514`, `max_tokens: 4000`.
 
