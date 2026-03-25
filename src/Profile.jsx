@@ -108,8 +108,9 @@ const STYLE = `
   .tab-content { padding: 32px 0 0; }
 
   /* Overview tab */
-  .overview-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
-  .overview-card-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 16px; }
+  .overview-card { background: var(--surface); border: 1px solid var(--border); padding: 0; margin-bottom: 16px; overflow: hidden; }
+  .overview-card-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.06em; color: var(--paper); padding: 18px 24px 14px; border-bottom: 1px solid var(--border); }
+  .overview-card-body { padding: 8px 24px 16px; }
   .career-detail-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .career-detail-row:last-child { border-bottom: none; }
   .career-detail-label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); min-width: 160px; padding-top: 2px; }
@@ -760,21 +761,25 @@ export default function Profile() {
         {detailFields.length > 0 && (
           <div className="overview-card">
             <div className="overview-card-title">Career Details</div>
-            {detailFields.map(([key, label]) => (
-              <div key={key} className="career-detail-row">
-                <span className="career-detail-label">{label}</span>
-                <span className="career-detail-value">{src[key]}</span>
-              </div>
-            ))}
+            <div className="overview-card-body">
+              {detailFields.map(([key, label]) => (
+                <div key={key} className="career-detail-row">
+                  <span className="career-detail-label">{label}</span>
+                  <span className="career-detail-value">{src[key]}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
         {showSkillsCard && (
           <div className="overview-card">
             <div className="overview-card-title">Skills</div>
-            <div className="skills-tag-list">
-              {skillsForDisplay.map(tag => (
-                <span key={tag} className="skill-tag-ro">{tag}</span>
-              ))}
+            <div className="overview-card-body">
+              <div className="skills-tag-list">
+                {skillsForDisplay.map(tag => (
+                  <span key={tag} className="skill-tag-ro">{tag}</span>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -827,19 +832,23 @@ export default function Profile() {
           {pubFields.length > 0 && (
             <div className="overview-card">
               <div className="overview-card-title">Career Details</div>
-              {pubFields.map(([key, label]) => (
-                <div key={key} className="career-detail-row">
-                  <span className="career-detail-label">{label}</span>
-                  <span className="career-detail-value">{src[key]}</span>
-                </div>
-              ))}
+              <div className="overview-card-body">
+                {pubFields.map(([key, label]) => (
+                  <div key={key} className="career-detail-row">
+                    <span className="career-detail-label">{label}</span>
+                    <span className="career-detail-value">{src[key]}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           {showSkills && (
             <div className="overview-card">
               <div className="overview-card-title">Skills</div>
-              <div className="skills-tag-list">
-                {pubSkills.map(tag => <span key={tag} className="skill-tag-ro">{tag}</span>)}
+              <div className="overview-card-body">
+                <div className="skills-tag-list">
+                  {pubSkills.map(tag => <span key={tag} className="skill-tag-ro">{tag}</span>)}
+                </div>
               </div>
             </div>
           )}

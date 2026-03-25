@@ -67,7 +67,7 @@ export function day0() {
       <p style="margin:0 0 18px;">Not because they weren't qualified. Because the process isn't designed to respond.</p>
       <p style="margin:0 0 18px;">That's what GhostBust is built against.</p>
       <p style="margin:0 0 18px;">You're a Founding Member. That means Pro access — every feature, free for life. When paid tiers launch, you won't see a bill. This tier closes when the early window closes, and it doesn't reopen.</p>
-      <p style="margin:0 0 18px;">One place to start: the Verify Listing tab. Paste a job you're considering and get a ghost job score in under a minute. No setup, no resume required.</p>
+      <p style="margin:0 0 18px;">One place to start: the Ghost Detector tab. Paste a job you're considering and get a ghost job score in under a minute. No setup, no resume required.</p>
       ${cta('https://ghostbust.us/app.html', 'Open GhostBust')}
       <p style="margin:0;">&mdash;&nbsp;GhostBust</p>
     `)

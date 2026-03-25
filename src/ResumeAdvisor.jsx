@@ -850,7 +850,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   // Load Pro status + admin check + profile context for AI prompts
   useEffect(function () {
     if (!session) return;
-    supabase.from("profiles").select("founding_member, username, job_market_region, job_market_country, job_market_state").eq("id", session.user.id).single()
+    supabase.from("profiles").select("founding_member, username, job_market_region, job_market_country, job_market_state, experience_years, seniority_level, work_arrangement, target_roles, target_salary_band, search_duration, career_goal, skills").eq("id", session.user.id).single()
       .then(function (res) {
         if (res.data) {
           setIsPro(res.data.founding_member === true);
@@ -1628,6 +1628,26 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       {/* ── ADVISOR TAB ── */}
       {innerTab === "advisor" && (
         <div>
+          {/* Career Profile completeness nudge */}
+          {userProfile && (() => {
+            const careerFields = ["experience_years","seniority_level","work_arrangement","target_roles","target_salary_band","search_duration","career_goal","skills"];
+            const filled = careerFields.filter(k => userProfile[k] && String(userProfile[k]).trim()).length;
+            if (filled >= 5) return null;
+            const pct = Math.round((filled / 8) * 100);
+            return (
+              <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderTop: "3px solid var(--bile)", padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 14, letterSpacing: "0.1em", color: "var(--bile)", marginBottom: 3 }}>AI Context: {pct}% Complete</div>
+                  <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: "var(--muted)", lineHeight: 1.5 }}>
+                    Fill in your Career Profile to get sharper, more personalised AI advice.
+                  </div>
+                </div>
+                <a href="/profile.html" style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--bile)", textDecoration: "none", border: "1px solid var(--bile)", padding: "6px 14px", whiteSpace: "nowrap", flexShrink: 0 }}>
+                  Complete Profile →
+                </a>
+              </div>
+            );
+          })()}
           {!advisorResume ? (
             <div className="ra-no-resume">
               <div className="ra-no-resume-icon">📄</div>

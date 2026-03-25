@@ -1897,7 +1897,7 @@ export default function App() {
             Find Jobs
           </button>
           <button className={"tab-btn"+(tab==="verify"?" active":"")} onClick={function(){setTab("verify");}}>
-            Verify Listing
+            Ghost Detector
           </button>
           <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setTab("tracker");}}>
             Application Tracker
