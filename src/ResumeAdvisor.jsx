@@ -2100,6 +2100,27 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                   onGenerateCL={function () {}} generatingCL={false} clResult={null} onCopyCL={function () {}} copiedCL={false}
                 />
               )}
+              {/* PDF Download */}
+              <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 10 }}>
+                {(function() {
+                  var detailResumeName = (resumes.find(function(r) { return r.id === selectedAnalysis.resume_id; }) || {}).file_name || "resume";
+                  var detailId = selectedAnalysis.id;
+                  return (
+                    <>
+                      <button
+                        onClick={function() { exportAnalysisToPdf(selectedAnalysis, detailResumeName, selectedAnalysis.mode); }}
+                        disabled={pdfExporting === detailId}
+                        style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: "0.12em", color: pdfExporting === detailId ? "rgba(238,234,224,0.25)" : "rgba(238,234,224,0.45)", background: "transparent", border: "1px solid rgba(255,255,255,0.07)", padding: "6px 14px", borderRadius: 3, cursor: pdfExporting === detailId ? "default" : "pointer" }}
+                      >
+                        {pdfExporting === detailId ? "Generating…" : "↓ Download PDF"}
+                      </button>
+                      {pdfErrors[detailId] && (
+                        <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "#d42200", letterSpacing: "0.1em" }}>{pdfErrors[detailId]}</span>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
             </div>
           ) : analyses.length === 0 ? (
             <div className="ra-no-resume">
