@@ -342,7 +342,7 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 
 ---
 
-## Phase 2 Status (as of 2026-03-24)
+## Phase 2 Status (as of 2026-03-25)
 
 **Completed:**
 - Onboarding email sequence (5 emails: Day 0/2/5/14/30) via Vercel cron + Resend
@@ -377,13 +377,27 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - Profile navbar link auth modal on all pages
 - Page entrance animations (`gbFadeIn`) on all pages
 - Tab content constrained to `max-width: 1280px`
-
 - Full UI overhaul of app.html and profile.html (see UI Patterns below)
+- **Profile auto-creation trigger** — `handle_new_user` Postgres function + trigger creates a `profiles` row on every new auth.users insert; fixes missing profile rows for users signed up before trigger existed
+- **`username_changed_at` column** added to `profiles` table (`supabase/migrations/20260324_username_changed_at.sql`)
+- **Username change feature** in Profile.jsx Career Profile tab: 30-day cooldown enforced client-side, uniqueness check (Postgres error code `23505`), validation (3–20 chars, alphanumeric + underscores only)
+- **First-time username modal** in Profile.jsx: auto-shown for users with `user_XXXX` style usernames (Supabase default), prompts for a custom username on first visit
+- **Bio editor** in Profile.jsx Career Profile tab: textarea with 300-char counter, saves to `profiles.bio`
+- **Focus-loss / page-jump bug fixed** in Profile.jsx: inner tab components (`CareerProfileTab`, `OverviewTab`, `ActivityTab`) were defined as arrow functions inside the parent, causing remount on every keystroke; fixed by calling them as plain functions `{CareerProfileTab()}` instead of `<CareerProfileTab />`
+- **Bug audit + fixes** (12 confirmed real bugs fixed across 5 files):
+  - `InboxDrawer.jsx`: sendMessage error feedback + input restore, loadConversations try/catch, unread count try/catch
+  - `App.jsx`: share link null feedback, clipboard API guard + prompt() fallback, stale board results cleared on industry change, saved searches error logging, search history floating promise caught
+  - `CommunityPage.jsx`: region fetch .catch() to prevent unhandled rejection
+  - `api/subscribe.js`: email validation tightened to reject malformed addresses
 
-**Pending / known issues:**
+**Pending / in progress:**
+- Resume Advisor PDF export (all 4 modes, from active view + history tab, styled branded document) — brainstorming complete, plan not yet written
+- Sentry error tracking — not yet started
+- API rate limiting — not yet started
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
 - `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
 - Onboarding email cron requires `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `RESEND_FROM_EMAIL` in Vercel dashboard
 - `20260324_email_sends.sql` migration must be run in Supabase SQL editor before cron goes live
+- `20260324_username_changed_at.sql` migration must be run in Supabase SQL editor
 - Sending domain must be verified in Resend before `RESEND_FROM_EMAIL` will work
 - Migrations `20260322_*.sql` and `20260323_*.sql` must be run manually in Supabase SQL editor
