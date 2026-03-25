@@ -256,13 +256,17 @@ const STYLE = `
 /* ================================================================
    HELPERS
 ================================================================ */
-function apiCall(messages) {
+function apiCall(messages, accessToken) {
   return fetch("/api/claude", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "authorization": "Bearer " + (accessToken || ""),
+    },
     body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 4000, messages }),
   })
     .then(function (r) {
+      if (r.status === 429) throw new Error("RATE_LIMIT");
       if (!r.ok) {
         return r.text().then(function (t) { throw new Error("HTTP " + r.status + ": " + t); });
       }
@@ -1212,7 +1216,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         "Return only valid JSON, no markdown, no code blocks.";
 
       var userMsg = ctxBlock + (resumeText ? "RESUME:\n" + resumeText : "(No resume on file — provide coaching based on profile context only)");
-      var raw = await apiCall([{ role: "user", content: ccPrompt + "\n\n" + userMsg }]);
+      var raw = await apiCall([{ role: "user", content: ccPrompt + "\n\n" + userMsg }], session?.access_token);
       var parsed = parseJSON(raw);
 
       var dbPayload = {
@@ -1241,7 +1245,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       }));
       loadAnalyses();
     } catch (err) {
-      setAnalysisError("Analysis failed: " + err.message);
+      if (err.message === "RATE_LIMIT") {
+        setAnalysisError("You've reached your limit of 20 analyses per hour. Please try again later.");
+      } else {
+        setAnalysisError("Analysis failed: " + err.message);
+      }
     } finally {
       setAnalyzing(false);
     }
@@ -1311,7 +1319,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
         "Return only valid JSON, no markdown, no code blocks.";
 
       var userMsg = ctxBlock + (resumeText ? "RESUME:\n" + resumeText : "(No resume on file — provide advice based on profile context only)");
-      var raw = await apiCall([{ role: "user", content: jsaPrompt + "\n\n" + userMsg }]);
+      var raw = await apiCall([{ role: "user", content: jsaPrompt + "\n\n" + userMsg }], session?.access_token);
       var parsed = parseJSON(raw);
 
       var dbPayload = {
@@ -1337,7 +1345,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       setResult(Object.assign({}, saved, { next_steps: parsed.immediate_action_plan || [] }));
       loadAnalyses();
     } catch (err) {
-      setAnalysisError("Analysis failed: " + err.message);
+      if (err.message === "RATE_LIMIT") {
+        setAnalysisError("You've reached your limit of 20 analyses per hour. Please try again later.");
+      } else {
+        setAnalysisError("Analysis failed: " + err.message);
+      }
     } finally {
       setAnalyzing(false);
     }
@@ -1369,7 +1381,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           "next_steps (array of exactly 3 strings, the highest-impact improvements ranked by importance — if LAST RECOMMENDED NEXT STEPS are in USER CONTEXT, note whether they were addressed).\n" +
           "Return only valid JSON, no markdown, no code blocks.";
         var genMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + advisorResume.extracted_text;
-        var raw = await apiCall([{ role: "user", content: genPrompt + "\n\n" + genMsg }]);
+        var raw = await apiCall([{ role: "user", content: genPrompt + "\n\n" + genMsg }], session?.access_token);
         parsed = parseJSON(raw);
         dbPayload = {
           user_id: session.user.id, resume_id: advisorResume.id,
@@ -1405,7 +1417,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
           "If a USER CONTEXT block is present in the user message, use it to personalize all feedback. Reference specific prior scores, companies scanned, or unaddressed action items where relevant.\n" +
           "Return only valid JSON, no markdown, no code blocks.";
         var jobMsg = (ctx ? ctx + "\n\n" : "") + "RESUME:\n" + advisorResume.extracted_text + "\n\nJOB LISTING:\n" + jobText;
-        var raw2 = await apiCall([{ role: "user", content: jobPrompt + "\n\n" + jobMsg }]);
+        var raw2 = await apiCall([{ role: "user", content: jobPrompt + "\n\n" + jobMsg }], session?.access_token);
         parsed = parseJSON(raw2);
         dbPayload = {
           user_id: session.user.id, resume_id: advisorResume.id,
@@ -1438,7 +1450,11 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       }));
       loadAnalyses();
     } catch (err) {
-      setAnalysisError("Analysis failed: " + err.message);
+      if (err.message === "RATE_LIMIT") {
+        setAnalysisError("You've reached your limit of 20 analyses per hour. Please try again later.");
+      } else {
+        setAnalysisError("Analysis failed: " + err.message);
+      }
     } finally {
       setAnalyzing(false);
     }
@@ -1453,14 +1469,18 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
       var clMsg = "RESUME:\n" + resume.extracted_text +
         "\n\nTARGET JOB TITLE: " + clJobTitle +
         (clCompany ? "\nCOMPANY: " + clCompany : "");
-      var raw = await apiCall([{ role: "user", content: clPrompt + "\n\n" + clMsg }]);
+      var raw = await apiCall([{ role: "user", content: clPrompt + "\n\n" + clMsg }], session?.access_token);
       setCLResult(raw.trim());
       // Patch the saved analysis with the generated cover letter
       if (result && result.id) {
         supabase.from("resume_analyses").update({ cover_letter: raw.trim(), job_title: clJobTitle, company_name: clCompany }).eq("id", result.id).then(function () { loadAnalyses(); });
       }
     } catch (err) {
-      setCLResult("Generation failed: " + err.message);
+      if (err.message === "RATE_LIMIT") {
+        setCLResult("You've reached your limit of 20 analyses per hour. Please try again later.");
+      } else {
+        setCLResult("Generation failed: " + err.message);
+      }
     } finally {
       setGeneratingCL(false);
     }
