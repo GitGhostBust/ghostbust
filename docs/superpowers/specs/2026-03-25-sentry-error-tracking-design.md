@@ -90,11 +90,13 @@ export default defineConfig({
     }),
   ],
   build: {
-    sourcemap: true, // required for the plugin to have maps to upload
-    rollupOptions: { ... } // existing multi-entry config unchanged
+    sourcemap: true, // ADD this line — required for the plugin to have maps to upload
+    rollupOptions: { /* KEEP existing 7-entry input config exactly as-is */ }
   }
 });
 ```
+
+**Important:** `sourcemap: true` is added inside the **existing** `build` object. The existing `rollupOptions.input` with all 7 HTML entries (`main`, `app`, `profile`, `community`, `tos`, `privacy`, `score`) must be preserved exactly — do not replace or omit it.
 
 ### Serverless: Per-Handler Init + Capture + Flush
 
@@ -104,6 +106,10 @@ Each of the 4 serverless files gets the same pattern:
 2. Handler body wrapped in try/catch
 3. `Sentry.captureException(error)` in the catch block
 4. `await Sentry.flush(2000)` before returning the error response — prevents the Vercel process from terminating before the event is sent
+
+`Sentry.flush()` is only needed in the catch block (error path). These handlers capture no breadcrumbs or context events during successful runs, so the success path requires no flush.
+
+`Sentry.init()` is called at module scope in each handler file individually — not in a shared module. This is intentional: Vercel runs each serverless function in an isolated Node.js process, so there is no shared module scope across handlers. Calling `init()` per file is the correct pattern and will not cause duplicate-init warnings.
 
 ```js
 import * as Sentry from "@sentry/node";
@@ -134,9 +140,11 @@ For the cron handlers (`onboarding.js`, `application-nudge.js`), the same patter
 | `SENTRY_ORG` | Vercel dashboard only | Sentry organization slug |
 | `SENTRY_PROJECT` | Vercel dashboard only | Sentry project slug |
 
-`VITE_SENTRY_DSN` must also be added to `.env` for local development (or source maps won't upload locally). It is safe to commit — Sentry DSNs are public by design.
+`VITE_SENTRY_DSN` must also be added to `.env` for local development. It is safe to commit — Sentry DSNs are public by design.
 
-`SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT` must NOT be committed. They are build-time variables only, set in the Vercel dashboard.
+`SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT` are consumed by `@sentry/vite-plugin` at `npm run build` time. They must be set in the Vercel dashboard for production builds. For local builds to upload source maps, they also need to be set in a local `.env` file — but that `.env` must be gitignored (never committed). If these three vars are absent during a local build, the plugin skips source map upload silently; this is acceptable for local development.
+
+`SENTRY_DSN` (server-side, no `VITE_` prefix) must be set in the Vercel dashboard. It does not need to be in `.env` — it is only read at serverless function runtime, not at build time.
 
 ---
 
