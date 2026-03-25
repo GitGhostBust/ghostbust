@@ -120,6 +120,34 @@ const STYLE = `
   .overview-private-note { font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-top: 16px; }
   .overview-empty-state { font-size: 13px; color: var(--muted); font-style: italic; padding: 24px 0 24px 24px; }
 
+  /* Username change card */
+  .username-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 20px 24px; margin-bottom: 16px; }
+  .username-card-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 14px; }
+  .username-current-lbl { font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 14px; }
+  .username-inp { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: "Space Mono", monospace; font-size: 13px; padding: 10px 14px; outline: none; width: 100%; transition: border-color 0.2s; box-sizing: border-box; }
+  .username-inp:focus { border-color: var(--border-hi); }
+  .username-feedback { font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .username-feedback.error { color: var(--blood); }
+  .username-feedback.success { color: var(--signal); }
+  .username-feedback.muted { color: var(--muted); font-style: italic; }
+  .username-save-btn { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 18px; background: none; border: 1px solid var(--border-hi); color: var(--paper); cursor: pointer; margin-top: 12px; transition: background 0.15s; }
+  .username-save-btn:hover:not(:disabled) { background: rgba(255,255,255,0.06); }
+  .username-save-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* First-time username modal */
+  .umodal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .umodal { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); max-width: 420px; width: 100%; padding: 36px 32px 28px; }
+  .umodal-title { font-family: "Bebas Neue", sans-serif; font-size: 26px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 10px; }
+  .umodal-body { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 22px; }
+  .umodal-inp { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: "Space Mono", monospace; font-size: 14px; padding: 12px 14px; outline: none; width: 100%; transition: border-color 0.2s; box-sizing: border-box; }
+  .umodal-inp:focus { border-color: var(--border-hi); }
+  .umodal-error { font-size: 12px; color: var(--blood); margin-top: 8px; min-height: 18px; }
+  .umodal-actions { display: flex; align-items: center; gap: 16px; margin-top: 20px; }
+  .umodal-confirm { font-family: "Bebas Neue", sans-serif; font-size: 17px; letter-spacing: 0.06em; background: var(--blood); color: #fff; border: none; padding: 11px 28px; cursor: pointer; transition: opacity 0.15s; }
+  .umodal-confirm:disabled { opacity: 0.5; cursor: default; }
+  .umodal-skip { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: none; border: none; cursor: pointer; padding: 4px 0; }
+  .umodal-skip:hover { color: var(--paper); }
+
   /* Career Profile tab */
   .completeness-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--blood); padding: 20px 24px; margin-bottom: 16px; }
   .completeness-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
@@ -467,6 +495,16 @@ export default function Profile() {
   const [avatarColor, setAvatarColor] = useState(AVATAR_COLORS[0]);
   const [ghostColor, setGhostColor] = useState(GHOST_COLORS[0]);
 
+  // username change
+  const [usernameInput, setUsernameInput] = useState("");
+  const [usernameError, setUsernameError] = useState(null);
+  const [usernameSuccess, setUsernameSuccess] = useState(null);
+  const [usernameSaving, setUsernameSaving] = useState(false);
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const [modalUsernameInput, setModalUsernameInput] = useState("");
+  const [modalUsernameError, setModalUsernameError] = useState(null);
+  const [modalUsernameSaving, setModalUsernameSaving] = useState(false);
+
   // follow system
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
@@ -587,6 +625,11 @@ export default function Profile() {
       setSkillTags(data.skills ? data.skills.split(",").map(s => s.trim()).filter(Boolean) : []);
       setTargetRolesList(data.target_roles ? data.target_roles.split(",").map(s => s.trim()).filter(Boolean) : []);
       profileSnapshotRef.current = { ...newForm };
+      try {
+        if (data.username?.startsWith("user_") && !sessionStorage.getItem("gb_username_modal_skipped")) {
+          setShowUsernameModal(true);
+        }
+      } catch(e) {}
       if (data.avatar_color) setAvatarColor(data.avatar_color);
       if (data.ghost_color) setGhostColor(data.ghost_color);
       if (data.avatar_url) setAvatarUrl(data.avatar_url);
@@ -666,6 +709,52 @@ export default function Profile() {
   }
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  function validateUsername(val) {
+    const v = val.trim();
+    if (v.length < 3) return "Username must be at least 3 characters.";
+    if (v.length > 20) return "Username must be 20 characters or less.";
+    if (!/^[a-zA-Z0-9_]+$/.test(v)) return "Only letters, numbers, and underscores allowed.";
+    return null;
+  }
+
+  async function applyUsernameChange(val) {
+    const trimmed = val.trim();
+    const valErr = validateUsername(trimmed);
+    if (valErr) return valErr;
+    const { data: existing } = await supabase.from("profiles")
+      .select("id").eq("username", trimmed).neq("id", session.user.id).maybeSingle();
+    if (existing) return "That username is already taken.";
+    const now = new Date().toISOString();
+    const { error } = await supabase.from("profiles")
+      .update({ username: trimmed, username_changed_at: now }).eq("id", session.user.id);
+    if (error) return error.message;
+    setProfile(p => ({ ...p, username: trimmed, username_changed_at: now }));
+    setForm(f => ({ ...f, username: trimmed }));
+    profileSnapshotRef.current = { ...profileSnapshotRef.current, username: trimmed };
+    return null;
+  }
+
+  async function handleChangeUsername() {
+    setUsernameError(null); setUsernameSuccess(null); setUsernameSaving(true);
+    const err = await applyUsernameChange(usernameInput);
+    if (err) { setUsernameError(err); } else { setUsernameSuccess("Username updated."); setUsernameInput(""); }
+    setUsernameSaving(false);
+  }
+
+  async function handleModalSave() {
+    setModalUsernameError(null); setModalUsernameSaving(true);
+    const err = await applyUsernameChange(modalUsernameInput);
+    if (err) { setModalUsernameError(err); setModalUsernameSaving(false); return; }
+    setModalUsernameSaving(false);
+    setShowUsernameModal(false);
+    try { sessionStorage.setItem("gb_username_modal_skipped", "1"); } catch(e) {}
+  }
+
+  function dismissUsernameModal() {
+    setShowUsernameModal(false);
+    try { sessionStorage.setItem("gb_username_modal_skipped", "1"); } catch(e) {}
+  }
 
   async function handleAvatarFile(e) {
     const file = e.target.files[0];
@@ -858,6 +947,31 @@ export default function Profile() {
 
     return (
       <>
+        {/* Username change */}
+        <div className="username-card">
+          <div className="username-card-title">Username</div>
+          <div className="username-current-lbl">Current: @{profile.username}</div>
+          {(() => {
+            const changedAt = profile.username_changed_at;
+            const cooldownMs = 30 * 24 * 60 * 60 * 1000;
+            const elapsed = changedAt ? Date.now() - new Date(changedAt).getTime() : cooldownMs + 1;
+            const cooldownActive = elapsed < cooldownMs;
+            const daysLeft = cooldownActive ? Math.ceil((cooldownMs - elapsed) / (24 * 60 * 60 * 1000)) : 0;
+            if (cooldownActive) return (
+              <div className="username-feedback muted">You can change your username in {daysLeft} day{daysLeft !== 1 ? "s" : ""}.</div>
+            );
+            return (
+              <>
+                <input className="username-inp" type="text" value={usernameInput} onChange={e => { setUsernameInput(e.target.value); setUsernameError(null); setUsernameSuccess(null); }} placeholder="New username" maxLength={20} />
+                {usernameError && <div className="username-feedback error">{usernameError}</div>}
+                {usernameSuccess && <div className="username-feedback success">{usernameSuccess}</div>}
+                <button className="username-save-btn" onClick={handleChangeUsername} disabled={usernameSaving || !usernameInput.trim()}>
+                  {usernameSaving ? "Saving…" : "Save Username"}
+                </button>
+              </>
+            );
+          })()}
+        </div>
         <div className="completeness-card">
           <div className="completeness-header">
             <span className="completeness-title">AI Context Completeness</span>
@@ -1343,6 +1457,35 @@ export default function Profile() {
                 </a>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+      {showUsernameModal && (
+        <div className="umodal-backdrop" onClick={dismissUsernameModal}>
+          <div className="umodal" onClick={e => e.stopPropagation()}>
+            <div className="umodal-title">Set Your Username</div>
+            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "12px", color: "var(--muted)", lineHeight: 1.7, marginBottom: "20px" }}>
+              Your account was created with a temporary username. Pick one that's yours — you can change it later, but only once every 30 days.
+            </p>
+            <input
+              className="username-inp"
+              type="text"
+              value={modalUsernameInput}
+              onChange={e => { setModalUsernameInput(e.target.value); setModalUsernameError(null); }}
+              placeholder="New username"
+              maxLength={20}
+              autoFocus
+            />
+            {modalUsernameError && <div className="username-feedback error" style={{ marginTop: "8px" }}>{modalUsernameError}</div>}
+            <button
+              className="umodal-confirm"
+              onClick={handleModalSave}
+              disabled={modalUsernameSaving || !modalUsernameInput.trim()}
+              style={{ marginTop: "18px" }}
+            >
+              {modalUsernameSaving ? "Saving…" : "Set Username"}
+            </button>
+            <button className="umodal-skip" onClick={dismissUsernameModal}>Skip for now</button>
           </div>
         </div>
       )}
