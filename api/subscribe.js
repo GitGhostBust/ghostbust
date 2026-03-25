@@ -1,4 +1,6 @@
 import * as Sentry from "@sentry/node";
+import { checkRateLimit } from "./lib/rateLimit.js";
+
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
 export default async function handler(req, res) {
@@ -6,12 +8,23 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email } = req.body;
+  // --- Rate limit by IP ---
+  const forwarded = req.headers['x-forwarded-for'] || '';
+  const ip = forwarded.split(',')[0].trim() || 'unknown';
 
+  const { allowed, retryAfter } = await checkRateLimit(`subscribe:${ip}`, 3, 3600);
+  if (!allowed) {
+    res.setHeader('Retry-After', String(retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
+  // --- Validate email ---
+  const { email } = req.body;
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Valid email required' });
   }
 
+  // --- Add to Resend audience ---
   try {
     const response = await fetch('https://api.resend.com/audiences/' + process.env.RESEND_AUDIENCE_ID + '/contacts', {
       method: 'POST',
@@ -19,10 +32,7 @@ export default async function handler(req, res) {
         'Authorization': 'Bearer ' + process.env.RESEND_API_KEY,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        email: email,
-        unsubscribed: false
-      })
+      body: JSON.stringify({ email: email, unsubscribed: false })
     });
 
     const data = await response.json();
