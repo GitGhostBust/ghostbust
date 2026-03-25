@@ -949,6 +949,20 @@ export default function Profile() {
 
     return (
       <>
+        {/* Bio */}
+        <div className="username-card">
+          <div className="username-card-title">Bio</div>
+          <textarea
+            className="username-inp"
+            value={form.bio}
+            onChange={e => setField("bio", e.target.value)}
+            placeholder="Write a short bio…"
+            maxLength={300}
+            rows={3}
+            style={{ resize: "vertical", lineHeight: 1.6 }}
+          />
+          <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "var(--ghost)", marginTop: 4, letterSpacing: "0.04em" }}>{form.bio.length} / 300</div>
+        </div>
         {/* Username change */}
         <div className="username-card">
           <div className="username-card-title">Username</div>
@@ -1412,9 +1426,9 @@ export default function Profile() {
 
         {/* TAB CONTENT */}
         <div className="tab-content">
-          {activeTab === "overview" && <OverviewTab />}
-          {activeTab === "career" && <CareerProfileTab />}
-          {activeTab === "activity" && <ActivityTab />}
+          {activeTab === "overview" && OverviewTab()}
+          {activeTab === "career" && CareerProfileTab()}
+          {activeTab === "activity" && ActivityTab()}
         </div>
 
       </div>
