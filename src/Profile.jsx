@@ -515,6 +515,7 @@ export default function Profile() {
 
   const avatarFileRef = useRef(null);
   const bannerFileRef = useRef(null);
+  const mountedRef = useRef(true);
 
   const [form, setForm] = useState({
     username: "", full_name: "", education: "", current_job: "",
@@ -552,7 +553,7 @@ export default function Profile() {
         else { setShowGate(true); setLoading(false); }
       }
     });
-    return () => sub.subscription.unsubscribe();
+    return function(){ mountedRef.current = false; sub.subscription.unsubscribe(); };
   }, []);
 
   useEffect(() => {
@@ -585,6 +586,7 @@ export default function Profile() {
 
   async function loadProfile(uid) {
     const { data } = await supabase.from("profiles").select("*").eq("id", uid).single();
+    if (!mountedRef.current) return;
     if (data) {
       setProfile(data);
       try {
@@ -795,7 +797,7 @@ export default function Profile() {
     };
     const res = await supabase.from("profiles").upsert(payload);
     if (res.error) {
-      setError(res.error.message.includes("unique") ? "That username is already taken." : res.error.message);
+      setError((res.error.code === "23505" || res.error.message.includes("unique")) ? "That username is already taken." : res.error.message);
       setSaving(false); return;
     }
     setProfile({ ...payload });

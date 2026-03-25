@@ -969,7 +969,7 @@ function SearchTab({ session, addApp }) {
       industry: industry,
       board_id: board.id,
       board_name: board.name,
-    }).then(function() {});
+    }).then(function() {}).catch(function(err) { console.warn("[search_history] log failed:", err); });
   }
 
   // Feature 1: Track this role
