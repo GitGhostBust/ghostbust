@@ -536,30 +536,36 @@ export default function InboxDrawer({ session, myProfile, open, onClose, onUnrea
     const body = input.trim();
     setInput("");
     setReplyTo(null);
+    try {
+      const { data: msg, error } = await supabase.from("messages").insert({
+        conversation_id: selectedConvId,
+        sender_id: uid,
+        body,
+        parent_message_id: parentId || null,
+      }).select().single();
 
-    const { data: msg, error } = await supabase.from("messages").insert({
-      conversation_id: selectedConvId,
-      sender_id: uid,
-      body,
-      parent_message_id: parentId || null,
-    }).select().single();
+      if (error || !msg) {
+        setInput(body);
+        setSendError("Message failed to send. Please try again.");
+        setSending(false);
+        mainInputRef.current?.focus();
+        return;
+      }
 
-    if (error || !msg) {
+      setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
+      await supabase.from("conversations")
+        .update({ last_message_at: msg.created_at })
+        .eq("id", selectedConvId);
+      loadConversations();
+      scrollToBottom();
+      setSending(false);
+      mainInputRef.current?.focus();
+    } catch (e) {
       setInput(body);
       setSendError("Message failed to send. Please try again.");
       setSending(false);
       mainInputRef.current?.focus();
-      return;
     }
-
-    setMessages(prev => prev.find(m => m.id === msg.id) ? prev : [...prev, msg]);
-    await supabase.from("conversations")
-      .update({ last_message_at: msg.created_at })
-      .eq("id", selectedConvId);
-    loadConversations();
-    scrollToBottom();
-    setSending(false);
-    mainInputRef.current?.focus();
   }
 
   // ── typeahead search ────────────────────────────────────────────────────
