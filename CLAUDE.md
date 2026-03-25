@@ -390,12 +390,13 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
   - `CommunityPage.jsx`: region fetch .catch() to prevent unhandled rejection
   - `api/subscribe.js`: email validation tightened to reject malformed addresses
 
-- **Resume Advisor PDF export** — spec at `docs/superpowers/specs/2026-03-25-resume-pdf-export-design.md`, plan at `docs/superpowers/plans/2026-03-25-resume-pdf-export.md`, HTML preview at `resume-pdf-preview.html`; implementation in progress (Task 1 of 4 complete: jspdf installed, `exportAnalysisToPdf` function added, hidden render div added)
+- **Sentry error tracking** — fully integrated. `src/sentry.js` init module wired into all 4 React entry points, error capture added to `api/claude.js` and `api/subscribe.js`, `sentryVitePlugin` + `sourcemap: true` in `vite.config.js`. Requires `VITE_SENTRY_DSN` env var.
+
+- **API rate limiting** — 20 req/hr per user on `api/claude.js` (JWT-verified via Supabase auth), 3 req/hr per IP on `api/subscribe.js`. Backed by Supabase `rate_limits` table + atomic `check_and_increment_rate_limit` RPC. Shared utility at `api/lib/rateLimit.js`. Requires `20260325_rate_limits.sql` migration and `SUPABASE_URL` env var in Vercel.
+
+- **Resume Advisor PDF export** — fully built and live. All four analysis modes have PDF download buttons: active analysis view, history detail view, and history list cards. Client-side html2canvas + jsPDF, GhostBust-branded dark PDF, per-mode content layout. Full implementation reviewed and approved, pushed to origin main. Spec at `docs/superpowers/specs/2026-03-25-resume-pdf-export-design.md`, plan at `docs/superpowers/plans/2026-03-25-resume-pdf-export.md`.
 
 **Pending / in progress:**
-- Resume Advisor PDF export — Tasks 2–4 remaining (add download buttons to active view, history detail, history list cards)
-- Sentry error tracking — not yet started
-- API rate limiting — not yet started
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
 - `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
 - Onboarding email cron requires `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `RESEND_FROM_EMAIL` in Vercel dashboard
