@@ -351,6 +351,11 @@ const STYLE = `
   .report-brand em { color: var(--blood); font-style: normal; }
   .copy-btn { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 14px; border: 1px solid var(--border-hi); color: var(--paper); background: none; cursor: pointer; transition: background 0.15s; }
   .copy-btn:hover { background: rgba(255,255,255,0.05); }
+  .share-row { display: flex; gap: 10px; margin-top: 18px; }
+  .share-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 8px 16px; border: 1px solid var(--border-hi); color: var(--paper); background: none; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .share-btn:hover { background: rgba(255,255,255,0.06); }
+  .share-btn.copied { border-color: var(--signal); color: var(--signal); }
+  .share-btn.downloading { opacity: 0.6; cursor: default; }
   .copy-btn.copied { color: var(--paper); border-color: var(--border-hi); }
   .report-close { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); color: rgba(238,234,224,0.6); width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; transition: color 0.15s; }
   .report-close:hover { color: var(--paper); }
@@ -708,7 +713,43 @@ function LoadingBlock(props) {
 ================================================================ */
 function VerdictCard(props) {
   var r = props.result;
+  var scanId = props.scanId;
+  var jobCompany = props.company || "";
+  var jobTitle = props.jobTitle || "";
   var v = r.verdict;
+  var [shareLabel, setShareLabel] = useState("🔗 Copy Link");
+  var [downloading, setDownloading] = useState(false);
+  var receiptRef = useRef(null);
+
+  function handleCopyLink() {
+    if (!scanId) { setShareLabel("Saving…"); setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 1500); return; }
+    import("./supabase.js").then(function(m){
+      m.supabase.from("ghost_scans").update({ share_enabled: true }).eq("id", scanId).then(function(){
+        var url = "https://ghostbust.us/score?id="+scanId;
+        navigator.clipboard.writeText(url).then(function(){
+          setShareLabel("✓ Copied!");
+          setTimeout(function(){ setShareLabel("🔗 Copy Link"); }, 2500);
+        });
+      });
+    });
+  }
+
+  function handleDownload() {
+    if (downloading || !receiptRef.current) return;
+    setDownloading(true);
+    document.fonts.ready.then(function(){
+      import("html2canvas").then(function(mod){
+        var html2canvas = mod.default;
+        html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#070709", useCORS: true, logging: false }).then(function(canvas){
+          var link = document.createElement("a");
+          link.download = "ghostbust-score.png";
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+          setDownloading(false);
+        }).catch(function(){ setDownloading(false); });
+      });
+    });
+  }
   var cardCls = "verdict-card"+(v==="LEGIT"?" legit":v==="SUSPICIOUS"?" suspicious":"");
   var headText = v==="LEGIT"?"Appears Legitimate":v==="SUSPICIOUS"?"Suspicious — Proceed With Caution":"Ghost Listing Detected";
   var headCls = v==="LEGIT"?"vh-legit":v==="SUSPICIOUS"?"vh-suspicious":"vh-ghost";
@@ -776,6 +817,60 @@ function VerdictCard(props) {
         <p style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:"rgba(255,255,255,0.5)",lineHeight:1.7}}>
           DISCLAIMER: GhostBust scores are algorithmic estimates based on patterns in listing language and structure. They are not verified facts about employer intent and should not be the sole basis for any application decision. A low score does not guarantee a role is unfilled, and a high score does not guarantee a hire. Always conduct your own research.
         </p>
+      </div>
+
+      {/* Share row */}
+      <div className="share-row">
+        <button className={"share-btn"+(downloading?" downloading":"")} onClick={handleDownload} disabled={downloading}>
+          {downloading ? "Generating…" : "↓ Download Card"}
+        </button>
+        <button className={"share-btn"+(shareLabel==="✓ Copied!"?" copied":"")} onClick={handleCopyLink}>
+          {shareLabel}
+        </button>
+      </div>
+
+      {/* Hidden receipt card for html2canvas */}
+      <div ref={receiptRef} style={{
+        position:"absolute", left:"-9999px", top:0, width:480,
+        background:"#070709", fontFamily:"'Space Mono',monospace", overflow:"hidden"
+      }}>
+        {/* Ticker strip */}
+        <div style={{background:"#d42200",padding:"7px 0",overflow:"hidden",whiteSpace:"nowrap"}}>
+          <span style={{fontFamily:"'Space Mono',monospace",fontSize:9,letterSpacing:"0.22em",color:"#fff",textTransform:"uppercase",paddingLeft:16}}>
+            GHOSTBUST &nbsp;·&nbsp; GHOST JOB ANALYSIS &nbsp;·&nbsp; GHOSTBUST &nbsp;·&nbsp; GHOST JOB ANALYSIS &nbsp;·&nbsp; GHOSTBUST &nbsp;·&nbsp; GHOST JOB ANALYSIS
+          </span>
+        </div>
+        {/* Job info */}
+        <div style={{padding:"24px 28px 0"}}>
+          {jobCompany&&<div style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.18em",color:"rgba(238,234,224,0.45)",textTransform:"uppercase",marginBottom:4}}>{jobCompany}</div>}
+          {jobTitle&&<div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:"0.04em",color:"#eeeae0",marginBottom:20}}>{jobTitle}</div>}
+          {/* Score */}
+          <div style={{display:"flex",alignItems:"flex-end",gap:14,marginBottom:20}}>
+            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:96,lineHeight:0.85,color:gs>60?"#d42200":gs>35?"#c99a00":"#00e67a"}}>{gs}</div>
+            <div style={{paddingBottom:10}}>
+              <div style={{fontFamily:"'Space Mono',monospace",fontSize:9,letterSpacing:"0.25em",textTransform:"uppercase",color:"#4a4a60",marginBottom:5}}>Ghost Score</div>
+              <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:"0.04em",color:v==="LEGIT"?"#00e67a":v==="SUSPICIOUS"?"#c99a00":"#d42200"}}>
+                {v==="LEGIT"?"Appears Legitimate":v==="SUSPICIOUS"?"Suspicious":"Ghost Listing Detected"}
+              </div>
+            </div>
+          </div>
+          {/* Sub-score rows */}
+          <div style={{borderTop:"1px solid rgba(255,255,255,0.07)",paddingTop:16,marginBottom:16}}>
+            {[["Specificity",sc.specificityScore],["Transparency",sc.transparencyScore],["Process",sc.processScore],["Confidence",r.confidence]].map(function(item){
+              return (
+                <div key={item[0]} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"6px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                  <span style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.16em",textTransform:"uppercase",color:"rgba(238,234,224,0.45)"}}>{item[0]}</span>
+                  <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:18,color:"#eeeae0"}}>{item[1]!=null?item[1]:"—"}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        {/* Footer */}
+        <div style={{padding:"14px 28px",borderTop:"1px solid rgba(255,255,255,0.07)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:18,letterSpacing:"0.04em",color:"#eeeae0"}}>Ghost<span style={{color:"#d42200"}}>Bust</span></span>
+          <span style={{fontFamily:"'Space Mono',monospace",fontSize:9,color:"#4a4a60",letterSpacing:"0.12em"}}>ghostbust.us</span>
+        </div>
       </div>
     </div>
   );
