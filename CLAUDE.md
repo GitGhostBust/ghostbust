@@ -390,8 +390,10 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
   - `CommunityPage.jsx`: region fetch .catch() to prevent unhandled rejection
   - `api/subscribe.js`: email validation tightened to reject malformed addresses
 
+- **Resume Advisor PDF export** — spec at `docs/superpowers/specs/2026-03-25-resume-pdf-export-design.md`, plan at `docs/superpowers/plans/2026-03-25-resume-pdf-export.md`, HTML preview at `resume-pdf-preview.html`; implementation in progress (Task 1 of 4 complete: jspdf installed, `exportAnalysisToPdf` function added, hidden render div added)
+
 **Pending / in progress:**
-- Resume Advisor PDF export (all 4 modes, from active view + history tab, styled branded document) — brainstorming complete, plan not yet written
+- Resume Advisor PDF export — Tasks 2–4 remaining (add download buttons to active view, history detail, history list cards)
 - Sentry error tracking — not yet started
 - API rate limiting — not yet started
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
