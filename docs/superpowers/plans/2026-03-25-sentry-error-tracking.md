@@ -390,7 +390,7 @@ cd C:/Users/gabri/ghostbust-app && npm run build
 
 Expected: `✓ built` with no errors.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
 git add api/claude.js api/subscribe.js
