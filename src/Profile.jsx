@@ -112,11 +112,11 @@ const STYLE = `
   .overview-card-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 0.06em; color: var(--paper); margin-bottom: 16px; }
   .career-detail-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .career-detail-row:last-child { border-bottom: none; }
-  .career-detail-label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); min-width: 160px; padding-top: 2px; }
+  .career-detail-label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); min-width: 160px; padding-top: 2px; }
   .career-detail-value { font-size: 13px; color: var(--paper); flex: 1; line-height: 1.5; }
   .skills-tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
   .skill-tag-ro { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.08em; padding: 4px 10px; background: var(--surface3); border: 1px solid var(--border); color: var(--muted); }
-  .overview-private-note { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 16px; }
+  .overview-private-note { font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; margin-top: 16px; }
   .overview-empty-state { font-size: 13px; color: var(--muted); font-style: italic; padding: 24px 0; }
 
   /* Career Profile tab */
@@ -124,7 +124,7 @@ const STYLE = `
   .completeness-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
   .completeness-title { font-family: "Bebas Neue", sans-serif; font-size: 16px; letter-spacing: 0.1em; color: var(--paper); }
   .completeness-pct { font-family: "Bebas Neue", sans-serif; font-size: 28px; color: var(--blood); }
-  .completeness-sub { font-family: "Space Mono", monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; line-height: 1.6; }
+  .completeness-sub { font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; line-height: 1.6; }
   .completeness-bar-track { height: 4px; background: var(--surface3); margin-top: 12px; }
   .completeness-bar-fill { height: 100%; background: var(--blood); transition: width 0.3s; }
 
@@ -144,24 +144,24 @@ const STYLE = `
   .toggle-field-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; cursor: pointer; transition: background 0.1s; }
   .toggle-field-header:hover { background: var(--surface2); }
   .toggle-field-left { flex: 1; min-width: 0; }
-  .toggle-field-label { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ghost); margin-bottom: 2px; }
+  .toggle-field-label { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
   .toggle-field-value { font-size: 13px; color: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .toggle-field-value.empty { color: var(--ghost); font-style: italic; }
-  .toggle-field-help { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.06em; margin-top: 2px; line-height: 1.4; }
+  .toggle-field-help { font-family: "Space Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 2px; line-height: 1.4; }
   .inline-edit-area { padding: 12px 24px 16px; background: var(--surface2); border-top: 1px solid var(--border); }
   .inline-edit-area .f-input { background: var(--surface3); border: 1px solid var(--border-hi); color: var(--paper); font-size: 13px; padding: 8px 12px; width: 100%; font-family: "Libre Baskerville", serif; box-sizing: border-box; }
   .inline-edit-area .f-input:focus { outline: none; border-color: var(--blood); }
-  .inline-char-counter { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); text-align: right; margin-top: 4px; letter-spacing: 0.06em; }
+  .inline-char-counter { font-family: "Space Mono", monospace; font-size: 10px; color: var(--muted); text-align: right; margin-top: 4px; letter-spacing: 0.06em; }
 
   .tag-chip-area { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
   .tag-chip { display: inline-flex; align-items: center; gap: 6px; font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.06em; padding: 4px 10px; background: var(--surface3); border: 1px solid var(--border-hi); color: var(--paper); }
   .tag-chip-remove { background: none; border: none; color: var(--ghost); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; }
   .tag-chip-remove:hover { color: var(--blood); }
-  .tag-chip-helper { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.06em; }
+  .tag-chip-helper { font-family: "Space Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
   .tag-chip-input { background: var(--surface3); border: 1px solid var(--border-hi); color: var(--paper); font-size: 13px; padding: 6px 10px; font-family: "Libre Baskerville", serif; width: 100%; box-sizing: border-box; }
   .tag-chip-input:focus { outline: none; border-color: var(--blood); }
   .tag-chip-input:disabled { opacity: 0.4; cursor: not-allowed; }
-  .tag-max-msg { font-family: "Space Mono", monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.06em; margin-top: 4px; }
+  .tag-max-msg { font-family: "Space Mono", monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; margin-top: 4px; }
 
   .skills-card { background: var(--surface); border: 1px solid var(--border); padding: 0; margin-bottom: 16px; overflow: hidden; }
   .skills-card-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; border-bottom: 1px solid var(--border); }
@@ -172,7 +172,7 @@ const STYLE = `
   .activity-section { margin-bottom: 32px; }
   .activity-section-title { font-family: "Bebas Neue", sans-serif; font-size: 18px; letter-spacing: 0.06em; margin-bottom: 12px; }
   .activity-table { width: 100%; border-collapse: collapse; }
-  .activity-table th { font-family: "Space Mono", monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ghost); padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+  .activity-table th { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
   .activity-table td { font-size: 12px; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
   .activity-empty { font-size: 13px; color: var(--ghost); font-style: italic; padding: 16px 0; }
 
@@ -183,7 +183,7 @@ const STYLE = `
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
   .avatar-hover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
   .avatar.editable:hover .avatar-hover { background: rgba(0,0,0,0.55); }
-  .avatar-hover-text { font-family: "Space Mono", monospace; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); text-align: center; opacity: 0; transition: opacity 0.2s; line-height: 1.5; }
+  .avatar-hover-text { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paper); text-align: center; opacity: 0; transition: opacity 0.2s; line-height: 1.5; }
   .avatar.editable:hover .avatar-hover-text { opacity: 1; }
 
   .header-actions { display: flex; gap: 8px; align-items: center; padding-bottom: 4px; }
@@ -295,7 +295,7 @@ const STYLE = `
   .follow-row { display: flex; align-items: center; gap: 20px; margin: 4px 0 10px; }
   .follow-stat { display: flex; flex-direction: column; align-items: flex-start; background: none; border: none; cursor: pointer; padding: 0; }
   .follow-stat-num { font-family: "Bebas Neue", sans-serif; font-size: 28px; line-height: 1.1; color: var(--paper); transition: color 0.15s; }
-  .follow-stat-lbl { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
+  .follow-stat-lbl { font-family: "Space Mono", monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .follow-stat:hover .follow-stat-num { color: var(--paper); }
   .btn-follow { font-family: "Space Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 7px 18px; border: 1px solid var(--blood); color: var(--blood); background: none; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; }
   .btn-follow:hover { background: var(--blood); color: var(--paper); }
@@ -870,7 +870,7 @@ export default function Profile() {
           </button>
           {privacyOpen && (
             <div className="privacy-content">
-              <div style={{ fontFamily: "Space Mono, monospace", fontSize: 10, letterSpacing: "0.1em", color: "var(--ghost)", marginBottom: 10, textTransform: "uppercase" }}>We will never ask for:</div>
+              <div style={{ fontFamily: "Space Mono, monospace", fontSize: 11, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 10, textTransform: "uppercase" }}>We will never ask for:</div>
               <ul className="privacy-list">
                 <li>Salary history <em style={{ color: "var(--ghost)", fontSize: 11 }}>(target range is fine — history is not)</em></li>
                 <li>Bank account, routing, or financial account numbers</li>
