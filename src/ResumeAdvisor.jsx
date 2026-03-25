@@ -2049,6 +2049,19 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
                       copiedCL={copiedCL}
                     />
                   )}
+                  {/* PDF Download */}
+                  <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 10 }}>
+                    <button
+                      onClick={function() { exportAnalysisToPdf(result, advisorResume && advisorResume.file_name, result.mode); }}
+                      disabled={pdfExporting === (result.id || "active")}
+                      style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: "0.12em", color: pdfExporting === (result.id || "active") ? "rgba(238,234,224,0.25)" : "rgba(238,234,224,0.45)", background: "transparent", border: "1px solid rgba(255,255,255,0.07)", padding: "6px 14px", borderRadius: 3, cursor: pdfExporting === (result.id || "active") ? "default" : "pointer" }}
+                    >
+                      {pdfExporting === (result.id || "active") ? "Generating…" : "↓ Download PDF"}
+                    </button>
+                    {pdfErrors[result.id || "active"] && (
+                      <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 9, color: "#d42200", letterSpacing: "0.1em" }}>{pdfErrors[result.id || "active"]}</span>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
