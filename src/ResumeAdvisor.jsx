@@ -1680,8 +1680,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
 
       var badgeColor = mode === "general" ? "#4a4a60" : mode === "job_specific" ? "#d42200" : mode === "job_search_advisor" ? "#00c8e6" : "#c99a00";
       var pageHtml =
-        '<style>@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap");</style>' +
         '<div style="width:794px;background:#070709;padding:0;font-size:0;">' +
+        '<style>@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap");</style>' +
           '<div style="background:#070709;border-left:4px solid #d42200;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">' +
             '<div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;letter-spacing:0.08em;color:#eeeae0;">GHOSTBUST</div>' +
             '<div style="font-family:\'Space Mono\',monospace;font-size:9px;letter-spacing:0.18em;color:rgba(238,234,224,0.45);text-transform:uppercase;">ghostbust.us</div></div>' +
