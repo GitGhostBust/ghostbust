@@ -170,6 +170,28 @@ const STYLE = `
   .search-save-link { margin-left: auto; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 1px solid var(--border); transition: color 0.15s; padding: 0; }
   .search-save-link:hover:not(:disabled) { color: var(--paper); }
   .search-save-link:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* SCAN — COMPACT */
+  .scan-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .scan-header-left { display: flex; align-items: center; gap: 10px; }
+  .scan-header-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.06em; color: var(--paper); }
+  .scan-header-ghost { opacity: 0.2; }
+  .scan-header-sub { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
+  .scan-textarea { width: 100%; min-height: 140px; background: var(--surface); border: none; border-radius: 6px 6px 0 0; color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; line-height: 1.7; padding: 16px; resize: vertical; outline: none; transition: box-shadow 0.2s; }
+  .scan-textarea:focus { box-shadow: inset 0 0 0 1px var(--blood); }
+  .scan-textarea::placeholder { color: var(--ghost); }
+  .scan-context-row { display: flex; gap: 1px; margin-bottom: 2px; }
+  .scan-context-cell { flex: 1; background: var(--surface); padding: 12px 16px; }
+  .scan-context-cell:first-child { border-radius: 0 0 0 6px; }
+  .scan-context-cell:last-child { border-radius: 0 0 6px 0; }
+  .scan-context-label { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .scan-context-input { background: none; border: none; color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 0; outline: none; width: 100%; }
+  .scan-context-input::placeholder { color: var(--ghost); }
+  .scan-actions { display: flex; gap: 10px; align-items: center; padding: 12px 0; flex-wrap: wrap; }
+  .scan-actions-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
+  .scan-detect-btn { margin-left: auto; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.06em; background: var(--blood); border: none; color: var(--paper); padding: 10px 28px; border-radius: 4px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+  .scan-detect-btn:hover:not(:disabled) { background: #e52600; }
+  .scan-detect-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .scan-hint { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.03em; margin-top: 4px; opacity: 0.6; }
   .search-form-actions { display: flex; gap: 10px; margin-top: 16px; }
   .search-form-actions .run-btn { flex: 1; margin-top: 0; border-radius: 4px; }
   .save-search-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; border-radius: 4px; }
@@ -484,6 +506,10 @@ const STYLE = `
     .search-row { flex-direction: column; border-radius: 6px; }
     .search-row-btn { padding: 14px; }
     .search-filters { gap: 8px; }
+    .scan-context-row { flex-direction: column; }
+    .scan-context-cell:first-child { border-radius: 0; }
+    .scan-context-cell:last-child { border-radius: 0 0 6px 6px; }
+    .scan-detect-btn { width: 100%; margin-left: 0; }
     .score-row { grid-template-columns: 1fr 1fr; }
     .page-hero { grid-template-columns: 1fr; }
     .app-card { grid-template-columns: 1fr; }
@@ -1544,52 +1570,51 @@ function VerifyTab(props) {
       <div className="tab-intro">Paste a job listing. AI scans for <strong>red flags, vague language, and ghost patterns.</strong></div>
 
       {innerTab==="scan"&&<>
-      <div className="form-box red-top">
-        <span className="form-label red">Ghost Detector — Full Listing Analysis</span>
-        <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid var(--border)",padding:"14px 16px",marginBottom:18}}>
-          <p style={{fontSize:13,color:"var(--muted)",lineHeight:1.8}}>
-            Paste the full text of any job listing. The AI reads the actual language — not just surface signals — and identifies patterns that correlate with listings that never result in hires: vague or contradictory requirements, copy-pasted boilerplate, implausible experience stacking, missing process detail, and structural inconsistencies. It returns a Ghost Score, a breakdown of specific signals found in this listing, and concrete next steps.
-          </p>
-          <p style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.7,marginTop:8,fontFamily:"'Space Mono',monospace"}}>
-            Paste the raw listing text — do not summarise it. The more complete the text, the more accurate the analysis.
-          </p>
+      <div className="scan-header">
+        <div className="scan-header-left">
+          <svg className="scan-header-ghost" width="18" height="18" viewBox="0 0 32 32"><path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.25"/><circle cx="13" cy="14" r="2" fill="#d42200" opacity="0.4"/><circle cx="19" cy="14" r="2" fill="#d42200" opacity="0.4"/></svg>
+          <span className="scan-header-title">GHOST DETECTOR</span>
         </div>
-        <label className="field-label red">Full Job Listing Text</label>
-        <textarea className="paste-area" placeholder="Paste the complete listing here — job title, responsibilities, requirements, and company description. Everything on the page." value={text} onChange={function(e){setText(e.target.value);setSaved(false);setResult(null);}} />
-        <div className="two-col">
-          <div>
-            <label className="field-label red" style={{marginTop:12}}>Job Title (optional)</label>
-            <input className="f-input" placeholder="e.g. Senior Product Designer" value={jobTitle} onChange={function(e){setJobTitle(e.target.value);}} />
-          </div>
-          <div>
-            <label className="field-label red" style={{marginTop:12}}>Company (optional)</label>
-            <input className="f-input" placeholder="e.g. Acme Corp" value={company} onChange={function(e){setCompany(e.target.value);}} />
-          </div>
+        <span className="scan-header-sub">Full Listing Analysis</span>
+      </div>
+
+      <div className="search-row-label accent" style={{marginBottom:8}}>Paste Full Job Listing</div>
+      <textarea className="scan-textarea" placeholder="Paste the complete listing here — job title, responsibilities, requirements, and company description. Everything on the page." value={text} onChange={function(e){setText(e.target.value);setSaved(false);setResult(null);}} />
+
+      <div className="scan-context-row">
+        <div className="scan-context-cell">
+          <div className="scan-context-label">Job Title</div>
+          <input className="scan-context-input" placeholder="e.g. Senior Product Designer" value={jobTitle} onChange={function(e){setJobTitle(e.target.value);}} />
         </div>
-        <div className="two-col" style={{marginTop:12}}>
-          <div>
-            <label className="field-label red">Posting Age (optional)</label>
-            <input className="f-input" placeholder="e.g. posted 3 months ago" value={age} onChange={function(e){setAge(e.target.value);}} />
-          </div>
-          <div>
-            <label className="field-label red">Source Job Board (optional)</label>
-            <select className="f-input" value={sourceBoard} onChange={function(e){setSourceBoard(e.target.value);}}>
-              <option value="">Select board...</option>
-              <option>Indeed</option>
-              <option>LinkedIn</option>
-              <option>Wellfound</option>
-              <option>ZipRecruiter</option>
-              <option>Monster</option>
-              <option>SimplyHired</option>
-              <option>Company Website</option>
-              <option>Other</option>
-            </select>
-          </div>
+        <div className="scan-context-cell">
+          <div className="scan-context-label">Company</div>
+          <input className="scan-context-input" placeholder="e.g. Acme Corp" value={company} onChange={function(e){setCompany(e.target.value);}} />
         </div>
-        <button className="run-btn red" onClick={analyze} disabled={text.trim().length<50||loading}>
-          {loading?"ANALYSING...":"DETECT GHOST JOB"}
+      </div>
+
+      <div className="scan-actions">
+        <span className="scan-actions-label">Context:</span>
+        <span className="search-filter-pill">
+          <select value={age} onChange={function(e){setAge(e.target.value);}}>
+            <option value="">Posting Age ▾</option>
+            <option value="less than a week">Less than a week</option>
+            <option value="1-2 weeks">1-2 weeks</option>
+            <option value="2-4 weeks">2-4 weeks</option>
+            <option value="1-2 months">1-2 months</option>
+            <option value="3+ months">3+ months</option>
+          </select>
+        </span>
+        <span className="search-filter-pill">
+          <select value={sourceBoard} onChange={function(e){setSourceBoard(e.target.value);}}>
+            <option value="">Source Board ▾</option>
+            <option>Indeed</option><option>LinkedIn</option><option>Wellfound</option><option>ZipRecruiter</option><option>Monster</option><option>SimplyHired</option><option>Company Website</option><option>Other</option>
+          </select>
+        </span>
+        <button className="scan-detect-btn" onClick={analyze} disabled={text.trim().length<50||loading}>
+          {loading?"ANALYSING...":"DETECT GHOST JOB →"}
         </button>
       </div>
+      <div className="scan-hint">Raw listing text — the more complete, the more accurate the analysis.</div>
 
       {loading&&<LoadingBlock steps={VERIFY_STEPS} current={step} />}
       {error&&<div className="err-box">{"⚠ "+error}</div>}
