@@ -307,7 +307,7 @@ const STYLE = `
 
   /* VERDICT */
   .verdict-card { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); padding: 26px; margin-top: 24px; position: relative; overflow: hidden; }
-  .verdict-card::after { content: ''; position: absolute; right: -10px; top: -10px; width: 180px; height: 180px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z' fill='%23f0ece0'/%3E%3C/svg%3E") no-repeat center/contain; opacity: 0.035; pointer-events: none; transform: rotate(8deg); }
+  .verdict-card::after { content: ''; position: absolute; right: -10px; top: -10px; width: 180px; height: 180px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z' fill='%23f0ece0'/%3E%3Ccircle cx='13' cy='14' r='2' fill='%23d42200'/%3E%3Ccircle cx='19' cy='14' r='2' fill='%23d42200'/%3E%3C/svg%3E") no-repeat center/contain; opacity: 0.035; pointer-events: none; transform: rotate(8deg); }
   .verdict-card.legit { border-top-color: var(--signal); }
   .verdict-card.suspicious { border-top-color: var(--bile); }
   .v-headline { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 0.04em; margin-bottom: 18px; }
