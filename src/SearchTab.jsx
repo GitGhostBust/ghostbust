@@ -95,6 +95,26 @@ var STYLE = `
   .saved-nudge-text { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--bile); letter-spacing: 0.04em; }
   .saved-nudge-arrow { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--bile); }
 
+  /* NL SEARCH */
+  .nl-search-wrap { margin-bottom: 20px; }
+  .nl-search-row { display: flex; gap: 1px; border-radius: 6px; overflow: hidden; }
+  .nl-search-input { flex: 1; background: var(--surface); border: none; color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 16px 18px; outline: none; }
+  .nl-search-input::placeholder { color: var(--ghost); }
+  .nl-search-btn { background: var(--blood); border: none; color: var(--paper); padding: 0 28px; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; white-space: nowrap; transition: background 0.15s; }
+  .nl-search-btn:hover:not(:disabled) { background: #e52600; }
+  .nl-search-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .nl-search-hint { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.04em; margin-top: 6px; line-height: 1.5; }
+  .nl-search-hint em { font-style: italic; color: var(--muted); }
+  .nl-parsed { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; margin-bottom: 4px; }
+  .nl-parsed-chip { font-family: 'Space Mono', monospace; font-size: 11px; background: rgba(212,34,0,0.08); border: 1px solid rgba(212,34,0,0.2); color: var(--paper); padding: 4px 12px; border-radius: 4px; }
+  .nl-parsed-chip .chip-label { color: var(--ghost); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 6px; }
+  .nl-or-divider { display: flex; align-items: center; gap: 12px; margin: 12px 0 16px; }
+  .nl-or-line { flex: 1; height: 1px; background: var(--border); }
+  .nl-or-text { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.15em; text-transform: uppercase; }
+  .advanced-toggle { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); cursor: pointer; background: none; border: 1px solid var(--border); padding: 6px 14px; transition: all 0.15s; border-radius: 4px; }
+  .advanced-toggle:hover { border-color: var(--border-hi); color: var(--paper); }
+  .advanced-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+
   /* SEARCH — COMPACT ROW */
   .search-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
   .search-header-left { display: flex; align-items: center; gap: 10px; }
@@ -193,6 +213,11 @@ var STYLE = `
     .search-row { flex-direction: column; border-radius: 6px; }
     .search-row-btn { padding: 14px; }
     .search-filters { gap: 8px; }
+    .nl-search-row { flex-direction: column; border-radius: 6px; }
+    .nl-search-input { border-radius: 6px 6px 0 0; }
+    .nl-search-btn { padding: 14px; border-radius: 0 0 6px 6px; }
+    .nl-parsed { gap: 4px; }
+    .nl-parsed-chip { font-size: 10px; padding: 3px 8px; }
   }
   @media (max-width: 480px) {
     .board-grid { grid-template-columns: 1fr 1fr; }
@@ -217,6 +242,13 @@ function SearchTab({ session, addApp }) {
   var [radius, setRadius] = useState(lastSearch&&lastSearch.radius||"25");
   var [results, setResults] = useState(null);
   var [trackedBoards, setTrackedBoards] = useState({});
+
+  // Natural language search
+  var [nlQuery, setNlQuery] = useState("");
+  var [nlParsing, setNlParsing] = useState(false);
+  var [nlParsed, setNlParsed] = useState(null);
+  var [nlError, setNlError] = useState(null);
+  var [showAdvanced, setShowAdvanced] = useState(false);
 
   // AI Refine
   var [aiRefining, setAiRefining] = useState(false);
@@ -279,12 +311,48 @@ function SearchTab({ session, addApp }) {
     } catch(e) {}
   }
 
+  function handleNlSearch() {
+    if (!nlQuery.trim()) return;
+    setNlParsing(true);
+    setNlError(null);
+    setNlParsed(null);
+    var prompt = 'You are a job search parser. The user described the job they want in natural language. Parse it into structured search parameters.\n\nUser input: "' + nlQuery.trim() + '"\n\nReturn a JSON object with exactly these keys (use empty string "" for any field you cannot determine):\n{\n  "job_title": "the core job title to search for",\n  "industry": "one of: Technology and Software, Finance and Banking, Healthcare and Medicine, Marketing and Advertising, Design and Creative, Engineering and Manufacturing, Education and Training, Legal and Compliance, Sales and Business Development, Human Resources and Recruitment, Operations and Logistics, Data and Analytics, Media and Journalism, Construction and Real Estate, Retail and eCommerce, Hospitality and Tourism, Non-Profit and Government, Science and Research",\n  "specialization": "the most specific sub-field within that industry",\n  "job_type": "one of: Full-time, Part-time, Contract, Remote, or empty string",\n  "city": "city name or empty string",\n  "state": "US state abbreviation or empty string",\n  "summary": "one-line summary of what you understood"\n}\n\nIMPORTANT: For industry, you MUST pick the closest match from the list above. For specialization, be specific — e.g. "Pharmaceutical Sales" not just "Sales". If the user mentions seniority (senior, director, VP), include it in job_title. Return only the JSON object.';
+    apiCall([{ role: "user", content: prompt }], session?.access_token)
+      .then(function(text) {
+        var parsed = parseJSON(text);
+        setNlParsed(parsed);
+        // Populate the fields silently
+        if (parsed.job_title) setJobTitle(parsed.job_title);
+        if (parsed.industry) setIndustry(parsed.industry);
+        if (parsed.specialization) setSubfield(parsed.specialization);
+        if (parsed.job_type) setJobType(parsed.job_type);
+        if (parsed.city) setCity(parsed.city);
+        if (parsed.state) setUsState(parsed.state);
+        // Auto-run the search
+        var q = [parsed.job_title, parsed.specialization || parsed.industry, parsed.job_type].filter(Boolean).join(" ");
+        var loc = [parsed.city, parsed.state].filter(Boolean).join(", ");
+        buildResults(q, loc, radius);
+        setNlParsing(false);
+        setAiRefinement(null);
+        setAiRefineError(null);
+      })
+      .catch(function(err) {
+        if (err.message === "RATE_LIMIT") {
+          setNlError("You've reached your limit of 20 analyses per hour. Please try again later.");
+        } else {
+          setNlError("Couldn't parse your search. Try the advanced filters below, or rephrase.");
+        }
+        setNlParsing(false);
+      });
+  }
+
   function handleSearch() {
     var q = [jobTitle.trim(), subfield || industry, jobType].filter(Boolean).join(" ");
     var loc = [city.trim(), usState.trim()].filter(Boolean).join(", ");
     buildResults(q, loc, radius);
     setAiRefinement(null);
     setAiRefineError(null);
+    setNlParsed(null);
   }
 
   // Feature 3: Log board click to search_history
@@ -400,7 +468,7 @@ function SearchTab({ session, addApp }) {
       </div>
 
       {innerTab==="search"&&<>
-      <div className="tab-intro">Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired — <strong>searched and saved all at once.</strong></div>
+      <div className="tab-intro">Describe your ideal role in plain English. AI parses your intent and <strong>searches 6 boards at once</strong> — Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired.</div>
 
       {streak>0&&(
         <div className="search-streak">
@@ -431,6 +499,35 @@ function SearchTab({ session, addApp }) {
         </div>
       </div>
 
+      {/* PRIMARY: Natural Language Search */}
+      <div className="nl-search-wrap">
+        <div className="nl-search-row">
+          <input className="nl-search-input" placeholder="Describe your ideal job — e.g. &quot;Senior pharma marketing director, oncology, NYC&quot;" value={nlQuery} onChange={function(e){setNlQuery(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter"&&nlQuery.trim())handleNlSearch();}} />
+          <button className="nl-search-btn" onClick={handleNlSearch} disabled={nlParsing||!nlQuery.trim()}>{nlParsing?"PARSING...":"SEARCH →"}</button>
+        </div>
+        <div className="nl-search-hint">AI understands natural language — include title, industry, seniority, location, company type, specialization. <em>The more detail, the better.</em></div>
+        {nlError && <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: "var(--blood)", marginTop: 8 }}>{nlError}</div>}
+        {nlParsed && (
+          <div className="nl-parsed">
+            {nlParsed.job_title && <span className="nl-parsed-chip"><span className="chip-label">Title</span>{nlParsed.job_title}</span>}
+            {nlParsed.industry && <span className="nl-parsed-chip"><span className="chip-label">Industry</span>{nlParsed.industry}</span>}
+            {nlParsed.specialization && <span className="nl-parsed-chip"><span className="chip-label">Specialization</span>{nlParsed.specialization}</span>}
+            {nlParsed.job_type && <span className="nl-parsed-chip"><span className="chip-label">Type</span>{nlParsed.job_type}</span>}
+            {(nlParsed.city || nlParsed.state) && <span className="nl-parsed-chip"><span className="chip-label">Location</span>{[nlParsed.city, nlParsed.state].filter(Boolean).join(", ")}</span>}
+            {nlParsed.summary && <span style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:"var(--ghost)",display:"block",width:"100%",marginTop:4}}>{nlParsed.summary}</span>}
+          </div>
+        )}
+      </div>
+
+      {/* DIVIDER */}
+      <div className="nl-or-divider">
+        <span className="nl-or-line" />
+        <button className="advanced-toggle" onClick={function(){setShowAdvanced(!showAdvanced);}}>{showAdvanced ? "Hide Advanced Filters" : "Advanced Filters"}</button>
+        <span className="nl-or-line" />
+      </div>
+
+      {/* ADVANCED: Traditional dropdown search */}
+      {showAdvanced && <div className="advanced-section">
       <div className="search-row">
         <div className="search-row-cell primary">
           <div className="search-row-label accent">Job Title</div>
@@ -475,6 +572,7 @@ function SearchTab({ session, addApp }) {
         </span>
         {userId&&<button className="search-save-link" onClick={handleSaveSearch} disabled={saving||!canSearch}>{saving?"Saving...":"Save Search"}</button>}
       </div>
+      </div>}
 
       {results && (
         <div className="boards-section">
