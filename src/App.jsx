@@ -172,7 +172,7 @@ const STYLE = `
   .scan-history-empty { text-align: center; padding: 48px 24px; color: var(--ghost); font-family: 'Space Mono', monospace; font-size: 12px; }
 
   /* SCAN REPORT MODAL */
-  .scan-modal-backdrop { position: fixed; inset: 0; background: rgba(7,7,9,0.85); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .scan-modal-backdrop { position: fixed; inset: 0; background: rgba(7,7,9,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .scan-modal { background: var(--surface); border: 1px solid var(--border-hi); border-radius: 12px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; }
   .scan-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
   .scan-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; color: var(--paper); }
