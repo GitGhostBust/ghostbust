@@ -545,7 +545,7 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
       <div className="page-hero">
         <div>
           <div className="page-hero-eyebrow">
-            <svg className="page-hero-ghost" width="14" height="14" viewBox="0 0 32 32"><path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.9"/><circle cx="13" cy="14" r="2" fill="#d42200"/><circle cx="19" cy="14" r="2" fill="#d42200"/></svg>
+            <svg className="page-hero-ghost" width="28" height="28" viewBox="0 0 32 32"><path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.9"/><circle cx="13" cy="14" r="2" fill="#d42200"/><circle cx="19" cy="14" r="2" fill="#d42200"/></svg>
             COMMUNITY BOARD
           </div>
           <h1 className="page-hero-heading">Real People. <em>Real Experiences.</em></h1>
