@@ -2381,14 +2381,19 @@ export default function App() {
     var sub = supabase.auth.onAuthStateChange(function(event,s){ setSession(s); if(event==="PASSWORD_RECOVERY"){setResetMode(true);return;} if(event==="SIGNED_IN"&&!resetMode){setToast("Signed in as "+s.user.email);setTimeout(function(){setToast(null);},4000);} if(event==="SIGNED_OUT"){setToast("Signed out");setTimeout(function(){setToast(null);},2000);} });
     return function(){ sub.data.subscription.unsubscribe(); };
   },[]);
+  var [profileCompletePct, setProfileCompletePct] = useState(100);
+  var [profileNudgeDismissed, setProfileNudgeDismissed] = useState(function(){ try { return !!sessionStorage.getItem("gb_profile_nudge_off"); } catch(e) { return false; } });
   useEffect(function(){
     if (!session) return;
     try { if (sessionStorage.getItem("gb_region_skipped")) return; } catch(e) {}
-    supabase.from("profiles").select("region_set,job_market_region").eq("id", session.user.id).single()
+    supabase.from("profiles").select("region_set,job_market_region,bio,industry,employment_status,experience_years,seniority_level,work_arrangement,target_roles,career_goal,skills").eq("id", session.user.id).single()
       .then(function(res){
         if (res.data) {
           if (!res.data.region_set) setShowRegionModal(true);
           if (res.data.job_market_region) setUserRegion(res.data.job_market_region);
+          var fields = ["bio","industry","employment_status","experience_years","seniority_level","work_arrangement","target_roles","career_goal","skills","job_market_region"];
+          var filled = fields.filter(function(k){ return res.data[k] && String(res.data[k]).trim(); }).length;
+          setProfileCompletePct(Math.round((filled / fields.length) * 100));
         }
       });
   },[session]);
@@ -2513,6 +2518,21 @@ export default function App() {
         </nav>
 
         <div style={{maxWidth:1280,margin:"0 auto",width:"100%"}}>
+          {session && profileCompletePct < 60 && !profileNudgeDismissed && (
+            <div style={{background:"rgba(201,154,0,0.06)",border:"1px solid rgba(201,154,0,0.15)",borderLeft:"3px solid var(--bile)",padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+              <div style={{display:"flex",alignItems:"center",gap:12,flex:1,minWidth:0}}>
+                <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:28,color:"var(--bile)",lineHeight:1,flexShrink:0}}>{profileCompletePct}%</div>
+                <div>
+                  <div style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:"var(--bile)",letterSpacing:"0.06em"}}>Career Profile Incomplete</div>
+                  <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:"var(--muted)",marginTop:2}}>AI advice improves with more context about your background and goals.</div>
+                </div>
+              </div>
+              <div style={{display:"flex",gap:8,flexShrink:0}}>
+                <a href="/profile.html" style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--bile)",textDecoration:"none",border:"1px solid var(--bile)",padding:"6px 14px",whiteSpace:"nowrap"}}>Complete Profile</a>
+                <button onClick={function(){setProfileNudgeDismissed(true);try{sessionStorage.setItem("gb_profile_nudge_off","1");}catch(e){}}} style={{background:"none",border:"none",color:"var(--ghost)",fontSize:14,cursor:"pointer",padding:"0 4px"}} title="Dismiss">&times;</button>
+              </div>
+            </div>
+          )}
           {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
           {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} session={session} prefill={tab==="verify"?prefill:null} />}
           {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} onNavigate={function(t,pf){setPrefill(pf);setTab(t);}} />}

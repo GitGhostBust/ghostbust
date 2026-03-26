@@ -12,7 +12,7 @@ npm run lint       # ESLint check
 npm run preview    # preview production build locally
 ```
 
-There are no tests. Always verify with `npm run build` before pushing — JSX syntax errors will cause Vercel deployment failures that aren't caught by the dev server.
+Tests: `npm run test` runs Vitest (16 tests covering `api/claude.js` and `api/subscribe.js`). CI runs tests + build on every push via GitHub Actions. Always verify with `npm run build` before pushing — JSX syntax errors will cause Vercel deployment failures that aren't caught by the dev server.
 
 ---
 
@@ -433,12 +433,15 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - **Tracker card polish** — dynamic left accent by ghost score, per-status color pills, UNSCANNED chip, enhanced typography and hover effects
 - **Standardized hero section** (in progress) — shared compact hero for app.html and community.html with ghost logo in eyebrow, "Built For A Broken Market." heading, tab-specific intro lines for all four app tabs
 
-**Pending / in progress:**
-- `20260325_ghost_scans_user_id.sql` migration must be run in Supabase SQL editor for scan history to work
-- Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
-- `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
-- Onboarding email cron requires `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `RESEND_FROM_EMAIL` in Vercel dashboard
-- `20260324_email_sends.sql` migration must be run in Supabase SQL editor before cron goes live
-- `20260324_username_changed_at.sql` migration must be run in Supabase SQL editor
+- **Career Profile completion prompts** — nudge banner in App.jsx (below tabs, <60% complete), nudge in ResumeAdvisor AI Advisor tab (<5/8 fields), completeness card in Profile.jsx sidebar
+- **Mobile responsiveness** — breakpoints added/fixed across all pages for 375px+ screens (nav scroll, padding, font scaling, preview height)
+- **CI pipeline** — GitHub Actions runs `npm test` + `npm run build` on every push/PR to main
+- **All 21 migrations confirmed applied** in Supabase (verified 2026-03-26)
+
+**Required env vars (Vercel dashboard):**
+- `ANTHROPIC_API_KEY` — for `api/claude.js` proxy
+- `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — for rate limiting + onboarding cron
+- `VITE_SENTRY_DSN`, `SENTRY_AUTH_TOKEN` — for error tracking
+- `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` — for email capture
+- `CRON_SECRET`, `RESEND_FROM_EMAIL` — for onboarding email cron
 - Sending domain must be verified in Resend before `RESEND_FROM_EMAIL` will work
-- Migrations `20260322_*.sql` and `20260323_*.sql` must be run manually in Supabase SQL editor
