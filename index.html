@@ -368,35 +368,6 @@
       border-top: 1px solid var(--border);
     }
 
-    /* FEATURES */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: 40px;
-    }
-    .feature-card {
-      padding: 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--ghost);
-      transition: border-color 0.2s;
-    }
-    .feature-card:hover { border-top-color: var(--blood); }
-    .feature-icon { font-size: 28px; margin-bottom: 14px; }
-    .feature-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      letter-spacing: 0.04em;
-      color: var(--paper);
-      margin-bottom: 10px;
-    }
-    .feature-desc {
-      font-family: 'Libre Baskerville', Georgia, serif;
-      font-size: 13px;
-      color: rgba(255,255,255,0.88);
-      line-height: 1.75;
-    }
 
     /* HOW IT WORKS */
     .steps { display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
@@ -631,7 +602,7 @@
       .hero-stat-card { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; }
       .hero-stat { border-bottom: none; border-right: 1px solid var(--border); margin-bottom: 0; padding: 0 20px 0 0; margin-right: 20px; }
       .hero-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
-      .research-grid, .features-grid { grid-template-columns: 1fr 1fr; }
+      .research-grid { grid-template-columns: 1fr 1fr; }
       .legislation-grid { grid-template-columns: 1fr; }
       nav, section, footer { padding-left: 24px; padding-right: 24px; }
       .hero { padding: 48px 24px; }
@@ -650,7 +621,7 @@
       .hero { padding: 40px 20px; }
       .cta-band { padding: 40px 20px; }
       footer { padding: 28px 20px; }
-      .research-grid, .features-grid { grid-template-columns: 1fr; }
+      .research-grid { grid-template-columns: 1fr; }
       .hero-stat-card { grid-template-columns: 1fr; }
       .hero-stat { border-right: none; border-bottom: 1px solid var(--border); margin-bottom: 16px; padding-bottom: 16px; padding-right: 0; margin-right: 0; }
       .screenshot-pair { grid-template-columns: 1fr; }
@@ -920,35 +891,6 @@
   }
   </script>
 
-  <!-- FEATURES -->
-  <section>
-    <div class="section-label">What You Get</div>
-    <h2>One Platform.<br/>Total Control.</h2>
-    <p class="section-body">GhostBust puts job seekers on equal footing with a market that isn't always transparent about its intentions.</p>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🔍</div>
-        <div class="feature-title">Find Real Jobs</div>
-        <div class="feature-desc">Search six major job boards simultaneously from a single interface. Filter by industry, role, location, and job type — no repeated searches, no tab switching. Save searches, track history, and let AI refine your strategy based on your resume and profile.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">👻</div>
-        <div class="feature-title">Ghost Detector</div>
-        <div class="feature-desc">Paste any listing and get a Ghost Score from 0 to 100. The AI analyzes the full text against patterns most associated with postings that never result in hires — vague employer identity, missing application process, implausible requirement stacking. Full signal breakdown and concrete next steps in seconds.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📋</div>
-        <div class="feature-title">Application Tracker</div>
-        <div class="feature-desc">Track every application across every job board from a single dashboard. Move listings through your pipeline — Saved, Applied, Interviewing, Ghosted, Rejected, Offer — set follow-up dates, add notes, and log outcomes. Your entire job search history, organized and synced to your account.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <div class="feature-title">Career HQ</div>
-        <div class="feature-desc">Upload your resume for a full AI analysis. Get a personalized job search strategy. Run a career coaching session that draws on your scan history, past analyses, and profile data. Every session gets more tailored the more you use GhostBust.</div>
-      </div>
-    </div>
-  </section>
 
   <!-- SAMPLE OUTPUT -->
   <section>
