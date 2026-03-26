@@ -939,6 +939,7 @@ function VerdictCard(props) {
    SEARCH TAB
 ================================================================ */
 function SearchTab({ session, addApp }) {
+  var [innerTab, setInnerTab] = useState("search");
   var [industry, setIndustry] = useState("");
   var [subfield, setSubfield] = useState("");
   var [jobType, setJobType] = useState("");
@@ -1087,6 +1088,7 @@ function SearchTab({ session, addApp }) {
   }
 
   function handleLoadSaved(s) {
+    setInnerTab("search");
     setIndustry(s.industry || "");
     setSubfield(s.subfield || "");
     setJobType(s.job_type || "");
@@ -1108,7 +1110,14 @@ function SearchTab({ session, addApp }) {
 
   return (
     <div className="panel">
+      <div className="inner-tabs">
+        <button className={"inner-tab"+(innerTab==="search"?" active":"")} onClick={function(){setInnerTab("search");}}>Search</button>
+        <button className={"inner-tab"+(innerTab==="saved"?" active":"")} onClick={function(){setInnerTab("saved");}}>
+          Saved Searches{savedSearches.length>0&&<span className="tab-count">{savedSearches.length}</span>}
+        </button>
+      </div>
 
+      {innerTab==="search"&&<>
       {/* Feature 4: Daily search nudge */}
       {nudge && (
         <div className="search-nudge">
@@ -1171,23 +1180,6 @@ function SearchTab({ session, addApp }) {
           )}
         </div>
 
-        {/* Feature 5: Saved searches list */}
-        {userId && savedSearches.length > 0 && (
-          <div className="saved-searches-section">
-            <div className="saved-searches-title">Saved Searches — click to reload</div>
-            <div className="saved-search-list">
-              {savedSearches.map(function(s) {
-                return (
-                  <div key={s.id} className="saved-search-item" onClick={function() { handleLoadSaved(s); }}>
-                    <span className="saved-search-label">{s.label}</span>
-                    <span className="saved-search-meta">{s.location || "USA"}</span>
-                    <button className="saved-search-del" onClick={function(e) { handleDeleteSaved(e, s.id); }} title="Remove">✕</button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
 
       {results && (
@@ -1280,6 +1272,29 @@ function SearchTab({ session, addApp }) {
             <div className="search-tips-title">Ghost-Proof Your Search</div>
             {SEARCH_TIPS.map(function(t, i) { return <div key={i} className="tip-row"><span className="tip-n">{String(i + 1).padStart(2, "0")}</span><span>{t}</span></div>; })}
           </div>
+        </div>
+      )}
+      </>}
+
+      {innerTab==="saved"&&(
+        <div>
+          {savedSearches.length===0?(
+            <div className="scan-history-empty">
+              No saved searches yet. Use the Search tab to find jobs, then click "Save Search" to save your filters for quick reuse.
+            </div>
+          ):(
+            <div className="saved-search-list">
+              {savedSearches.map(function(s) {
+                return (
+                  <div key={s.id} className="saved-search-item" onClick={function() { handleLoadSaved(s); }}>
+                    <span className="saved-search-label">{s.label}</span>
+                    <span className="saved-search-meta">{s.location || "USA"}</span>
+                    <button className="saved-search-del" onClick={function(e) { handleDeleteSaved(e, s.id); }} title="Remove">✕</button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
