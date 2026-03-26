@@ -425,6 +425,13 @@ const STYLE = `
   .profile-footer a { color: inherit; text-decoration: none; transition: color 150ms; }
   .profile-footer a:hover { color: rgba(255,255,255,0.75); }
   .profile-footer-sep { opacity: 0.3; }
+
+  .pf-share-row { display: flex; justify-content: center; margin-top: 32px; margin-bottom: -48px; }
+  .pf-share-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(212,34,0,0.12), rgba(212,34,0,0.04)); border: 1px solid rgba(212,34,0,0.35); color: var(--blood); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 10px 22px; cursor: pointer; transition: all 200ms; border-radius: 6px; }
+  .pf-share-btn:hover { background: linear-gradient(135deg, rgba(212,34,0,0.22), rgba(212,34,0,0.1)); border-color: var(--blood); color: var(--paper); }
+  .pf-share-btn svg { width: 14px; height: 14px; }
+  .pf-share-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--signal); color: var(--signal); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; border-radius: 6px; z-index: 9999; animation: pfToastIn 300ms ease; }
+  @keyframes pfToastIn { from { opacity: 0; transform: translateX(-50%) translateY(12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 `;
 
 const TICKER_ITEMS = [
@@ -546,6 +553,19 @@ export default function Profile() {
   const [roleInput, setRoleInput] = useState("");
   const [skillInput, setSkillInput] = useState("");
   const profileSnapshotRef = useRef(null);
+  var [shareToast, setShareToast] = useState(false);
+
+  function handleShare() {
+    var url = "https://ghostbust.us";
+    var text = "GhostBust — detect ghost job listings before you waste your time applying. Built for a broken market.";
+    if (navigator.share) {
+      navigator.share({ title: "GhostBust", text: text, url: url }).catch(function(){});
+    } else {
+      try { navigator.clipboard.writeText(url); } catch(e) { window.prompt("Copy this link:", url); }
+      setShareToast(true);
+      setTimeout(function(){ setShareToast(false); }, 2500);
+    }
+  }
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
@@ -1573,6 +1593,13 @@ export default function Profile() {
           </div>
         </div>
       )}
+      <div className="pf-share-row">
+        <button className="pf-share-btn" onClick={handleShare}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share GhostBust
+        </button>
+      </div>
+      {shareToast && <div className="pf-share-toast">Link copied</div>}
       <footer className="profile-footer">
         <span>GhostBust</span>
         <span className="profile-footer-sep">·</span>

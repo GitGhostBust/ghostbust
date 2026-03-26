@@ -80,6 +80,13 @@ const STYLE = `
   /* PAGE ENTRANCE */
   @keyframes gbFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .community-root { animation: gbFadeIn 0.6s ease both; }
+
+  .cp-share-row { display: flex; justify-content: center; margin-top: 32px; margin-bottom: -48px; }
+  .cp-share-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(212,34,0,0.12), rgba(212,34,0,0.04)); border: 1px solid rgba(212,34,0,0.35); color: var(--blood); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 10px 22px; cursor: pointer; transition: all 200ms; border-radius: 6px; }
+  .cp-share-btn:hover { background: linear-gradient(135deg, rgba(212,34,0,0.22), rgba(212,34,0,0.1)); border-color: var(--blood); color: var(--paper); }
+  .cp-share-btn svg { width: 14px; height: 14px; }
+  .cp-share-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--signal); color: var(--signal); font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; border-radius: 6px; z-index: 9999; animation: cpToastIn 300ms ease; }
+  @keyframes cpToastIn { from { opacity: 0; transform: translateX(-50%) translateY(12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 `;
 
 const TICKER_ITEMS = [
@@ -150,6 +157,19 @@ export default function CommunityPage() {
   var [userRegion, setUserRegion] = useState(null);
   var [showAuth, setShowAuth] = useState(false);
   var [showProfileModal, setShowProfileModal] = useState(false);
+  var [shareToast, setShareToast] = useState(false);
+
+  function handleShare() {
+    var url = "https://ghostbust.us";
+    var text = "GhostBust — detect ghost job listings before you waste your time applying. Built for a broken market.";
+    if (navigator.share) {
+      navigator.share({ title: "GhostBust", text: text, url: url }).catch(function(){});
+    } else {
+      try { navigator.clipboard.writeText(url); } catch(e) { window.prompt("Copy this link:", url); }
+      setShareToast(true);
+      setTimeout(function(){ setShareToast(false); }, 2500);
+    }
+  }
 
   useEffect(function(){
     supabase.auth.getSession().then(function(d){ setSession(d.data.session); });
@@ -198,6 +218,13 @@ export default function CommunityPage() {
           userRegion={userRegion}
           onRequestSignIn={function(){ setShowAuth(true); }}
         />
+        <div className="cp-share-row">
+          <button className="cp-share-btn" onClick={handleShare}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share GhostBust
+          </button>
+        </div>
+        {shareToast && <div className="cp-share-toast">Link copied</div>}
         <footer className="cp-footer">
           <span>GhostBust</span>
           <span className="cp-footer-sep">·</span>
