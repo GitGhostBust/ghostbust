@@ -179,7 +179,9 @@ const STYLE = `
   .scan-modal-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px; }
   .scan-modal-close:hover { color: var(--paper); }
   .scan-modal-body { padding: 0 16px 16px; }
-  .scan-modal-footer { border-top: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: flex-end; }
+  .scan-modal-footer { border-top: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .scan-modal-save-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 10px; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+  .scan-modal-save-btn:hover { color: var(--paper); border-color: var(--border-hi); }
 
   .saved-searches-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
   .saved-searches-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
@@ -1568,6 +1570,7 @@ function VerifyTab(props) {
               <VerdictCard result={buildResultFromScan(modalScan)} scanId={modalScan.id} company={modalScan.company||""} jobTitle={modalScan.title||""} />
             </div>
             <div className="scan-modal-footer">
+              <button className="scan-modal-save-btn" onClick={function(){ addApp({ id:uid(), title:modalScan.title||"Untitled Role", company:modalScan.company||"Unknown Company", ghostScore:modalScan.ghost_score||0, verdict:modalScan.assessment||"UNKNOWN", status:"Researching", notes:"", sourceBoard:modalScan.job_board||"", savedAt:Date.now(), signalFlags:modalScan.signal_flags||[] }); setModalScan(null); if(onSaved) onSaved(); }}>SAVE TO TRACKER</button>
               <button className="scan-history-view-btn" style={{width:"auto",padding:"6px 20px"}} onClick={function(){ setModalScan(null); }}>CLOSE</button>
             </div>
           </div>

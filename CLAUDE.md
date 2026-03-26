@@ -396,7 +396,13 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 
 - **Resume Advisor PDF export** — fully built and live. All four analysis modes have PDF download buttons: active analysis view, history detail view, and history list cards. Client-side html2canvas + jsPDF, GhostBust-branded dark PDF, per-mode content layout. Full implementation reviewed and approved, pushed to origin main. Spec at `docs/superpowers/specs/2026-03-25-resume-pdf-export-design.md`, plan at `docs/superpowers/plans/2026-03-25-resume-pdf-export.md`.
 
+- **Inner tabs for Find Jobs** — Search / Saved Searches sub-tabs within the Find Jobs tab; saved searches promoted from inline section to dedicated tab
+- **Inner tabs for Ghost Detector** — Scan / History sub-tabs; history shows chronological scan list with expand/collapse and full-report modal reusing VerdictCard; "Save to Tracker" from modal
+- **Application Tracker restructured** — Prospects (Researching/Saved) and Applications (Applied+) sub-tabs with count badges; status change auto-migrates cards between tabs; tab-specific filters and empty states
+- **`user_id` column on `ghost_scans`** — migration at `20260325_ghost_scans_user_id.sql`; scan insert now includes user_id for authenticated users
+
 **Pending / in progress:**
+- `20260325_ghost_scans_user_id.sql` migration must be run in Supabase SQL editor for scan history to work
 - Resume Advisor requires `VITE_ANTHROPIC_API_KEY` env var set in `.env` and Vercel dashboard
 - `RESEND_API_KEY` and `RESEND_AUDIENCE_ID` env vars required in Vercel dashboard for email capture
 - Onboarding email cron requires `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`, `RESEND_FROM_EMAIL` in Vercel dashboard
