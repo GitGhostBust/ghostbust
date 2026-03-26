@@ -18,7 +18,7 @@ const STYLE = `
   .cb-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
   .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; border-radius: 8px; padding: 13px 28px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .cb-new-btn:hover { background: #e52600; }
-  .cb-region-badge { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border-hi); padding: 5px 10px; white-space: nowrap; }
+  .cb-region-badge { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border-hi); border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
   .cb-region-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
   .cb-region-change { background: none; border: none; color: var(--ghost); cursor: pointer; font-size: 11px; padding: 0; line-height: 1; transition: color 0.15s; }
   .cb-region-change:hover { color: var(--paper); }
@@ -55,7 +55,7 @@ const STYLE = `
   .cb-topic-general { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--ghost); }
   .cb-post-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.04em; color: var(--paper); margin-bottom: 6px; line-height: 1.15; }
   .cb-post-body { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; color: rgba(238,234,224,0.7); line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .cb-post-photo { width: 100%; max-height: 260px; object-fit: cover; margin-top: 12px; border: 1px solid var(--border); display: block; }
+  .cb-post-photo { width: 100%; max-height: 260px; object-fit: cover; margin-top: 12px; border: 1px solid var(--border); border-radius: 8px; display: block; }
   .cb-card-footer { display: flex; align-items: center; gap: 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
   .cb-like-btn { display: flex; align-items: center; gap: 5px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--ghost); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; transition: all 0.15s; }
   .cb-like-btn:hover { color: var(--blood); border-color: var(--blood); }
@@ -114,9 +114,9 @@ const STYLE = `
   .cb-modal-select:focus { border-color: var(--border-hi); }
   .cb-modal-select option { background: var(--surface2); }
   .cb-photo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
-  .cb-photo-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); cursor: pointer; border: 1px dashed var(--border); padding: 8px 14px; transition: border-color 0.15s; }
+  .cb-photo-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); cursor: pointer; border: 1px dashed var(--border); border-radius: 8px; padding: 8px 14px; transition: border-color 0.15s; }
   .cb-photo-label:hover { border-color: var(--border-hi); color: var(--paper); }
-  .cb-photo-preview { width: 60px; height: 60px; object-fit: cover; border: 1px solid var(--border); }
+  .cb-photo-preview { width: 60px; height: 60px; object-fit: cover; border: 1px solid var(--border); border-radius: 8px; }
   .cb-modal-submit { width: 100%; font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; border-radius: 8px; padding: 14px; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
   .cb-modal-submit:hover:not(:disabled) { background: #e52600; }
   .cb-modal-submit:disabled { opacity: 0.4; cursor: not-allowed; }

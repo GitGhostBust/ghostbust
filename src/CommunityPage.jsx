@@ -57,16 +57,16 @@ const STYLE = `
 
   /* AUTH MODAL */
   .cp-auth-modal { position: fixed; inset: 0; background: rgba(7,7,9,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
-  .cp-auth-inner { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); max-width: 420px; width: 100%; padding: 36px; position: relative; }
+  .cp-auth-inner { background: linear-gradient(165deg, rgba(30,30,40,0.98) 0%, rgba(22,22,30,0.95) 100%); backdrop-filter: blur(8px); border: 1px solid var(--border); border-top: 4px solid var(--blood); max-width: 420px; width: 100%; padding: 36px; position: relative; border-radius: 16px; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
   .cp-auth-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--ghost); font-size: 18px; cursor: pointer; }
 
   /* AUTH FORM (inline) */
   .af-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; margin-bottom: 4px; }
   .af-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--blood); letter-spacing: 0.2em; margin-bottom: 24px; }
-  .af-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 11px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+  .af-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-hi); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 11px 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; border-radius: 8px; }
   .af-input:focus { border-color: rgba(255,255,255,0.3); }
   .af-input::placeholder { color: var(--ghost); }
-  .af-btn { width: 100%; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px; cursor: pointer; margin-top: 4px; transition: background 0.15s; }
+  .af-btn { width: 100%; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px; cursor: pointer; margin-top: 4px; transition: background 0.15s; border-radius: 8px; }
   .af-btn:hover:not(:disabled) { background: #e52600; }
   .af-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .af-error { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--blood); margin-bottom: 10px; }

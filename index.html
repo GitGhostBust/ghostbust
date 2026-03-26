@@ -256,6 +256,7 @@
       text-decoration: none;
       display: inline-block;
       transition: background 0.15s;
+      border-radius: 6px;
     }
     .cta-primary:hover { background: #00ff88; }
 
@@ -738,9 +739,9 @@
         The job market has a ghost job epidemic. Up to 1 in 5 listings posted online are either fake or never filled — wasting millions of hours of job seekers' time every year. GhostBust gives you the tools to search smarter, detect low-intent listings before you apply, and track every application in one place.
       </p>
       <div class="hero-cta-row" style="gap:16px;">
-        <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">START FREE — NO ACCOUNT REQUIRED →</a>
-        <a href="/community.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">COMMUNITY →</a>
-        <button onclick="document.getElementById('hiw-modal').style.display='flex'" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(204,34,0,0.5);color:rgba(204,34,0,0.85);cursor:pointer;padding:14px 32px;transition:all 150ms;" onmouseover="this.style.borderColor='#cc2200';this.style.color='#cc2200';this.style.boxShadow='0 0 20px rgba(204,34,0,0.15)'" onmouseout="this.style.borderColor='rgba(204,34,0,0.5)';this.style.color='rgba(204,34,0,0.85)';this.style.boxShadow='none'">HOW IT WORKS</button>
+        <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;border-radius:6px;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">START FREE — NO ACCOUNT REQUIRED →</a>
+        <a href="/community.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;border-radius:6px;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">COMMUNITY →</a>
+        <button onclick="document.getElementById('hiw-modal').style.display='flex'" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(204,34,0,0.5);color:rgba(204,34,0,0.85);cursor:pointer;padding:14px 32px;transition:all 150ms;border-radius:6px;" onmouseover="this.style.borderColor='#cc2200';this.style.color='#cc2200';this.style.boxShadow='0 0 20px rgba(204,34,0,0.15)'" onmouseout="this.style.borderColor='rgba(204,34,0,0.5)';this.style.color='rgba(204,34,0,0.85)';this.style.boxShadow='none'">HOW IT WORKS</button>
       </div>
       <div style="margin-top:16px;">
         <button onclick="window.gbOpenIntro();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.3);cursor:pointer;padding:0;transition:color 150ms;" onmouseover="this.style.color='rgba(238,234,224,0.65)'" onmouseout="this.style.color='rgba(238,234,224,0.3)'">▶ Watch Intro</button>
@@ -882,6 +883,7 @@
       color: var(--paper); font-family: 'Space Mono', monospace;
       font-size: 13px; padding: 13px 16px; outline: none;
       transition: border-color 150ms;
+      border-radius: 8px 0 0 8px;
     }
     .email-capture-input:focus { border-color: rgba(255,255,255,0.35); }
     .email-capture-input::placeholder { color: rgba(238,234,224,0.28); }
@@ -890,6 +892,7 @@
       letter-spacing: 0.12em; background: var(--blood); color: var(--paper);
       border: none; padding: 13px 28px; cursor: pointer;
       transition: background 150ms; white-space: nowrap;
+      border-radius: 0 8px 8px 0;
     }
     .email-capture-btn:hover { background: #e02600; }
     .email-capture-msg {
@@ -899,8 +902,8 @@
     @media (max-width: 600px) {
       .email-capture-section { padding: 48px 20px; }
       .email-capture-form { flex-direction: column; }
-      .email-capture-input { border-right: 1px solid rgba(255,255,255,0.14); border-bottom: none; }
-      .email-capture-btn { padding: 13px; }
+      .email-capture-input { border-right: 1px solid rgba(255,255,255,0.14); border-bottom: none; border-radius: 8px 8px 0 0; }
+      .email-capture-btn { padding: 13px; border-radius: 0 0 8px 8px; }
     }
   </style>
   <script>
@@ -1110,6 +1113,15 @@
     <p>GhostBust is free to use. No account required. Start finding real jobs and stop wasting applications on listings that were never meant to be filled.</p>
     <a href="/app.html" class="cta-primary">Open GhostBust →</a>
   </section>
+
+  <!-- SHARE -->
+  <div style="display:flex;justify-content:center;padding:32px 0 0;">
+    <button id="share-btn" onclick="(function(){var u='https://ghostbust.us',t='GhostBust — detect ghost job listings before you waste your time applying.';if(navigator.share){navigator.share({title:'GhostBust',text:t,url:u}).catch(function(){});}else{try{navigator.clipboard.writeText(u);}catch(e){window.prompt('Copy this link:',u);}var d=document.getElementById('share-toast');if(d){d.style.display='block';setTimeout(function(){d.style.display='none';},2500);}}})()" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(212,34,0,0.12),rgba(212,34,0,0.04));border:1px solid rgba(212,34,0,0.35);color:#d42200;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;padding:10px 22px;cursor:pointer;transition:all 200ms;border-radius:6px;" onmouseover="this.style.background='linear-gradient(135deg,rgba(212,34,0,0.22),rgba(212,34,0,0.1))';this.style.borderColor='#d42200';this.style.color='#eeeae0';" onmouseout="this.style.background='linear-gradient(135deg,rgba(212,34,0,0.12),rgba(212,34,0,0.04))';this.style.borderColor='rgba(212,34,0,0.35)';this.style.color='#d42200';">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      Share GhostBust
+    </button>
+  </div>
+  <div id="share-toast" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0e0e12;border:1px solid #00e67a;color:#00e67a;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border-radius:6px;z-index:9999;">Link copied</div>
 
   <!-- FOOTER -->
   <footer>
@@ -1642,7 +1654,7 @@
 
       <!-- Bottom CTA -->
       <div style="padding:20px 36px 32px;text-align:center;">
-        <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;text-transform:uppercase;background:#cc2200;color:#f0ece0;border:none;padding:14px 40px;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.15s,box-shadow 0.15s;" onmouseover="this.style.background='#e02600';this.style.boxShadow='0 4px 24px rgba(204,34,0,0.35)'" onmouseout="this.style.background='#cc2200';this.style.boxShadow='none'">START FREE &rarr;</a>
+        <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;text-transform:uppercase;background:#cc2200;color:#f0ece0;border:none;padding:14px 40px;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.15s,box-shadow 0.15s;border-radius:6px;" onmouseover="this.style.background='#e02600';this.style.boxShadow='0 4px 24px rgba(204,34,0,0.35)'" onmouseout="this.style.background='#cc2200';this.style.boxShadow='none'">START FREE &rarr;</a>
       </div>
     </div>
   </div>
