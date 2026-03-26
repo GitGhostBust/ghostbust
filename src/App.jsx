@@ -329,9 +329,7 @@ const STYLE = `
   .stat-ghosted { color: var(--ghost); }
   .stat-rejected { color: var(--blood); }
   .stat-offer { color: var(--bile); }
-  .app-card.status-researching { border-left-color: var(--bile); }
-  .app-card.status-saved { border-left-color: rgba(238,234,224,0.3); }
-  .status-select.status-researching { color: var(--bile); }
+  .status-select.status-researching { color: var(--ice); }
 
   .tracker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .tracker-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.04em; color: var(--paper); }
@@ -340,34 +338,37 @@ const STYLE = `
   .small-btn:hover { color: var(--paper); border-color: var(--border-hi); }
   .small-btn.danger:hover { color: var(--blood); border-color: var(--blood); }
 
-  .app-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--ghost); margin-bottom: 10px; padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; transition: background 0.15s; }
-  .app-card:hover { background: var(--surface2); }
-  .app-card.status-saved { border-left-color: rgba(238,234,224,0.3); }
-  .app-card.status-applied { border-left-color: var(--ice); }
-  .app-card.status-interviewing { border-left-color: var(--signal); }
-  .app-card.status-ghosted { border-left-color: var(--ghost); }
-  .app-card.status-rejected { border-left-color: var(--blood); }
-  .app-card.status-offer { border-left-color: var(--bile); }
-  .app-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.03em; color: var(--paper); margin-bottom: 3px; line-height: 1.2; }
-  .app-company { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.06em; margin-bottom: 8px; }
-  .app-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .app-chip { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--border); color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.03); }
-  .gs-chip { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.05em; padding: 3px 9px; }
+  .app-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--border-hi); margin-bottom: 12px; padding: 20px 22px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start; transition: background 0.18s, border-color 0.18s, box-shadow 0.18s; border-radius: 4px; }
+  .app-card:hover { background: var(--surface2); border-color: var(--border-hi); box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+  .app-card:hover .app-title { color: #fff; }
+  .app-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.03em; color: var(--paper); margin-bottom: 2px; line-height: 1.2; transition: color 0.18s; }
+  .app-company { font-family: 'Libre Baskerville', serif; font-size: 12px; color: rgba(238,234,224,0.7); letter-spacing: 0.02em; margin-bottom: 10px; }
+  .app-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .app-chip { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 3px; }
+  .status-pill-researching { background: var(--ice-dim); color: var(--ice); }
+  .status-pill-saved { background: rgba(255,255,255,0.05); color: var(--muted); }
+  .status-pill-applied { background: var(--bile-dim); color: var(--bile); }
+  .status-pill-interviewing { background: var(--signal-dim); color: var(--signal); }
+  .status-pill-ghosted { background: var(--blood-dim); color: var(--blood); }
+  .status-pill-rejected { background: rgba(212,34,0,0.08); color: rgba(212,34,0,0.5); }
+  .status-pill-offer { background: var(--signal-dim); color: var(--signal); font-weight: 700; }
+  .unscanned-chip { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); padding: 3px 10px; border: 1px dashed var(--border-hi); border-radius: 3px; }
+  .gs-chip { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.05em; padding: 3px 10px; border-radius: 3px; }
   .gs-low { background: var(--signal-dim); border: 1px solid rgba(0,230,122,0.2); color: var(--signal); }
   .gs-mid { background: var(--bile-dim); border: 1px solid rgba(201,154,0,0.2); color: var(--bile); }
   .gs-high { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.2); color: var(--blood); }
-  .app-notes { font-size: 12px; color: var(--muted); margin-top: 8px; font-style: italic; line-height: 1.5; }
-  .app-date { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); }
+  .app-notes { font-family: 'Libre Baskerville', serif; font-size: 11px; color: var(--muted); margin-top: 10px; font-style: italic; line-height: 1.6; }
+  .app-date { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--ghost); letter-spacing: 0.04em; }
 
   .app-controls { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .status-select { background: var(--surface2); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 5px 8px; outline: none; cursor: pointer; appearance: none; text-align: center; }
   .status-select option { background: #13131a; color: var(--paper); }
-  .status-select.status-saved { color: rgba(238,234,224,0.6); }
-  .status-select.status-applied { color: var(--ice); }
+  .status-select.status-saved { color: var(--muted); }
+  .status-select.status-applied { color: var(--bile); }
   .status-select.status-interviewing { color: var(--signal); }
-  .status-select.status-ghosted { color: var(--ghost); }
-  .status-select.status-rejected { color: var(--blood); }
-  .status-select.status-offer { color: var(--bile); }
+  .status-select.status-ghosted { color: var(--blood); }
+  .status-select.status-rejected { color: rgba(212,34,0,0.5); }
+  .status-select.status-offer { color: var(--signal); font-weight: 700; }
   .delete-btn { background: none; border: 1px solid var(--border); color: var(--ghost); font-size: 12px; width: 26px; height: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.15s, border-color 0.15s; }
   .delete-btn:hover { color: var(--blood); border-color: var(--blood); }
 
@@ -401,11 +402,11 @@ const STYLE = `
   .edit-save-btn { background: var(--blood); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 10px; padding: 4px 10px; border: none; cursor: pointer; flex-shrink: 0; }
 
   /* FOLLOW-UP DATE */
-  .followup-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-  .followup-label { font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.65); }
+  .followup-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .followup-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
   .followup-date { background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 11px; padding: 3px 8px; outline: none; cursor: pointer; }
   .followup-date:focus { border-color: var(--border-hi); }
-  .followup-due { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--bile); }
+  .followup-due { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--bile); }
   .followup-overdue { color: var(--blood); }
 
   /* EXPORT */
@@ -1630,30 +1631,42 @@ function AppCard(props) {
   var isOverdue = app.followupDate && app.followupDate < today;
   var isDueToday = app.followupDate && app.followupDate === today;
 
+  // Dynamic left accent based on ghost score
+  var accentColor = "var(--border-hi)";
+  if (app.ghostScore > 0) {
+    accentColor = app.ghostScore > 60 ? "var(--blood)" : app.ghostScore > 30 ? "var(--bile)" : "var(--signal)";
+  }
+
+  var statusSlug = app.status.toLowerCase();
+
   return (
-    <div className={"app-card status-"+app.status.toLowerCase()} onClick={function(){onClick(app);}} style={{cursor:"pointer"}}>
+    <div className="app-card" onClick={function(){onClick(app);}} style={{cursor:"pointer",borderLeftColor:accentColor}}>
       <div>
         <div className="app-title">{app.title}</div>
         <div className="app-company">{app.company}</div>
-        <div className="app-meta" style={{marginTop:6}}>
-          {app.ghostScore>0&&<span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>}
-          <span className="app-chip">{app.status}</span>
-          {app.sourceBoard&&<span className="app-chip" style={{color:"var(--muted)"}}>{app.sourceBoard}</span>}
+        <div className="app-meta">
+          {app.ghostScore>0?(
+            <span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>
+          ):(
+            <span className="unscanned-chip">UNSCANNED</span>
+          )}
+          <span className={"app-chip status-pill-"+statusSlug}>{app.status}</span>
+          {app.sourceBoard&&<span className="app-chip" style={{background:"rgba(255,255,255,0.04)",color:"var(--muted)"}}>{app.sourceBoard}</span>}
           <span className="app-date">{formatDate(app.savedAt)}</span>
         </div>
         {app.followupDate&&(
           <div className="followup-row">
             <span className="followup-label">Follow-up:</span>
-            <span className="followup-date" style={{border:"none",padding:0,background:"none"}}>{app.followupDate}</span>
+            <span style={{fontFamily:"'Space Mono',monospace",fontSize:11,color:"var(--paper)"}}>{app.followupDate}</span>
             <span className={"followup-due"+(isOverdue?" followup-overdue":"")}>
               {isOverdue?"Overdue":isDueToday?"Today!":""}
             </span>
           </div>
         )}
-        {app.notes&&<div className="app-notes" style={{marginTop:6}}>"{app.notes}"</div>}
+        {app.notes&&<div className="app-notes">"{app.notes}"</div>}
       </div>
       <div className="app-controls" onClick={function(e){e.stopPropagation();}}>
-        <span className={"status-select status-"+app.status.toLowerCase()} style={{textAlign:"center",padding:"5px 8px"}}>{app.status}</span>
+        <span className={"status-select status-"+statusSlug} style={{textAlign:"center",padding:"5px 10px",borderRadius:3}}>{app.status}</span>
       </div>
     </div>
   );
