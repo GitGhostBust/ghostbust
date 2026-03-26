@@ -139,6 +139,48 @@ const STYLE = `
   .save-search-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; }
   .save-search-btn:hover:not(:disabled) { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.25); }
   .save-search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  /* INNER TABS */
+  .inner-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); background: var(--void); margin-bottom: 24px; }
+  .inner-tab { padding: 10px 24px; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.08em; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s; }
+  .inner-tab:hover { color: var(--paper); }
+  .inner-tab.active { color: var(--blood); border-bottom-color: var(--blood); }
+  .inner-tab .tab-count { background: var(--blood-dim); padding: 1px 7px; border-radius: 8px; font-size: 11px; margin-left: 6px; }
+
+  /* SCAN HISTORY */
+  .scan-history-list { display: flex; flex-direction: column; gap: 8px; }
+  .scan-history-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer; transition: border-color 0.15s; }
+  .scan-history-item:hover { border-color: var(--border-hi); }
+  .scan-history-item.expanded { border-color: var(--border-hi); }
+  .scan-history-row { display: flex; justify-content: space-between; align-items: center; }
+  .scan-history-left { display: flex; align-items: center; gap: 12px; }
+  .scan-history-score { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; }
+  .scan-history-info { }
+  .scan-history-title { font-family: 'Bebas Neue', sans-serif; font-size: 15px; color: var(--paper); }
+  .scan-history-company { font-size: 10px; color: var(--muted); font-family: 'Libre Baskerville', serif; }
+  .scan-history-right { display: flex; align-items: center; gap: 8px; }
+  .scan-history-date { font-size: 9px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .scan-history-badge { padding: 2px 8px; border-radius: 3px; font-size: 9px; font-family: 'Space Mono', monospace; letter-spacing: 0.06em; }
+  .scan-history-badge.ghost { background: var(--blood-dim); color: var(--blood); }
+  .scan-history-badge.suspicious { background: var(--bile-dim); color: var(--bile); }
+  .scan-history-badge.legit { background: var(--signal-dim); color: var(--signal); }
+  .scan-history-detail { border-top: 1px solid var(--border); padding-top: 8px; margin-top: 8px; }
+  .scan-history-summary { font-size: 10px; color: var(--muted); font-family: 'Libre Baskerville', serif; line-height: 1.6; margin-bottom: 8px; }
+  .scan-history-flags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .scan-history-flag { padding: 2px 6px; border-radius: 3px; font-size: 8px; font-family: 'Space Mono', monospace; }
+  .scan-history-view-btn { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); color: var(--blood); padding: 6px 16px; border-radius: 4px; font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.06em; text-align: center; cursor: pointer; width: 100%; transition: background 0.15s; }
+  .scan-history-view-btn:hover { background: rgba(212,34,0,0.25); }
+  .scan-history-empty { text-align: center; padding: 48px 24px; color: var(--ghost); font-family: 'Space Mono', monospace; font-size: 12px; }
+
+  /* SCAN REPORT MODAL */
+  .scan-modal-backdrop { position: fixed; inset: 0; background: rgba(7,7,9,0.85); z-index: 8000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .scan-modal { background: var(--surface); border: 1px solid var(--border-hi); border-radius: 12px; max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .scan-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .scan-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; color: var(--paper); }
+  .scan-modal-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px; }
+  .scan-modal-close:hover { color: var(--paper); }
+  .scan-modal-body { padding: 0 16px 16px; }
+  .scan-modal-footer { border-top: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: flex-end; }
+
   .saved-searches-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
   .saved-searches-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
   .saved-search-list { display: flex; flex-direction: column; gap: 6px; }
