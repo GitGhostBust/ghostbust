@@ -278,6 +278,20 @@
 
     .footer-links a:hover { color: var(--paper); }
 
+    .phase-fine-print {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(238,234,224,0.5);
+      line-height: 1.6;
+      margin-top: 0.8rem;
+    }
+
+    .phase-fine-print a.inline-link {
+      color: var(--ice);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .roadmap-layout { padding: 2.5rem 1.5rem 4rem; }
@@ -384,13 +398,15 @@
       <ul class="phase-items">
         <li>Pro tier ($12/month) via Stripe</li>
         <li>The GhostBust Monthly newsletter</li>
-        <li>Ghost Job Index — public leaderboard by region and company</li>
+        <li>Ghost Job Index* — public leaderboard by region and company</li>
         <li>Chrome extension</li>
         <li>Ghost score history and trends on profile</li>
-        <li>User Showcase — public portfolio and work display for creatives and professionals, enabling peer networking and discovery within the GhostBust community</li>
+        <li>User Showcase* — public portfolio and work display for creatives and professionals, enabling peer networking and discovery within the GhostBust community</li>
         <li>Programmatic SEO</li>
         <li>Social auto-posting</li>
       </ul>
+      <div class="phase-fine-print">* Ghost Job Index scores are based on user-submitted scan data and community activity. GhostBust makes no guarantees regarding the accuracy or completeness of employer-specific scores.</div>
+      <div class="phase-fine-print">* User Showcase is intended for professional networking and job opportunity discovery only. Soliciting clients or selling goods and services is not permitted under GhostBust's <a href="/tos.html" class="inline-link">Terms of Service</a>.</div>
     </div>
 
     <!-- PHASE 4 -->
