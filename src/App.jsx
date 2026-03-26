@@ -141,7 +141,35 @@ const STYLE = `
   .tip-row { display: flex; gap: 10px; font-size: 13px; color: rgba(238,234,224,0.7); padding: 4px 0; line-height: 1.6; }
   .tip-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
 
-  /* SEARCH — ENHANCED */
+  /* SEARCH — COMPACT ROW */
+  .search-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .search-header-left { display: flex; align-items: center; gap: 10px; }
+  .search-header-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.06em; color: var(--paper); }
+  .search-header-ghost { opacity: 0.2; }
+  .search-board-dots { display: flex; gap: 6px; align-items: center; }
+  .search-board-dot { width: 6px; height: 6px; border-radius: 50%; }
+  .search-row { display: flex; gap: 1px; border-radius: 6px; overflow: hidden; margin-bottom: 2px; }
+  .search-row-cell { flex: 1; background: var(--surface); padding: 12px 16px; }
+  .search-row-cell.primary { flex: 1.2; }
+  .search-row-cell.narrow { flex: 0.6; }
+  .search-row-label { font-family: 'Space Mono', monospace; font-size: 7px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .search-row-label.accent { color: var(--blood); }
+  .search-row-input { background: none; border: none; color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 0; outline: none; width: 100%; }
+  .search-row-input::placeholder { color: var(--ghost); }
+  .search-row-select { background: none; border: none; color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 0; outline: none; width: 100%; appearance: none; cursor: pointer; }
+  .search-row-select option { background: var(--surface2); color: var(--paper); }
+  .search-row-btn { background: var(--blood); border: none; color: var(--paper); padding: 0 24px; cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; white-space: nowrap; transition: background 0.15s; }
+  .search-row-btn:hover:not(:disabled) { background: #e52600; }
+  .search-row-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .search-filters { display: flex; gap: 10px; align-items: center; padding: 10px 0; flex-wrap: wrap; }
+  .search-filters-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ghost); }
+  .search-filter-pill { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 0; border-radius: 3px; cursor: pointer; display: flex; align-items: center; overflow: hidden; }
+  .search-filter-pill select { background: none; border: none; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 10px; padding: 5px 12px; outline: none; appearance: none; cursor: pointer; }
+  .search-filter-pill select option { background: var(--surface2); color: var(--paper); }
+  .search-filter-pill:hover { border-color: var(--border-hi); }
+  .search-save-link { margin-left: auto; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 1px solid var(--border); transition: color 0.15s; padding: 0; }
+  .search-save-link:hover:not(:disabled) { color: var(--paper); }
+  .search-save-link:disabled { opacity: 0.4; cursor: not-allowed; }
   .search-form-actions { display: flex; gap: 10px; margin-top: 16px; }
   .search-form-actions .run-btn { flex: 1; margin-top: 0; border-radius: 4px; }
   .save-search-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; border-radius: 4px; }
@@ -453,6 +481,9 @@ const STYLE = `
     .board-grid { grid-template-columns: 1fr; }
     .tracker-stats { grid-template-columns: repeat(3, 1fr); }
     .search-grid, .two-col { grid-template-columns: 1fr; }
+    .search-row { flex-direction: column; border-radius: 6px; }
+    .search-row-btn { padding: 14px; }
+    .search-filters { gap: 8px; }
     .score-row { grid-template-columns: 1fr 1fr; }
     .page-hero { grid-template-columns: 1fr; }
     .app-card { grid-template-columns: 1fr; }
@@ -991,6 +1022,7 @@ function SearchTab({ session, addApp }) {
   try { lastSearch = JSON.parse(localStorage.getItem("ghostbust-last-search-params")); } catch(e) {}
 
   var [innerTab, setInnerTab] = useState("search");
+  var [jobTitle, setJobTitle] = useState(lastSearch&&lastSearch.jobTitle||"");
   var [industry, setIndustry] = useState(lastSearch&&lastSearch.industry||"");
   var [subfield, setSubfield] = useState(lastSearch&&lastSearch.subfield||"");
   var [jobType, setJobType] = useState(lastSearch&&lastSearch.jobType||"");
@@ -1047,7 +1079,7 @@ function SearchTab({ session, addApp }) {
     setTrackedBoards({});
     // Store last search params for pre-fill on return
     try {
-      localStorage.setItem("ghostbust-last-search-params", JSON.stringify({ industry:industry, subfield:subfield, jobType:jobType, city:city, usState:usState, radius:radius }));
+      localStorage.setItem("ghostbust-last-search-params", JSON.stringify({ jobTitle:jobTitle, industry:industry, subfield:subfield, jobType:jobType, city:city, usState:usState, radius:radius }));
     } catch(e) {}
     // Track search streak days
     try {
@@ -1062,7 +1094,7 @@ function SearchTab({ session, addApp }) {
   }
 
   function handleSearch() {
-    var q = [subfield || industry, jobType].filter(Boolean).join(" ");
+    var q = [jobTitle.trim(), subfield || industry, jobType].filter(Boolean).join(" ");
     var loc = [city.trim(), usState.trim()].filter(Boolean).join(", ");
     buildResults(q, loc, radius);
     setAiRefinement(null);
@@ -1087,7 +1119,7 @@ function SearchTab({ session, addApp }) {
   // Feature 1: Track this role
   function handleTrackRole(board) {
     if (!addApp || !results) return;
-    var title = subfield || industry || results.q || "Job";
+    var title = jobTitle.trim() || subfield || industry || results.q || "Job";
     addApp({
       title: title,
       company: "",
@@ -1108,7 +1140,7 @@ function SearchTab({ session, addApp }) {
   function handleAiRefine() {
     setAiRefining(true);
     setAiRefineError(null);
-    var q = results ? results.q : [subfield || industry, jobType].filter(Boolean).join(" ");
+    var q = results ? results.q : [jobTitle.trim(), subfield || industry, jobType].filter(Boolean).join(" ");
     var loc = results ? results.loc : [city.trim(), usState.trim()].filter(Boolean).join(", ");
     var prompt = 'You are a job search strategist. The user is searching for: "' + q + '" in "' + (loc || "USA") + '".\n\nProvide targeted search refinement as JSON with exactly these keys:\n{\n  "alternative_titles": ["title1", "title2", "title3"],\n  "board_priorities": [\n    {"board": "Indeed", "reason": "one sentence why this board suits this search"},\n    {"board": "LinkedIn", "reason": "..."},\n    {"board": "Wellfound", "reason": "..."}\n  ],\n  "search_tips": ["tip1", "tip2", "tip3"]\n}\n\nalternative_titles: 3 related job titles that often yield hidden results for this role.\nboard_priorities: top 3 boards for this specific query and location with a brief reason each.\nsearch_tips: 3 specific actionable tips for this exact role and location — not generic advice.\n\nReturn only the JSON object.';
     apiCall([{ role: "user", content: prompt }], session?.access_token)
@@ -1131,9 +1163,9 @@ function SearchTab({ session, addApp }) {
   function handleSaveSearch() {
     if (!userId || !canSearch) return;
     setSaving(true);
-    var q = [subfield || industry, jobType].filter(Boolean).join(" ");
+    var q = [jobTitle.trim(), subfield || industry, jobType].filter(Boolean).join(" ");
     var loc = [city.trim(), usState.trim()].filter(Boolean).join(", ");
-    var label = [subfield || industry, jobType, loc].filter(Boolean).join(" · ") || "Search";
+    var label = [jobTitle.trim() || subfield || industry, jobType, loc].filter(Boolean).join(" · ") || "Search";
     supabase.from("saved_searches").insert({
       user_id: userId,
       label: label,
@@ -1169,7 +1201,7 @@ function SearchTab({ session, addApp }) {
     setSavedSearches(function(prev) { return prev.filter(function(s) { return s.id !== id; }); });
   }
 
-  var canSearch = industry.length > 0 || city.length > 0 || usState.length > 0 || jobType.length > 0;
+  var canSearch = jobTitle.trim().length > 0 || industry.length > 0 || city.length > 0 || usState.length > 0 || jobType.length > 0;
 
   return (
     <div className="panel">
@@ -1181,7 +1213,7 @@ function SearchTab({ session, addApp }) {
       </div>
 
       {innerTab==="search"&&<>
-      <div className="search-intro">Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired — <strong>searched and saved all at once.</strong></div>
+      <div className="tab-intro">Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired — <strong>searched and saved all at once.</strong></div>
 
       {streak>0&&(
         <div className="search-streak">
@@ -1197,60 +1229,64 @@ function SearchTab({ session, addApp }) {
         </div>
       )}
 
-      <div className="form-box green-top">
-        <span className="form-label green">Find Real Jobs — Search All Major Boards</span>
-        <div className="search-grid">
-          <div>
-            <label className="field-label">Industry</label>
-            <select className="f-input" value={industry} onChange={handleIndustryChange}>
-              <option value="">Any Industry</option>
-              {Object.keys(INDUSTRY_MAP).map(function(ind) { return <option key={ind} value={ind}>{ind}</option>; })}
-            </select>
-          </div>
-          <div>
-            <label className="field-label" style={{ color: subfields.length > 0 ? "var(--paper)" : "var(--ghost)" }}>
-              Specialisation {subfields.length === 0 ? "— select an industry first" : ""}
-            </label>
-            <select className="f-input" value={subfield} onChange={function(e) { setSubfield(e.target.value); }} disabled={subfields.length === 0}>
-              <option value="">All {industry || "fields"}</option>
-              {subfields.map(function(s) { return <option key={s} value={s}>{s}</option>; })}
-            </select>
-          </div>
-          <div>
-            <label className="field-label">Job Type</label>
-            <select className="f-input" value={jobType} onChange={function(e) { setJobType(e.target.value); }}>
-              <option value="">Any</option>
-              <option>Full-time</option><option>Part-time</option><option>Contract</option><option>Remote</option>
-            </select>
-          </div>
-          <div>
-            <label className="field-label">City</label>
-            <input className="f-input" placeholder="e.g. San Francisco, Austin" value={city} onChange={function(e) { setCity(e.target.value); }} />
-          </div>
-          <div>
-            <label className="field-label">State</label>
-            <input className="f-input" placeholder="e.g. California, TX" value={usState} onChange={function(e) { setUsState(e.target.value); }} />
-          </div>
-          <div>
-            <label className="field-label">Distance</label>
-            <select className="f-input" value={radius} onChange={function(e) { setRadius(e.target.value); }}>
-              <option value="5">Within 5 miles</option>
-              <option value="10">Within 10 miles</option>
-              <option value="25">Within 25 miles</option>
-              <option value="50">Within 50 miles</option>
-              <option value="100">Within 100 miles</option>
-            </select>
-          </div>
+      <div className="search-header">
+        <div className="search-header-left">
+          <svg className="search-header-ghost" width="18" height="18" viewBox="0 0 32 32"><path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.25"/><circle cx="13" cy="14" r="2" fill="#d42200" opacity="0.4"/><circle cx="19" cy="14" r="2" fill="#d42200" opacity="0.4"/></svg>
+          <span className="search-header-title">MULTI-BOARD SEARCH</span>
         </div>
-        <div className="search-form-actions">
-          <button className="run-btn green" onClick={handleSearch} disabled={!canSearch}>GENERATE SEARCH LINKS</button>
-          {userId && (
-            <button className="save-search-btn" onClick={handleSaveSearch} disabled={saving || !canSearch} title="Save this search for quick reuse">
-              {saving ? "SAVING..." : "SAVE SEARCH"}
-            </button>
-          )}
+        <div className="search-board-dots">
+          <span className="search-board-dot" style={{background:"#2557a7"}} title="Indeed" />
+          <span className="search-board-dot" style={{background:"#0a66c2"}} title="LinkedIn" />
+          <span className="search-board-dot" style={{background:"#4a90d9"}} title="ZipRecruiter" />
+          <span className="search-board-dot" style={{background:"#ff6154"}} title="Wellfound" />
+          <span className="search-board-dot" style={{background:"#6e44ff"}} title="Monster" />
+          <span className="search-board-dot" style={{background:"#ff6b35"}} title="SimplyHired" />
         </div>
+      </div>
 
+      <div className="search-row">
+        <div className="search-row-cell primary">
+          <div className="search-row-label accent">Job Title</div>
+          <input className="search-row-input" placeholder="e.g. Software Engineer" value={jobTitle} onChange={function(e){setJobTitle(e.target.value);}} />
+        </div>
+        <div className="search-row-cell">
+          <div className="search-row-label">Industry</div>
+          <select className="search-row-select" value={industry} onChange={handleIndustryChange}>
+            <option value="">Any Industry</option>
+            {Object.keys(INDUSTRY_MAP).map(function(ind) { return <option key={ind} value={ind}>{ind}</option>; })}
+          </select>
+        </div>
+        <div className="search-row-cell">
+          <div className="search-row-label">City</div>
+          <input className="search-row-input" placeholder="e.g. Austin" value={city} onChange={function(e){setCity(e.target.value);}} />
+        </div>
+        <div className="search-row-cell narrow">
+          <div className="search-row-label">State</div>
+          <input className="search-row-input" placeholder="e.g. TX" value={usState} onChange={function(e){setUsState(e.target.value);}} />
+        </div>
+        <button className="search-row-btn" onClick={handleSearch} disabled={!canSearch}>SEARCH →</button>
+      </div>
+
+      <div className="search-filters">
+        <span className="search-filters-label">Filters:</span>
+        <span className="search-filter-pill">
+          <select value={subfield} onChange={function(e){setSubfield(e.target.value);}} disabled={subfields.length===0}>
+            <option value="">{subfields.length>0?"Specialisation ▾":"Specialisation"}</option>
+            {subfields.map(function(s){return <option key={s} value={s}>{s}</option>;})}
+          </select>
+        </span>
+        <span className="search-filter-pill">
+          <select value={jobType} onChange={function(e){setJobType(e.target.value);}}>
+            <option value="">Job Type ▾</option>
+            <option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Remote">Remote</option>
+          </select>
+        </span>
+        <span className="search-filter-pill">
+          <select value={radius} onChange={function(e){setRadius(e.target.value);}}>
+            <option value="5">5 miles</option><option value="10">10 miles</option><option value="25">25 miles</option><option value="50">50 miles</option><option value="100">100 miles</option>
+          </select>
+        </span>
+        {userId&&<button className="search-save-link" onClick={handleSaveSearch} disabled={saving||!canSearch}>{saving?"Saving...":"Save Search"}</button>}
       </div>
 
       {results && (
