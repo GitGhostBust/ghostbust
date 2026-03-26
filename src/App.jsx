@@ -52,6 +52,7 @@ const STYLE = `
   .page-hero-ghost { flex-shrink: 0; opacity: 0.7; }
   .page-hero-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 5vw, 42px); line-height: 0.94; letter-spacing: 0.03em; color: var(--paper); }
   .page-hero-heading em { color: var(--blood); font-style: normal; }
+  .page-hero-desc { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.03em; line-height: 1.6; margin-top: 10px; }
   .page-hero-back { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; border: 1px solid var(--border); padding: 5px 10px; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
   .page-hero-back:hover { color: var(--paper); border-color: var(--border-hi); }
 
@@ -2413,6 +2414,7 @@ export default function App() {
               GHOSTBUST APP
             </div>
             <h1 className="page-hero-heading">Built For A <em>Broken Market.</em></h1>
+            <p className="page-hero-desc">AI-powered ghost detection, job tracking, and career intelligence. One platform.</p>
           </div>
           <a href="/" className="page-hero-back">← GHOSTBUST.US</a>
         </div>

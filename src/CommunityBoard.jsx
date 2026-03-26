@@ -14,6 +14,7 @@ const STYLE = `
   .page-hero-ghost { flex-shrink: 0; opacity: 0.7; }
   .page-hero-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 5vw, 42px); line-height: 0.94; letter-spacing: 0.03em; color: var(--paper); }
   .page-hero-heading em { color: var(--blood); font-style: normal; }
+  .page-hero-desc { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.03em; line-height: 1.6; margin-top: 10px; }
   .cb-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
   .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px 28px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .cb-new-btn:hover { background: #e52600; }
@@ -548,6 +549,7 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
             COMMUNITY BOARD
           </div>
           <h1 className="page-hero-heading">Real People. <em>Real Experiences.</em></h1>
+          <p className="page-hero-desc">What the job market actually looks like — from the people in it.</p>
         </div>
         <div className="cb-hero-right">
           {session ? (
