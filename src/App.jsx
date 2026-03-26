@@ -184,6 +184,42 @@ const STYLE = `
   .scan-modal-save-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 6px 14px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 10px; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
   .scan-modal-save-btn:hover { color: var(--paper); border-color: var(--border-hi); }
 
+  /* APP DETAIL MODAL */
+  .adm-backdrop { position: fixed; inset: 0; background: rgba(7,7,9,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .adm { background: var(--surface); border: 1px solid var(--border-hi); border-radius: 12px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .adm-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .adm-header-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 0.06em; color: var(--paper); }
+  .adm-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; padding: 4px; }
+  .adm-close:hover { color: var(--paper); }
+  .adm-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .adm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .adm-field { display: flex; flex-direction: column; gap: 4px; }
+  .adm-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .adm-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 8px 10px; outline: none; transition: border-color 0.2s; border-radius: 2px; }
+  .adm-input:focus { border-color: var(--blood); }
+  .adm-input::placeholder { color: var(--ghost); }
+  .adm-select { background: var(--surface2); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 8px 10px; outline: none; cursor: pointer; appearance: none; border-radius: 2px; }
+  .adm-select option { background: #13131a; color: var(--paper); }
+  .adm-textarea { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 8px 10px; outline: none; resize: vertical; min-height: 80px; line-height: 1.6; transition: border-color 0.2s; border-radius: 2px; }
+  .adm-textarea:focus { border-color: var(--blood); }
+  .adm-textarea::placeholder { color: var(--ghost); }
+  .adm-ghost-badge { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; }
+  .adm-ghost-score { font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
+  .adm-ghost-meta { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+  .adm-ghost-verdict { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 3px; display: inline-block; margin-top: 3px; }
+  .adm-action-btn { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.06em; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: background 0.15s; text-align: center; border: none; }
+  .adm-scan-btn { background: var(--blood-dim); border: 1px solid rgba(212,34,0,0.3); color: var(--blood); }
+  .adm-scan-btn:hover { background: rgba(212,34,0,0.25); }
+  .adm-career-btn { background: var(--ice-dim); border: 1px solid rgba(0,200,230,0.2); color: var(--ice); }
+  .adm-career-btn:hover { background: rgba(0,200,230,0.18); }
+  .adm-footer { border-top: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .adm-save-btn { background: var(--blood); color: var(--paper); font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 0.06em; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; transition: background 0.15s; }
+  .adm-save-btn:hover { background: #e82800; }
+  .adm-delete-btn { background: none; border: 1px solid var(--border); color: var(--ghost); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 8px 14px; border-radius: 4px; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+  .adm-delete-btn:hover { color: var(--blood); border-color: var(--blood); }
+  .adm-actions-row { display: flex; gap: 8px; }
+  @media (max-width: 600px) { .adm-row { grid-template-columns: 1fr; } }
+
   .saved-searches-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
   .saved-searches-title { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ghost); margin-bottom: 10px; }
   .saved-search-list { display: flex; flex-direction: column; gap: 6px; }
@@ -1313,6 +1349,7 @@ function VerifyTab(props) {
   var addApp = props.addApp;
   var onSaved = props.onSaved;
   var session = props.session;
+  var initialPrefill = props.prefill;
 
   var [innerTab, setInnerTab] = useState("scan");
   var [scans, setScans] = useState([]);
@@ -1320,9 +1357,9 @@ function VerifyTab(props) {
   var [expandedScan, setExpandedScan] = useState(null);
   var [modalScan, setModalScan] = useState(null);
 
-  var [text,setText] = useState("");
-  var [company,setCompany] = useState("");
-  var [jobTitle,setJobTitle] = useState("");
+  var [text,setText] = useState(initialPrefill&&initialPrefill.url?initialPrefill.url:"");
+  var [company,setCompany] = useState(initialPrefill&&initialPrefill.company?initialPrefill.company:"");
+  var [jobTitle,setJobTitle] = useState(initialPrefill&&initialPrefill.title?initialPrefill.title:"");
   var [age,setAge] = useState("");
   var [sourceBoard,setSourceBoard] = useState("");
   var [loading,setLoading] = useState(false);
@@ -1587,83 +1624,192 @@ function VerifyTab(props) {
 ================================================================ */
 function AppCard(props) {
   var app = props.app;
-  var onUpdate = props.onUpdate;
-  var onDelete = props.onDelete;
-  var [editingNotes,setEditingNotes] = useState(false);
-  var [notes,setNotes] = useState(app.notes||"");
-  var [editingTitle,setEditingTitle] = useState(false);
-  var [editTitle,setEditTitle] = useState(app.title||"");
-  var [editCompany,setEditCompany] = useState(app.company||"");
-
-  function handleStatusChange(e) {
-    onUpdate(app.id, {status:e.target.value, updatedAt:Date.now()});
-  }
-  function saveNotes() {
-    onUpdate(app.id, {notes:notes, updatedAt:Date.now()});
-    setEditingNotes(false);
-  }
-  function saveTitleCompany() {
-    onUpdate(app.id, {title:editTitle||"Untitled Role", company:editCompany||"Unknown", updatedAt:Date.now()});
-    setEditingTitle(false);
-  }
-  function handleFollowup(e) {
-    onUpdate(app.id, {followupDate:e.target.value, updatedAt:Date.now()});
-  }
+  var onClick = props.onClick;
 
   var today = new Date().toISOString().slice(0,10);
   var isOverdue = app.followupDate && app.followupDate < today;
   var isDueToday = app.followupDate && app.followupDate === today;
 
   return (
-    <div className={"app-card status-"+app.status.toLowerCase()}>
+    <div className={"app-card status-"+app.status.toLowerCase()} onClick={function(){onClick(app);}} style={{cursor:"pointer"}}>
       <div>
-        {editingTitle?(
-          <div className="edit-inline" style={{marginBottom:6}}>
-            <input value={editTitle} onChange={function(e){setEditTitle(e.target.value);}} placeholder="Job title" onKeyDown={function(e){if(e.key==="Enter")saveTitleCompany();if(e.key==="Escape")setEditingTitle(false);}} autoFocus />
-            <input value={editCompany} onChange={function(e){setEditCompany(e.target.value);}} placeholder="Company" onKeyDown={function(e){if(e.key==="Enter")saveTitleCompany();}} />
-            <button className="edit-save-btn" onClick={saveTitleCompany}>Save</button>
-          </div>
-        ):(
-          <div style={{cursor:"pointer"}} onClick={function(){setEditingTitle(true);}}>
-            <div className="app-title">{app.title} <span style={{opacity:0.25,fontSize:10}}>✎</span></div>
-            <div className="app-company">{app.company}</div>
-          </div>
-        )}
+        <div className="app-title">{app.title}</div>
+        <div className="app-company">{app.company}</div>
         <div className="app-meta" style={{marginTop:6}}>
-          <span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>
-          <span className="app-chip">{app.verdict}</span>
+          {app.ghostScore>0&&<span className={gsChipClass(app.ghostScore)}>Ghost: {app.ghostScore}</span>}
           <span className="app-chip">{app.status}</span>
           {app.sourceBoard&&<span className="app-chip" style={{color:"var(--muted)"}}>{app.sourceBoard}</span>}
           <span className="app-date">{formatDate(app.savedAt)}</span>
         </div>
-        <div className="followup-row">
-          <span className="followup-label">Follow-up:</span>
-          <input type="date" className="followup-date" value={app.followupDate||""} onChange={handleFollowup} />
-          {app.followupDate&&(
+        {app.followupDate&&(
+          <div className="followup-row">
+            <span className="followup-label">Follow-up:</span>
+            <span className="followup-date" style={{border:"none",padding:0,background:"none"}}>{app.followupDate}</span>
             <span className={"followup-due"+(isOverdue?" followup-overdue":"")}>
-              {isOverdue?"⚠ Overdue":isDueToday?"📅 Today!":""}
+              {isOverdue?"Overdue":isDueToday?"Today!":""}
             </span>
-          )}
-        </div>
-        {app.notes&&!editingNotes&&(
-          <div className="app-notes" onClick={function(){setEditingNotes(true);}} style={{cursor:"pointer",marginTop:6}}>"{app.notes}" <span style={{opacity:0.35,fontSize:10}}>(edit)</span></div>
-        )}
-        {editingNotes?(
-          <div style={{display:"flex",gap:6,marginTop:6}}>
-            <input className="notes-input" placeholder="Notes..." value={notes} onChange={function(e){setNotes(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")saveNotes();if(e.key==="Escape")setEditingNotes(false);}} autoFocus />
-            <button className="small-btn" onClick={saveNotes} style={{flexShrink:0}}>Save</button>
           </div>
-        ):(
-          !app.notes&&<div style={{marginTop:5}}><button className="small-btn" style={{fontSize:8}} onClick={function(){setEditingNotes(true);}}>+ Add notes</button></div>
         )}
+        {app.notes&&<div className="app-notes" style={{marginTop:6}}>"{app.notes}"</div>}
       </div>
-      <div className="app-controls">
-        <select className={"status-select status-"+app.status.toLowerCase()} value={app.status} onChange={handleStatusChange}>
-          {STATUSES.map(function(s){return <option key={s}>{s}</option>;})}
-        </select>
-        <button className="delete-btn" onClick={function(){onDelete(app.id);}} title="Remove">✕</button>
+      <div className="app-controls" onClick={function(e){e.stopPropagation();}}>
+        <span className={"status-select status-"+app.status.toLowerCase()} style={{textAlign:"center",padding:"5px 8px"}}>{app.status}</span>
       </div>
     </div>
+  );
+}
+
+function AppDetailModal(props) {
+  var app = props.app;
+  var onUpdate = props.onUpdate;
+  var onDelete = props.onDelete;
+  var onClose = props.onClose;
+  var onNavigate = props.onNavigate;
+
+  var [title, setTitle] = useState(app.title||"");
+  var [company, setCompany] = useState(app.company||"");
+  var [status, setStatus] = useState(app.status||"Researching");
+  var [sourceBoard, setSourceBoard] = useState(app.sourceBoard||"");
+  var [url, setUrl] = useState(app.url||"");
+  var [notes, setNotes] = useState(app.notes||"");
+  var [followupDate, setFollowupDate] = useState(app.followupDate||"");
+  var [appliedDate, setAppliedDate] = useState(app.appliedDate||"");
+  var [dirty, setDirty] = useState(false);
+
+  useEffect(function(){
+    function handleKey(e){ if(e.key==="Escape") onClose(); }
+    document.addEventListener("keydown", handleKey);
+    return function(){ document.removeEventListener("keydown", handleKey); };
+  },[onClose]);
+
+  function markDirty(setter) {
+    return function(e) { setter(e.target.value); setDirty(true); };
+  }
+
+  function handleSave() {
+    onUpdate(app.id, {
+      title: title||"Untitled Role",
+      company: company||"Unknown",
+      status: status,
+      sourceBoard: sourceBoard,
+      url: url,
+      notes: notes,
+      followupDate: followupDate||null,
+      appliedDate: appliedDate||null,
+      updatedAt: Date.now(),
+    });
+    setDirty(false);
+    onClose();
+  }
+
+  function handleDelete() {
+    onDelete(app.id);
+    onClose();
+  }
+
+  function handleGhostScan() {
+    var prefill = { title: title, company: company };
+    if (url) prefill.url = url;
+    onNavigate("verify", prefill);
+    onClose();
+  }
+
+  function handleCareerHQ() {
+    var prefill = { title: title, company: company };
+    if (url) prefill.url = url;
+    onNavigate("resume", prefill);
+    onClose();
+  }
+
+  var ghostScoreColor = app.ghostScore > 60 ? "var(--blood)" : app.ghostScore > 35 ? "var(--bile)" : "var(--signal)";
+  var verdictColor = (app.verdict||"").toUpperCase() === "GHOST" ? "var(--blood)" : (app.verdict||"").toUpperCase() === "SUSPICIOUS" ? "var(--bile)" : "var(--signal)";
+  var verdictBg = (app.verdict||"").toUpperCase() === "GHOST" ? "var(--blood-dim)" : (app.verdict||"").toUpperCase() === "SUSPICIOUS" ? "var(--bile-dim)" : "var(--signal-dim)";
+
+  return createPortal(
+    <div className="adm-backdrop" onClick={onClose}>
+      <div className="adm" onClick={function(e){e.stopPropagation();}}>
+        <div className="adm-header">
+          <span className="adm-header-title">APPLICATION DETAILS</span>
+          <button className="adm-close" onClick={onClose}>&times;</button>
+        </div>
+        <div className="adm-body">
+          <div className="adm-row">
+            <div className="adm-field">
+              <label className="adm-label">Job Title</label>
+              <input className="adm-input" value={title} onChange={markDirty(setTitle)} placeholder="Job title" />
+            </div>
+            <div className="adm-field">
+              <label className="adm-label">Company</label>
+              <input className="adm-input" value={company} onChange={markDirty(setCompany)} placeholder="Company name" />
+            </div>
+          </div>
+          <div className="adm-row">
+            <div className="adm-field">
+              <label className="adm-label">Status</label>
+              <select className="adm-select" value={status} onChange={markDirty(setStatus)}>
+                {STATUSES.map(function(s){return <option key={s}>{s}</option>;})}
+              </select>
+            </div>
+            <div className="adm-field">
+              <label className="adm-label">Source</label>
+              <select className="adm-select" value={sourceBoard} onChange={markDirty(setSourceBoard)}>
+                <option value="">Select board...</option>
+                <option>Indeed</option>
+                <option>LinkedIn</option>
+                <option>Wellfound</option>
+                <option>ZipRecruiter</option>
+                <option>Monster</option>
+                <option>SimplyHired</option>
+                <option>Company Website</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div className="adm-row">
+            <div className="adm-field">
+              <label className="adm-label">Date Added</label>
+              <input type="date" className="adm-input" value={appliedDate} onChange={markDirty(setAppliedDate)} />
+            </div>
+            <div className="adm-field">
+              <label className="adm-label">Follow-up Date</label>
+              <input type="date" className="adm-input" value={followupDate} onChange={markDirty(setFollowupDate)} />
+            </div>
+          </div>
+          <div className="adm-field">
+            <label className="adm-label">Job Posting URL</label>
+            <input className="adm-input" value={url} onChange={markDirty(setUrl)} placeholder="https://..." />
+          </div>
+          <div className="adm-field">
+            <label className="adm-label">Notes</label>
+            <textarea className="adm-textarea" value={notes} onChange={markDirty(setNotes)} placeholder="Recruiter name, salary discussed, anything relevant..." />
+          </div>
+
+          {app.ghostScore>0?(
+            <div className="adm-ghost-badge">
+              <div className="adm-ghost-score" style={{color:ghostScoreColor}}>{app.ghostScore}</div>
+              <div>
+                <div className="adm-ghost-meta">GHOST SCORE</div>
+                {app.verdict&&app.verdict!=="UNKNOWN"&&(
+                  <span className="adm-ghost-verdict" style={{color:verdictColor,background:verdictBg}}>{app.verdict}</span>
+                )}
+              </div>
+            </div>
+          ):(
+            <button className="adm-action-btn adm-scan-btn" onClick={handleGhostScan}>RUN GHOST SCAN</button>
+          )}
+
+          <div className="adm-actions-row">
+            {app.ghostScore>0&&<button className="adm-action-btn adm-scan-btn" onClick={handleGhostScan} style={{flex:1}}>RE-SCAN</button>}
+            <button className="adm-action-btn adm-career-btn" onClick={handleCareerHQ} style={{flex:1}}>ANALYZE IN CAREER HQ</button>
+          </div>
+        </div>
+        <div className="adm-footer">
+          <button className="adm-delete-btn" onClick={handleDelete}>DELETE</button>
+          <button className="adm-save-btn" onClick={handleSave}>{dirty?"SAVE CHANGES":"CLOSE"}</button>
+        </div>
+      </div>
+    </div>,
+    document.body
   );
 }
 
@@ -1759,7 +1905,9 @@ function TrackerTab(props) {
   var onDelete = props.onDelete;
   var onClear = props.onClear;
   var addApp = props.addApp;
+  var onNavigate = props.onNavigate;
   var [subTab,setSubTab] = useState("prospects");
+  var [modalApp,setModalApp] = useState(null);
   var [filter,setFilter] = useState("All");
   var [showAdd,setShowAdd] = useState(false);
   var [showReport,setShowReport] = useState(false);
@@ -1964,8 +2112,10 @@ function TrackerTab(props) {
       )}
 
       {filtered.map(function(app){
-        return <AppCard key={app.id} app={app} onUpdate={onUpdate} onDelete={onDelete} />;
+        return <AppCard key={app.id} app={app} onClick={function(a){setModalApp(a);}} />;
       })}
+
+      {modalApp&&<AppDetailModal app={modalApp} onUpdate={onUpdate} onDelete={onDelete} onClose={function(){setModalApp(null);}} onNavigate={onNavigate} />}
     </div>
   );
 }
@@ -2127,6 +2277,7 @@ export default function App() {
       });
   },[session]);
   var [tab,setTab] = useState("search");
+  var [prefill,setPrefill] = useState(null);
   var storage = useApplications(session);
 
   // Handle one-click status updates from nudge emails (?tab=tracker&appId=xxx&markAs=Ghosted).
@@ -2227,17 +2378,17 @@ export default function App() {
         )}
 
         <nav className="tabs">
-          <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setTab("search");}}>
+          <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setPrefill(null);setTab("search");}}>
             Find Jobs
           </button>
-          <button className={"tab-btn"+(tab==="verify"?" active":"")} onClick={function(){setTab("verify");}}>
+          <button className={"tab-btn"+(tab==="verify"?" active":"")} onClick={function(){setPrefill(null);setTab("verify");}}>
             Ghost Detector
           </button>
-          <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setTab("tracker");}}>
+          <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setPrefill(null);setTab("tracker");}}>
             Application Tracker
             {trackerCount>0&&<span className={"tab-badge"+(activeCount>0?" green":"")}>{activeCount>0?activeCount:trackerCount}</span>}
           </button>
-          <button className={"tab-btn"+(tab==="resume"?" active":"")} onClick={function(){setTab("resume");}}>
+          <button className={"tab-btn"+(tab==="resume"?" active":"")} onClick={function(){setPrefill(null);setTab("resume");}}>
             Career HQ
           </button>
           <span style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
@@ -2250,9 +2401,9 @@ export default function App() {
 
         <div style={{maxWidth:1280,margin:"0 auto",width:"100%"}}>
           {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
-          {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} session={session} />}
-          {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} />}
-          {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} />}
+          {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} session={session} prefill={tab==="verify"?prefill:null} />}
+          {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} onNavigate={function(t,pf){setPrefill(pf);setTab(t);}} />}
+          {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} prefill={tab==="resume"?prefill:null} />}
         </div>
         <footer className="footer">
           <span>GhostBust</span>

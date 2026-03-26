@@ -819,7 +819,7 @@ function ComprehensiveResults({ data, onCopy, copied, onShowCLForm, showCLForm, 
 /* ================================================================
    MAIN COMPONENT
 ================================================================ */
-export default function ResumeAdvisor({ session, onRequestSignIn }) {
+export default function ResumeAdvisor({ session, onRequestSignIn, prefill }) {
   var [isPro, setIsPro] = useState(null);
   var [isAdmin, setIsAdmin] = useState(false);
   var [resumes, setResumes] = useState([]);
@@ -827,8 +827,8 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [expandedId, setExpandedId] = useState(null); // which card is showing preview
   var [uploading, setUploading] = useState(false);
   var [uploadError, setUploadError] = useState(null);
-  var [innerTab, setInnerTab] = useState("manager");
-  var [jobText, setJobText] = useState("");
+  var [innerTab, setInnerTab] = useState(prefill?"advisor":"manager");
+  var [jobText, setJobText] = useState(prefill&&prefill.url?prefill.url:"");
   var [analyzing, setAnalyzing] = useState(false);
   var [result, setResult] = useState(null);
   var [analysisError, setAnalysisError] = useState(null);
@@ -839,7 +839,7 @@ export default function ResumeAdvisor({ session, onRequestSignIn }) {
   var [previewContent, setPreviewContent] = useState(null); // { type:"pdf", url } | { type:"docx", html }
   var [previewLoading, setPreviewLoading] = useState(false);
   // Advisor mode
-  var [advisorMode, setAdvisorMode] = useState("general"); // "general" | "job_specific"
+  var [advisorMode, setAdvisorMode] = useState(prefill?"job_specific":"general"); // "general" | "job_specific"
   var [userProfile, setUserProfile] = useState(null);
   var [showCLForm, setShowCLForm] = useState(false);
   var [clJobTitle, setCLJobTitle] = useState("");
