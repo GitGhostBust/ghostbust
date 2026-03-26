@@ -1309,6 +1309,12 @@ function VerifyTab(props) {
   var onSaved = props.onSaved;
   var session = props.session;
 
+  var [innerTab, setInnerTab] = useState("scan");
+  var [scans, setScans] = useState([]);
+  var [scansLoading, setScansLoading] = useState(false);
+  var [expandedScan, setExpandedScan] = useState(null);
+  var [modalScan, setModalScan] = useState(null);
+
   var [text,setText] = useState("");
   var [company,setCompany] = useState("");
   var [jobTitle,setJobTitle] = useState("");
@@ -1327,6 +1333,30 @@ function VerifyTab(props) {
     if (result&&resultRef.current) resultRef.current.scrollIntoView({behavior:"smooth"});
   },[result]);
 
+  useEffect(function(){
+    if (!session) { setScans([]); return; }
+    setScansLoading(true);
+    supabase.from("ghost_scans")
+      .select("id, title, company, job_board, ghost_score, signal_flags, assessment, scores, confidence, summary, created_at")
+      .eq("user_id", session.user.id)
+      .order("created_at", { ascending: false })
+      .limit(50)
+      .then(function(res){
+        setScans(res.data || []);
+        setScansLoading(false);
+      })
+      .catch(function(){
+        setScansLoading(false);
+      });
+  },[session]);
+
+  useEffect(function(){
+    if (!modalScan) return;
+    function handleKey(e){ if(e.key==="Escape") setModalScan(null); }
+    document.addEventListener("keydown", handleKey);
+    return function(){ document.removeEventListener("keydown", handleKey); };
+  },[modalScan]);
+
   function analyze() {
     setLoading(true); setResult(null); setError(null); setSaved(false); setScanId(null); setStep(0);
     var iv = setInterval(function(){setStep(function(s){return Math.min(s+1,VERIFY_STEPS.length-1);});},700);
@@ -1335,7 +1365,7 @@ function VerifyTab(props) {
       .then(function(raw){
         clearInterval(iv); setStep(VERIFY_STEPS.length-1);
         var parsed = parseJSON(raw);
-        setResult(parsed); try { var anonId = localStorage.getItem("gb_anon_id"); if (!anonId) { anonId = Math.random().toString(36).slice(2); localStorage.setItem("gb_anon_id", anonId); } import("./supabase.js").then(function(m){ m.supabase.from("ghost_scans").insert({ anon_id: anonId, company: company||null, title: jobTitle||null, job_board: sourceBoard||null, ghost_score: parsed.ghostScore||0, signal_flags: parsed.flags||[], assessment: parsed.verdict||null, scores: parsed.scores||null, confidence: parsed.confidence||null, summary: parsed.summary||null }).select("id").single().then(function(res){ if (res.data&&res.data.id) setScanId(res.data.id); }).catch(function(){}); }); } catch(e) {}
+        setResult(parsed); try { var anonId = localStorage.getItem("gb_anon_id"); if (!anonId) { anonId = Math.random().toString(36).slice(2); localStorage.setItem("gb_anon_id", anonId); } import("./supabase.js").then(function(m){ m.supabase.from("ghost_scans").insert({ anon_id: anonId, user_id: session?.user?.id||null, company: company||null, title: jobTitle||null, job_board: sourceBoard||null, ghost_score: parsed.ghostScore||0, signal_flags: parsed.flags||[], assessment: parsed.verdict||null, scores: parsed.scores||null, confidence: parsed.confidence||null, summary: parsed.summary||null }).select("id, title, company, job_board, ghost_score, signal_flags, assessment, scores, confidence, summary, created_at").single().then(function(res){ if (res.data&&res.data.id) { setScanId(res.data.id); setScans(function(prev){ return [res.data].concat(prev); }); } }).catch(function(){}); }); } catch(e) {}
         setLoading(false); setStep(-1);
       })
       .catch(function(err){
@@ -1370,8 +1400,40 @@ function VerifyTab(props) {
     if (onSaved) onSaved();
   }
 
+  function buildResultFromScan(scan) {
+    return {
+      verdict: scan.assessment,
+      ghostScore: scan.ghost_score,
+      scores: scan.scores || {},
+      confidence: scan.confidence,
+      summary: scan.summary,
+      flags: scan.signal_flags || [],
+      actionTips: [],
+    };
+  }
+
+  function formatScanDate(ts) {
+    if (!ts) return "";
+    var d = new Date(ts);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
+
+  function verdictBadgeClass(assessment) {
+    if (assessment === "GHOST") return "scan-history-badge ghost";
+    if (assessment === "SUSPICIOUS") return "scan-history-badge suspicious";
+    return "scan-history-badge legit";
+  }
+
   return (
     <div className="panel">
+      <div className="inner-tabs">
+        <button className={"inner-tab"+(innerTab==="scan"?" active":"")} onClick={function(){setInnerTab("scan");}}>Scan</button>
+        <button className={"inner-tab"+(innerTab==="history"?" active":"")} onClick={function(){setInnerTab("history");}}>
+          History{scans.length>0&&<span className="tab-count">{scans.length}</span>}
+        </button>
+      </div>
+
+      {innerTab==="scan"&&<>
       <div className="form-box red-top">
         <span className="form-label red">Ghost Detector — Full Listing Analysis</span>
         <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid var(--border)",padding:"14px 16px",marginBottom:18}}>
@@ -1438,6 +1500,74 @@ function VerifyTab(props) {
             ):(
               <div className="save-success">✓ Saved to tracker as <strong>Researching</strong>. Switch to the Application Tracker tab to update status.</div>
             )}
+          </div>
+        </div>
+      )}
+      </>}
+
+      {innerTab==="history"&&(
+        <div>
+          {!session?(
+            <div className="scan-history-empty">Sign in to view your scan history.</div>
+          ):scansLoading?(
+            <div className="scan-history-empty">Loading history...</div>
+          ):scans.length===0?(
+            <div className="scan-history-empty">No scans yet. Use the Scan tab to analyze a job listing.</div>
+          ):(
+            <div className="scan-history-list">
+              {scans.map(function(scan){
+                var isExpanded = expandedScan === scan.id;
+                return (
+                  <div key={scan.id} className={"scan-history-item"+(isExpanded?" expanded":"")} onClick={function(){ setExpandedScan(isExpanded?null:scan.id); }}>
+                    <div className="scan-history-row">
+                      <div className="scan-history-left">
+                        <span className={"scan-history-score "+gsColor(scan.ghost_score||0)}>{scan.ghost_score||0}</span>
+                        <div className="scan-history-info">
+                          <div className="scan-history-title">{scan.title||"Untitled"}</div>
+                          <div className="scan-history-company">{scan.company||"Unknown company"}</div>
+                        </div>
+                      </div>
+                      <div className="scan-history-right">
+                        <span className="scan-history-date">{formatScanDate(scan.created_at)}</span>
+                        <span className={verdictBadgeClass(scan.assessment)}>{scan.assessment||"UNKNOWN"}</span>
+                      </div>
+                    </div>
+                    {isExpanded&&(
+                      <div className="scan-history-detail">
+                        <div className="scan-history-summary">{scan.summary||"No summary available."}</div>
+                        {scan.signal_flags&&scan.signal_flags.length>0&&(
+                          <div className="scan-history-flags">
+                            {scan.signal_flags.map(function(f,i){
+                              var bgColor = f.severity==="HIGH"?"var(--blood-dim)":f.severity==="MEDIUM"?"var(--bile-dim)":"var(--signal-dim)";
+                              var textColor = f.severity==="HIGH"?"var(--blood)":f.severity==="MEDIUM"?"var(--bile)":"var(--signal)";
+                              return <span key={i} className="scan-history-flag" style={{background:bgColor,color:textColor}}>{f.flag}</span>;
+                            })}
+                          </div>
+                        )}
+                        <button className="scan-history-view-btn" onClick={function(e){ e.stopPropagation(); setModalScan(scan); }}>VIEW FULL REPORT</button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {modalScan&&(
+        <div className="scan-modal-backdrop" onClick={function(){ setModalScan(null); }}>
+          <div className="scan-modal" onClick={function(e){ e.stopPropagation(); }}>
+            <div className="scan-modal-header">
+              <span className="scan-modal-title">GHOST REPORT</span>
+              <button className="scan-modal-close" onClick={function(){ setModalScan(null); }}>&times;</button>
+            </div>
+            <div className="scan-modal-body">
+              <VerdictCard result={buildResultFromScan(modalScan)} scanId={modalScan.id} company={modalScan.company||""} jobTitle={modalScan.title||""} />
+            </div>
+            <div className="scan-modal-footer">
+              <button className="scan-history-view-btn" style={{width:"auto",padding:"6px 20px"}} onClick={function(){ setModalScan(null); }}>CLOSE</button>
+            </div>
           </div>
         </div>
       )}
