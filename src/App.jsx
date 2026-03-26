@@ -65,7 +65,7 @@ const STYLE = `
 
   /* SHARED FORM */
   .panel { padding: 32px 0; }
-  .form-box { background: var(--surface); border: 1px solid var(--border); padding: 26px; }
+  .form-box { background: var(--surface); border: 1px solid var(--border); padding: 28px; border-radius: 6px; }
   .form-box.green-top { border-top: 3px solid var(--blood); }
   .form-box.red-top { border-top: 3px solid var(--blood); }
   .form-box.ice-top { border-top: 3px solid var(--blood); }
@@ -73,13 +73,22 @@ const STYLE = `
   .form-label.green { color: var(--paper); }
   .form-label.red { color: var(--blood); }
   .form-label.ice { color: var(--muted); }
-  .field-label { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--paper); margin-bottom: 8px; display: block; }
+  .field-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
   .field-label.red { color: var(--blood); }
-  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; padding: 11px 14px; outline: none; width: 100%; transition: border-color 0.2s; }
-  .f-input:focus { border-color: var(--border-hi); }
-  .f-input::placeholder { color: rgba(255,255,255,0.4); font-family: 'Space Mono', monospace; font-size: 12px; }
+  .search-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px; }
+  .f-input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 12px; padding: 10px 14px; outline: none; width: 100%; transition: border-color 0.2s; border-radius: 3px; }
+  .f-input:focus { border-color: var(--blood); }
+  .f-input::placeholder { color: var(--ghost); font-family: 'Space Mono', monospace; font-size: 11px; }
   select.f-input { appearance: none; cursor: pointer; }
   select.f-input option { background: #13131a; color: var(--paper); }
+  .search-intro { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.03em; line-height: 1.6; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .search-intro strong { color: var(--paper); font-weight: 400; }
+  .search-streak { display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--signal); letter-spacing: 0.06em; margin-bottom: 16px; }
+  .search-streak-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; }
+  .saved-nudge { display: flex; align-items: center; justify-content: space-between; background: rgba(201,154,0,0.06); border: 1px solid rgba(201,154,0,0.12); border-radius: 4px; padding: 10px 14px; margin-bottom: 16px; cursor: pointer; transition: background 0.15s; }
+  .saved-nudge:hover { background: rgba(201,154,0,0.1); }
+  .saved-nudge-text { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--bile); letter-spacing: 0.04em; }
+  .saved-nudge-arrow { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--bile); }
   .paste-area { width: 100%; min-height: 160px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: var(--paper); font-family: 'Space Mono', monospace; font-size: 13px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; transition: border-color 0.2s; }
   .paste-area:focus { border-color: var(--border-hi); }
   .paste-area::placeholder { color: var(--ghost); font-style: italic; }
@@ -104,12 +113,12 @@ const STYLE = `
 
   /* SEARCH BOARDS */
   .boards-section { margin-top: 32px; }
-  .boards-header { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+  .boards-header { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
   .boards-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 0.04em; }
-  .boards-sub { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); letter-spacing: 0.08em; margin-top: 4px; }
-  .board-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .board-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ghost); padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: background 0.15s; }
-  .board-card:hover { background: var(--surface2); }
+  .boards-sub { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.1em; margin-top: 4px; }
+  .board-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .board-card { background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--ghost); padding: 20px; display: flex; flex-direction: column; gap: 10px; transition: background 0.18s, box-shadow 0.18s; border-radius: 4px; }
+  .board-card:hover { background: var(--surface2); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
   .board-card.indeed { border-top-color: #2557a7; }
   .board-card.linkedin { border-top-color: #0a66c2; }
   .board-card.wellfound { border-top-color: #ff6154; }
@@ -132,12 +141,9 @@ const STYLE = `
   .tip-n { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--ghost); flex-shrink: 0; margin-top: 2px; }
 
   /* SEARCH — ENHANCED */
-  .search-nudge { background: rgba(255,255,255,0.03); border: 1px solid var(--border-hi); border-left: 3px solid var(--border-hi); padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-  .search-nudge-icon { font-size: 16px; flex-shrink: 0; color: var(--muted); }
-  .search-nudge-text { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); line-height: 1.5; }
-  .search-form-actions { display: flex; gap: 8px; margin-top: 12px; }
-  .search-form-actions .run-btn { flex: 1; margin-top: 0; }
-  .save-search-btn { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; }
+  .search-form-actions { display: flex; gap: 10px; margin-top: 16px; }
+  .search-form-actions .run-btn { flex: 1; margin-top: 0; border-radius: 4px; }
+  .save-search-btn { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1px solid var(--border-hi); color: var(--paper); padding: 0 18px; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s; border-radius: 4px; }
   .save-search-btn:hover:not(:disabled) { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.25); }
   .save-search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   /* INNER TABS */
@@ -981,29 +987,33 @@ function VerdictCard(props) {
    SEARCH TAB
 ================================================================ */
 function SearchTab({ session, addApp }) {
+  // Restore last search from localStorage
+  var lastSearch = null;
+  try { lastSearch = JSON.parse(localStorage.getItem("ghostbust-last-search-params")); } catch(e) {}
+
   var [innerTab, setInnerTab] = useState("search");
-  var [industry, setIndustry] = useState("");
-  var [subfield, setSubfield] = useState("");
-  var [jobType, setJobType] = useState("");
-  var [city, setCity] = useState("");
-  var [usState, setUsState] = useState("");
-  var [radius, setRadius] = useState("25");
+  var [industry, setIndustry] = useState(lastSearch&&lastSearch.industry||"");
+  var [subfield, setSubfield] = useState(lastSearch&&lastSearch.subfield||"");
+  var [jobType, setJobType] = useState(lastSearch&&lastSearch.jobType||"");
+  var [city, setCity] = useState(lastSearch&&lastSearch.city||"");
+  var [usState, setUsState] = useState(lastSearch&&lastSearch.usState||"");
+  var [radius, setRadius] = useState(lastSearch&&lastSearch.radius||"25");
   var [results, setResults] = useState(null);
   var [trackedBoards, setTrackedBoards] = useState({});
 
-  // Feature 2: AI Refine
+  // AI Refine
   var [aiRefining, setAiRefining] = useState(false);
   var [aiRefinement, setAiRefinement] = useState(null);
   var [aiRefineError, setAiRefineError] = useState(null);
 
-  // Feature 5: Saved searches
+  // Saved searches
   var [savedSearches, setSavedSearches] = useState([]);
   var [saving, setSaving] = useState(false);
 
   var userId = session ? session.user.id : null;
   var subfields = industry ? (INDUSTRY_MAP[industry] || []) : [];
 
-  // Feature 5: Load saved searches on login
+  // Load saved searches on login
   useEffect(function() {
     if (!userId) { setSavedSearches([]); return; }
     supabase.from("saved_searches")
@@ -1016,17 +1026,16 @@ function SearchTab({ session, addApp }) {
       });
   }, [userId]);
 
-  // Feature 4: Daily nudge based on last search date
-  var nudge = null;
-  var lastSearched = localStorage.getItem("ghostbust-last-search");
-  if (lastSearched) {
-    var daysSince = Math.floor((Date.now() - Number(lastSearched)) / 86400000);
-    if (daysSince === 0) nudge = "You searched today — keep the momentum going.";
-    else if (daysSince === 1) nudge = "It's been 1 day since your last search. Consistent daily searching gets results faster.";
-    else if (daysSince <= 3) nudge = "It's been " + daysSince + " days since your last search. Now is a good time to check what's new.";
-    else if (daysSince <= 7) nudge = "It's been " + daysSince + " days. Job boards refresh daily — you may be missing fresh listings.";
-    else nudge = "It's been " + daysSince + " days since your last search. Fresh listings are waiting — let's go.";
-  }
+  // Search streak — count distinct days searched this week (Mon-Sun)
+  var streak = 0;
+  try {
+    var streakData = JSON.parse(localStorage.getItem("ghostbust-search-days") || "[]");
+    var now = new Date();
+    var weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1)); // Monday
+    weekStart.setHours(0,0,0,0);
+    streak = streakData.filter(function(d){ return new Date(d) >= weekStart; }).length;
+  } catch(e) {}
 
   function handleIndustryChange(e) {
     setIndustry(e.target.value);
@@ -1037,7 +1046,20 @@ function SearchTab({ session, addApp }) {
   function buildResults(q, loc, r) {
     setResults({ q: q, loc: loc, radius: r, boards: BOARDS.map(function(b) { return { id: b.id, name: b.name, desc: b.desc, url: b.buildUrl(q, loc, r) }; }) });
     setTrackedBoards({});
-    localStorage.setItem("ghostbust-last-search", String(Date.now()));
+    // Store last search params for pre-fill on return
+    try {
+      localStorage.setItem("ghostbust-last-search-params", JSON.stringify({ industry:industry, subfield:subfield, jobType:jobType, city:city, usState:usState, radius:radius }));
+    } catch(e) {}
+    // Track search streak days
+    try {
+      var today = new Date().toISOString().slice(0,10);
+      var days = JSON.parse(localStorage.getItem("ghostbust-search-days") || "[]");
+      if (days.indexOf(today) === -1) days.push(today);
+      // Keep only last 14 days
+      var cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 14);
+      days = days.filter(function(d){ return new Date(d) >= cutoff; });
+      localStorage.setItem("ghostbust-search-days", JSON.stringify(days));
+    } catch(e) {}
   }
 
   function handleSearch() {
@@ -1160,11 +1182,19 @@ function SearchTab({ session, addApp }) {
       </div>
 
       {innerTab==="search"&&<>
-      {/* Feature 4: Daily search nudge */}
-      {nudge && (
-        <div className="search-nudge">
-          <span className="search-nudge-icon">◈</span>
-          <span className="search-nudge-text">{nudge}</span>
+      <div className="search-intro">Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired — <strong>searched and saved all at once.</strong></div>
+
+      {streak>0&&(
+        <div className="search-streak">
+          <span className="search-streak-num">{streak}</span>
+          <span>{streak===1?"day searching this week":"days searching this week"}</span>
+        </div>
+      )}
+
+      {savedSearches.length>0&&innerTab==="search"&&(
+        <div className="saved-nudge" onClick={function(){setInnerTab("saved");}}>
+          <span className="saved-nudge-text">You have {savedSearches.length} saved search{savedSearches.length>1?"es":""} — run one</span>
+          <span className="saved-nudge-arrow">&rarr;</span>
         </div>
       )}
 
