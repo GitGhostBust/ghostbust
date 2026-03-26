@@ -39,7 +39,7 @@ const STYLE = `
   .cp-nav-signout:hover { color: #ff4422; }
 
   /* BODY */
-  .cp-body { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 24px 120px; box-sizing: border-box; }
+  .cp-body { width: 100%; max-width: 100%; margin: 0; padding: 0 24px 120px; box-sizing: border-box; }
 
   /* FOOTER */
   .cp-footer { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; padding: 24px 0 8px; border-top: 1px solid var(--border); margin-top: 60px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
