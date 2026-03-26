@@ -1044,7 +1044,7 @@ export default function Profile() {
                     <div className={`toggle-field-value${!value ? " empty" : ""}`}>{value || "not set"}</div>
                     {helpText && <div className="toggle-field-help">{helpText}</div>}
                   </div>
-                  <label className="toggle" onClick={e => { e.stopPropagation(); setField(visKey, !form[visKey]); }}>
+                  <label className="toggle" onClick={e => { e.preventDefault(); e.stopPropagation(); setField(visKey, !form[visKey]); }}>
                     <input type="checkbox" checked={form[visKey]} readOnly />
                     <span className="toggle-slider" />
                   </label>
@@ -1093,7 +1093,7 @@ export default function Profile() {
         <div className="skills-card">
           <div className="skills-card-header">
             <span className="skills-card-title">Skills</span>
-            <label className="toggle" onClick={e => { e.stopPropagation(); setField("show_skills", !form.show_skills); }}>
+            <label className="toggle" onClick={e => { e.preventDefault(); e.stopPropagation(); setField("show_skills", !form.show_skills); }}>
               <input type="checkbox" checked={form.show_skills} readOnly />
               <span className="toggle-slider" />
             </label>
