@@ -476,6 +476,8 @@ const INDUSTRY_MAP = {
 };
 
 const STATUSES = ["Researching","Saved","Applied","Interviewing","Ghosted","Rejected","Offer"];
+const PROSPECT_STATUSES = ["Researching","Saved"];
+const APPLICATION_STATUSES = ["Applied","Interviewing","Ghosted","Rejected","Offer"];
 
 const STATUS_EMOJI = {
   Researching: "🔎", Saved: "📌", Applied: "📤", Interviewing: "🎯", Ghosted: "👻", Rejected: "✗", Offer: "🏆"
@@ -1752,6 +1754,7 @@ function TrackerTab(props) {
   var onDelete = props.onDelete;
   var onClear = props.onClear;
   var addApp = props.addApp;
+  var [subTab,setSubTab] = useState("prospects");
   var [filter,setFilter] = useState("All");
   var [showAdd,setShowAdd] = useState(false);
   var [showReport,setShowReport] = useState(false);
@@ -1763,12 +1766,17 @@ function TrackerTab(props) {
   var [addFollowup,setAddFollowup] = useState("");
   var [addSourceBoard,setAddSourceBoard] = useState("");
 
-  var counts = {};
-  STATUSES.forEach(function(s){ counts[s]=apps.filter(function(a){return a.status===s;}).length; });
-  counts["All"]=apps.length;
+  var prospects = apps.filter(function(a){ return PROSPECT_STATUSES.indexOf(a.status)!==-1; });
+  var applications = apps.filter(function(a){ return APPLICATION_STATUSES.indexOf(a.status)!==-1; });
+  var tabApps = subTab==="prospects"?prospects:applications;
+  var tabStatuses = subTab==="prospects"?PROSPECT_STATUSES:APPLICATION_STATUSES;
 
-  var filtered = filter==="All"?apps:apps.filter(function(a){return a.status===filter;});
-  var rate = apps.length>0?Math.round((counts["Ghosted"]||0)/apps.length*100):0;
+  var counts = {};
+  tabStatuses.forEach(function(s){ counts[s]=tabApps.filter(function(a){return a.status===s;}).length; });
+  counts["All"]=tabApps.length;
+
+  var filtered = filter==="All"?tabApps:tabApps.filter(function(a){return a.status===filter;});
+  var rate = apps.length>0?Math.round((apps.filter(function(a){return a.status==="Ghosted";}).length)/apps.length*100):0;
 
   function handleManualAdd() {
     if (!addTitle.trim()) return;
@@ -1778,8 +1786,15 @@ function TrackerTab(props) {
       notes:addNotes.trim(), url:addUrl.trim(), followupDate:addFollowup,
       sourceBoard:addSourceBoard, savedAt:Date.now(), manual:true,
     });
-    setAddTitle(""); setAddCompany(""); setAddNotes(""); setAddUrl(""); setAddFollowup(""); setAddStatus("Researching"); setAddSourceBoard("");
+    setAddTitle(""); setAddCompany(""); setAddNotes(""); setAddUrl(""); setAddFollowup(""); setAddStatus(subTab==="prospects"?"Researching":"Applied"); setAddSourceBoard("");
     setShowAdd(false);
+  }
+
+  function handleSubTabChange(newTab) {
+    setSubTab(newTab);
+    setFilter("All");
+    setShowAdd(false);
+    setAddStatus(newTab==="prospects"?"Researching":"Applied");
   }
 
   function exportCSV() {
@@ -1824,16 +1839,19 @@ function TrackerTab(props) {
 
   return (
     <div className="panel">
+      <div className="inner-tabs">
+        <button className={"inner-tab"+(subTab==="prospects"?" active":"")} onClick={function(){handleSubTabChange("prospects");}}>
+          Prospects<span className="tab-count">{prospects.length}</span>
+        </button>
+        <button className={"inner-tab"+(subTab==="applications"?" active":"")} onClick={function(){handleSubTabChange("applications");}}>
+          Applications<span className="tab-count">{applications.length}</span>
+        </button>
+      </div>
       <div className="tracker-stats">
-        {[
-          ["All","stat-saved",counts["All"]||0],
-          ["Researching","stat-researching",counts["Researching"]||0],
-          ["Applied","stat-applied",counts["Applied"]||0],
-          ["Interviewing","stat-interviewing",counts["Interviewing"]||0],
-          ["Ghosted","stat-ghosted",counts["Ghosted"]||0],
-          ["Rejected","stat-rejected",counts["Rejected"]||0],
-          ["Offer","stat-offer",counts["Offer"]||0],
-        ].map(function(item){
+        {[["All","stat-saved",counts["All"]||0]].concat(tabStatuses.map(function(s){
+          var cls = "stat-"+s.toLowerCase();
+          return [s, cls, counts[s]||0];
+        })).map(function(item){
           var label=item[0]; var cls=item[1]; var count=item[2];
           return (
             <div key={label} className={"stat-box"+(filter===label?" active-filter":"")} onClick={function(){setFilter(label);}}>
@@ -1854,7 +1872,7 @@ function TrackerTab(props) {
 
       <div className="tracker-header">
         <div className="tracker-title">
-          {filter==="All"?"All Applications":filter+" ("+filtered.length+")"}
+          {filter==="All"?(subTab==="prospects"?"All Prospects":"All Applications"):filter+" ("+filtered.length+")"}
         </div>
         <div className="tracker-actions">
           <button className="toggle-add-btn" onClick={function(){setShowAdd(function(v){return !v;});}}>
@@ -1884,7 +1902,7 @@ function TrackerTab(props) {
             <div>
               <label className="field-label" style={{color:"var(--muted)"}}>Status</label>
               <select className="f-input" value={addStatus} onChange={function(e){setAddStatus(e.target.value);}}>
-                {STATUSES.map(function(s){return <option key={s}>{s}</option>;})}
+                {tabStatuses.map(function(s){return <option key={s}>{s}</option>;})}
               </select>
             </div>
             <div>
@@ -1920,11 +1938,11 @@ function TrackerTab(props) {
         </div>
       )}
 
-      {filtered.length===0&&apps.length===0&&!showAdd&&(
+      {filtered.length===0&&tabApps.length===0&&!showAdd&&(
         <div className="empty-state">
-          <div className="empty-icon">📋</div>
-          <div className="empty-title">Your tracker is empty</div>
-          <p className="empty-sub">Go to the Ghost Detector tab, paste a listing, get your analysis — then save it here with one click. Or hit <strong style={{color:"var(--paper)"}}>+ Add Manually</strong> above to log any job you're tracking, no analysis needed.</p>
+          <div className="empty-icon">{subTab==="prospects"?"🔎":"📋"}</div>
+          <div className="empty-title">{subTab==="prospects"?"No prospects yet":"No applications yet"}</div>
+          <p className="empty-sub">{subTab==="prospects"?"Use Find Jobs to search boards and save roles here, or scan listings in Ghost Detector and save to tracker. Hit + Add Manually to log any role you're researching.":"When you change a prospect's status to Applied (or beyond), it moves here automatically. You can also add applications directly with + Add Manually."}</p>
           <div style={{marginTop:24,padding:"16px",background:"rgba(201,154,0,0.08)",border:"1px solid rgba(201,154,0,0.15)",maxWidth:380,margin:"24px auto 0"}}>
             <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,letterSpacing:"0.2em",textTransform:"uppercase",color:"var(--bile)",marginBottom:8}}>📊 Ghost Report</div>
             <p style={{fontSize:12,color:"rgba(255,255,255,0.65)",lineHeight:1.7}}>Once you start tracking applications, you can generate your personal Ghost Report — your response rate, active pipeline, and average Ghost Score across all your saved listings.</p>
@@ -1932,7 +1950,7 @@ function TrackerTab(props) {
         </div>
       )}
 
-      {filtered.length===0&&apps.length>0&&(
+      {filtered.length===0&&tabApps.length>0&&(
         <div className="empty-state">
           <div className="empty-icon">{STATUS_EMOJI[filter]||"🔍"}</div>
           <div className="empty-title">No {filter} Applications</div>
