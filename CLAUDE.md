@@ -2,6 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+
 ## Commands
 
 ```bash
@@ -342,7 +343,31 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 
 ---
 
-## Phase 2 Status (as of 2026-03-25)
+## Phase 3 Roadmap
+
+- 🔲 Pro tier ($12/month) via Stripe
+- 🔲 The GhostBust Monthly newsletter
+- 🔲 Ghost Job Index — public leaderboard by region and company
+- 🔲 Chrome extension
+- 🔲 Ghost score history and trends on profile
+- 🔲 User Showcase — public portfolio/work display on profile for creatives, professionals, and track-record-based careers (designers, writers, marketers, attorneys, advisors, coaches, etc). Enables peer networking and discovery within the GhostBust community. Distinct from Career HQ (which is private/AI-driven). Revisit at 200 MAU alongside Ghost Job Index and profile expansion.
+- 🔲 Programmatic SEO
+- 🔲 Social auto-posting
+
+---
+
+## Design Decisions Log
+
+- **Hero heading**: "Built For A Broken Market." — "Broken" chosen over "Rigged" for legal defensibility
+- **Ghost logo placement**: inline with eyebrow text (Option B) — 14px ghost SVG at 70% opacity, left of eyebrow label on both app and community pages
+- **App hero tone**: attitude-oriented (Option C from brainstorming) — compact hero + tab-specific intros
+- **Find Jobs intro line**: "Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired — searched and saved all at once."
+- **Application Tracker cards**: upgraded to modal popup windows with editable fields, Ghost Scan integration, Career HQ integration, and job posting URL field
+- **Roadmap is public**: strategic Phase 4 details omitted, User Showcase and Ghost Job Index have fine print asterisks on roadmap.html
+
+---
+
+## Phase 2 Status (as of 2026-03-26)
 
 **Completed:**
 - Onboarding email sequence (5 emails: Day 0/2/5/14/30) via Vercel cron + Resend
@@ -400,6 +425,13 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - **Inner tabs for Ghost Detector** — Scan / History sub-tabs; history shows chronological scan list with expand/collapse and full-report modal reusing VerdictCard; "Save to Tracker" from modal
 - **Application Tracker restructured** — Prospects (Researching/Saved) and Applications (Applied+) sub-tabs with count badges; status change auto-migrates cards between tabs; tab-specific filters and empty states
 - **`user_id` column on `ghost_scans`** — migration at `20260325_ghost_scans_user_id.sql`; scan insert now includes user_id for authenticated users
+- **Application Tracker modal cards** — full editable modal popup with all fields, ghost score badge, "RUN GHOST SCAN" cross-tab navigation to Ghost Detector with prefill, "ANALYZE IN CAREER HQ" cross-tab navigation to Resume Advisor with prefill
+- **Ghost Detector history tab** — chronological scan list with expand/collapse and full-report modal reusing VerdictCard; "Save to Tracker" from modal
+- **Find Jobs improvements** — saved searches inner tab, search streak counter, saved searches nudge, last search pre-fill from localStorage, visual polish (border-radius, focus colors, hover shadows), intro line with board names
+- **Profile toggle fixes** — `e.preventDefault()` on toggle `<label>` click to prevent native checkbox double-fire
+- **Public roadmap page** (`roadmap.html`) — 4 phases, status badges, fine print asterisks on Ghost Job Index and User Showcase; added to all page footers (index.html, app.html, profile.html, community.html, tos.html, privacy.html) and landing page "BUILT IN PUBLIC" section
+- **Tracker card polish** — dynamic left accent by ghost score, per-status color pills, UNSCANNED chip, enhanced typography and hover effects
+- **Standardized hero section** (in progress) — shared compact hero for app.html and community.html with ghost logo in eyebrow, "Built For A Broken Market." heading, tab-specific intro lines for all four app tabs
 
 **Pending / in progress:**
 - `20260325_ghost_scans_user_id.sql` migration must be run in Supabase SQL editor for scan history to work

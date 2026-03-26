@@ -9,12 +9,11 @@ const STYLE = `
   .cb-wrap { padding: 0 0 80px; }
 
   /* HERO */
-  .cb-hero { padding: 36px 0 28px; border-bottom: 1px solid var(--border); margin-bottom: 28px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 20px; }
-  .cb-hero-left { min-width: 0; }
-  .cb-hero-eyebrow { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 8px; }
-  .cb-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 6vw, 60px); letter-spacing: 0.03em; color: var(--paper); line-height: 0.92; margin-bottom: 12px; }
-  .cb-heading em { color: var(--blood); font-style: normal; }
-  .cb-hero-desc { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-style: italic; color: rgba(238,234,224,0.7); line-height: 1.7; max-width: 620px; }
+  .page-hero { padding: 24px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 28px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 16px; }
+  .page-hero-eyebrow { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 6px; }
+  .page-hero-ghost { flex-shrink: 0; opacity: 0.7; }
+  .page-hero-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 5vw, 42px); line-height: 0.94; letter-spacing: 0.03em; color: var(--paper); }
+  .page-hero-heading em { color: var(--blood); font-style: normal; }
   .cb-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
   .cb-new-btn { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 0.08em; background: var(--blood); color: var(--paper); border: none; padding: 13px 28px; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .cb-new-btn:hover { background: #e52600; }
@@ -128,7 +127,7 @@ const STYLE = `
 
   @media (max-width: 600px) {
     .cb-filters { gap: 6px; }
-    .cb-hero { grid-template-columns: 1fr; }
+    .page-hero { grid-template-columns: 1fr; }
     .cb-hero-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
   }
 `;
@@ -542,11 +541,13 @@ export default function CommunityBoard({ session, userRegion, onRequestSignIn })
     <div className="cb-wrap">
       <style>{STYLE}</style>
 
-      <div className="cb-hero">
-        <div className="cb-hero-left">
-          <div className="cb-hero-eyebrow">GhostBust · Community Board</div>
-          <div className="cb-heading">The Ghost<em>Bust</em><br/>Community</div>
-          <p className="cb-hero-desc">Real talk from real job seekers. Share ghost job alerts, company reviews, wins, and advice. Give us your thoughts and experiences, and contribute to the GhostBust community.</p>
+      <div className="page-hero">
+        <div>
+          <div className="page-hero-eyebrow">
+            <svg className="page-hero-ghost" width="14" height="14" viewBox="0 0 32 32"><path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.9"/><circle cx="13" cy="14" r="2" fill="#d42200"/><circle cx="19" cy="14" r="2" fill="#d42200"/></svg>
+            COMMUNITY BOARD
+          </div>
+          <h1 className="page-hero-heading">Real People. <em>Real Experiences.</em></h1>
         </div>
         <div className="cb-hero-right">
           {session ? (

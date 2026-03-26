@@ -46,14 +46,14 @@ const STYLE = `
   .app-nav-signout { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; border: 1px solid transparent; background: none; color: #72728a; cursor: pointer; transition: color 0.15s; margin-left: auto; flex-shrink: 0; }
   .app-nav-signout:hover { color: #ff4422; }
 
-  /* HEADER */
-  .header { padding: 40px 0 36px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 16px; }
-  .logo-eyebrow { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 6px; }
-  .logo-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 10vw, 100px); line-height: 0.88; color: var(--paper); }
-  .logo-title em { color: var(--blood); font-style: normal; }
-  .logo-sub { font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 460px; margin-top: 10px; }
-  .ghost-float { font-size: 68px; line-height: 1; animation: float 5s ease-in-out infinite; }
-  @keyframes float { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
+  /* PAGE HERO */
+  .page-hero { padding: 24px 0 20px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 16px; }
+  .page-hero-eyebrow { display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blood); margin-bottom: 6px; }
+  .page-hero-ghost { flex-shrink: 0; opacity: 0.7; }
+  .page-hero-heading { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 5vw, 42px); line-height: 0.94; letter-spacing: 0.03em; color: var(--paper); }
+  .page-hero-heading em { color: var(--blood); font-style: normal; }
+  .page-hero-back { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: var(--muted); text-decoration: none; border: 1px solid var(--border); padding: 5px 10px; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+  .page-hero-back:hover { color: var(--paper); border-color: var(--border-hi); }
 
   /* TABS */
   .tabs { display: flex; margin-top: 40px; border-bottom: 1px solid var(--border); gap: 0; }
@@ -81,8 +81,8 @@ const STYLE = `
   .f-input::placeholder { color: var(--ghost); font-family: 'Space Mono', monospace; font-size: 11px; }
   select.f-input { appearance: none; cursor: pointer; }
   select.f-input option { background: #13131a; color: var(--paper); }
-  .search-intro { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.03em; line-height: 1.6; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-  .search-intro strong { color: var(--paper); font-weight: 400; }
+  .tab-intro { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.03em; line-height: 1.6; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .tab-intro strong { color: var(--paper); font-weight: 400; }
   .search-streak { display: flex; align-items: center; gap: 10px; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--signal); letter-spacing: 0.06em; margin-bottom: 16px; }
   .search-streak-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1; }
   .saved-nudge { display: flex; align-items: center; justify-content: space-between; background: rgba(201,154,0,0.06); border: 1px solid rgba(201,154,0,0.12); border-radius: 4px; padding: 10px 14px; margin-bottom: 16px; cursor: pointer; transition: background 0.15s; }
@@ -453,11 +453,9 @@ const STYLE = `
     .tracker-stats { grid-template-columns: repeat(3, 1fr); }
     .search-grid, .two-col { grid-template-columns: 1fr; }
     .score-row { grid-template-columns: 1fr 1fr; }
-    .header { grid-template-columns: 1fr; }
-    .ghost-float { display: none; }
+    .page-hero { grid-template-columns: 1fr; }
     .app-card { grid-template-columns: 1fr; }
     .app-controls { flex-direction: row; align-items: center; }
-    .logo-title { font-size: clamp(42px, 12vw, 72px); }
     .tab-btn { font-size: 14px; padding: 10px 14px 12px; }
     .panel { padding: 24px 0; }
     .form-box { padding: 18px; }
@@ -471,7 +469,7 @@ const STYLE = `
     .tracker-stats { grid-template-columns: repeat(3,1fr); }
     .stat-num { font-size: 22px; }
     .verdict-title { font-size: 24px; }
-    .logo-title { font-size: clamp(38px, 11vw, 60px); }
+    .page-hero { gap: 10px; }
   }
 
   /* SCROLL REVEAL */
@@ -1506,6 +1504,8 @@ function VerifyTab(props) {
         </button>
       </div>
 
+      <div className="tab-intro">Paste a job listing. AI scans for <strong>red flags, vague language, and ghost patterns.</strong></div>
+
       {innerTab==="scan"&&<>
       <div className="form-box red-top">
         <span className="form-label red">Ghost Detector — Full Listing Analysis</span>
@@ -2043,6 +2043,7 @@ function TrackerTab(props) {
           Applications<span className="tab-count">{applications.length}</span>
         </button>
       </div>
+      <div className="tab-intro">Every application, <strong>from saved to offer</strong> — tracked in one place.</div>
       <div className="tracker-stats">
         {[["All","stat-saved",counts["All"]||0]].concat(tabStatuses.map(function(s){
           var cls = "stat-"+s.toLowerCase();
@@ -2344,9 +2345,6 @@ export default function App() {
   var [showTutorial, setShowTutorial] = useState(function() {
     try { return !localStorage.getItem("gb_tutorial_done"); } catch(e) { return true; }
   });
-  var [showHero, setShowHero] = useState(function() {
-    try { return !localStorage.getItem("gb_visited"); } catch(e) { return true; }
-  });
 
   // Scroll reveal — panel fades in on each tab switch
   useEffect(function() {
@@ -2408,17 +2406,16 @@ export default function App() {
         <button className="app-nav-signout" onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}}>{session?"Sign Out":"Sign In"}</button>
       </nav>
       <div className="app">
-        {showHero && (
-          <header className="header">
-            <div>
-              <div className="logo-eyebrow">AI-powered job intelligence</div>
-              <a href="/" style={{display:"inline-block",marginTop:8,marginBottom:4,fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.15em",color:"var(--paper)",background:"var(--blood)",padding:"6px 14px",textDecoration:"none",cursor:"pointer"}}>← BACK TO GHOSTBUST.US</a>
-              <h1 className="logo-title">Ghost<em>Bust</em></h1>
-              <p className="logo-sub">Find real jobs. Expose ghost listings. Track every application. The only job search tool built to fight back against a broken market.</p>
+        <div className="page-hero">
+          <div>
+            <div className="page-hero-eyebrow">
+              <svg className="page-hero-ghost" width="14" height="14" viewBox="0 0 32 32"><path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#eeeae0" opacity="0.9"/><circle cx="13" cy="14" r="2" fill="#d42200"/><circle cx="19" cy="14" r="2" fill="#d42200"/></svg>
+              GHOSTBUST APP
             </div>
-            <div className="ghost-float">👻</div>
-          </header>
-        )}
+            <h1 className="page-hero-heading">Built For A <em>Broken Market.</em></h1>
+          </div>
+          <a href="/" className="page-hero-back">← GHOSTBUST.US</a>
+        </div>
 
         <nav className="tabs">
           <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setPrefill(null);setTab("search");}}>
@@ -2446,7 +2443,7 @@ export default function App() {
           {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
           {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} session={session} prefill={tab==="verify"?prefill:null} />}
           {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} onNavigate={function(t,pf){setPrefill(pf);setTab(t);}} />}
-          {tab==="resume"&&<ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} prefill={tab==="resume"?prefill:null} />}
+          {tab==="resume"&&<><div className="tab-intro">Upload your resume. Get <strong>AI-powered analysis, coaching, and career strategy.</strong></div><ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} prefill={tab==="resume"?prefill:null} /></>}
         </div>
         <footer className="footer">
           <span>GhostBust</span>
