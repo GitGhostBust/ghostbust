@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { supabase } from "./supabase.js";
 import UserSearch from "./UserSearch.jsx";
 import RegionModal from "./RegionModal.jsx";
@@ -1559,7 +1560,7 @@ function VerifyTab(props) {
         </div>
       )}
 
-      {modalScan&&(
+      {modalScan&&createPortal(
         <div className="scan-modal-backdrop" onClick={function(){ setModalScan(null); }}>
           <div className="scan-modal" onClick={function(e){ e.stopPropagation(); }}>
             <div className="scan-modal-header">
@@ -1574,7 +1575,8 @@ function VerifyTab(props) {
               <button className="scan-history-view-btn" style={{width:"auto",padding:"6px 20px"}} onClick={function(){ setModalScan(null); }}>CLOSE</button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
