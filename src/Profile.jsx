@@ -295,6 +295,20 @@ const STYLE = `
     .overview-card-body { padding: 12px 20px 16px; }
     .overview-card-title { padding: 16px 20px 12px; }
   }
+  @media (max-width: 480px) {
+    .nav { padding: 0 16px; gap: 8px; }
+    .nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-btn { font-size: 10px; padding: 6px 8px; }
+    .page { padding: 0 16px 80px; }
+    .banner-area { height: 160px; }
+    .tab-bar { padding: 0 16px; }
+    .card { padding: 18px; }
+    .edit-card { padding: 20px; }
+    .career-detail-row { flex-wrap: wrap; }
+    .career-detail-label { min-width: unset; width: 100%; }
+    .activity-table th, .activity-table td { padding: 10px 8px; font-size: 10px; }
+  }
 
   .main-col { display: flex; flex-direction: column; gap: 12px; }
   .side-col { display: flex; flex-direction: column; gap: 12px; }

@@ -47,6 +47,14 @@ const STYLE = `
   .cp-footer a:hover { color: rgba(255,255,255,0.75); }
   .cp-footer-sep { opacity: 0.3; }
 
+  @media (max-width: 480px) {
+    .cp-nav { padding: 0 16px; gap: 8px; }
+    .cp-nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .cp-nav-links::-webkit-scrollbar { display: none; }
+    .cp-nav-btn { font-size: 9px; padding: 6px 8px; }
+    .cp-body { padding: 0 16px 100px; }
+  }
+
   /* AUTH MODAL */
   .cp-auth-modal { position: fixed; inset: 0; background: rgba(7,7,9,0.92); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .cp-auth-inner { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--blood); max-width: 420px; width: 100%; padding: 36px; position: relative; }

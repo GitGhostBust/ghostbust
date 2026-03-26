@@ -523,12 +523,21 @@ const STYLE = `
     .board-grid, .tracker-stats { grid-template-columns: 1fr 1fr; }
     .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .app { padding: 0 16px 100px; }
+    .app-nav { padding: 0 16px; gap: 8px; }
+    .app-nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .app-nav-links::-webkit-scrollbar { display: none; }
+    .app-nav-btn { font-size: 10px; padding: 6px 8px; }
     .tab-btn { font-size: 13px; padding: 10px 12px; }
     .score-row { grid-template-columns: 1fr 1fr; }
     .tracker-stats { grid-template-columns: repeat(3,1fr); }
     .stat-num { font-size: 22px; }
     .verdict-title { font-size: 24px; }
     .page-hero { gap: 10px; }
+    .score-hero-num { font-size: 72px; }
+    .verdict-card { padding: 20px 16px; }
+    .v-headline { font-size: 22px; }
+    .sub-score-row { gap: 12px; }
+    .sub-score-num { font-size: 22px; }
   }
 
   /* SCROLL REVEAL */

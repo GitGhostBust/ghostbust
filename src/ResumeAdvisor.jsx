@@ -204,6 +204,11 @@ const STYLE = `
     .ra-bullet-pair { grid-template-columns: 1fr; }
     .ra-fit-score-display { flex-direction: column; align-items: flex-start; gap: 12px; }
     .ra-score-bar-wrap { width: 100%; max-width: 100%; }
+    .ra-preview-box { height: 60vh; }
+    .ra-score-num { font-size: 56px; }
+    .ra-jsa-score-num { font-size: 60px; }
+    .ra-jsa-card { padding: 18px 16px; }
+    .ra-preview-docx { padding: 20px 16px; }
   }
 
   /* JOB SEARCH ADVISOR */

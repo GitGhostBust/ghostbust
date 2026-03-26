@@ -658,8 +658,11 @@
     }
 
     @media (max-width: 600px) {
-      nav { padding: 16px 20px; }
+      nav { padding: 16px 20px; gap: 8px; }
       .nav-brand { font-size: 25px; }
+      .nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .nav-btn { padding: 6px 8px; }
       h1 { font-size: clamp(52px, 14vw, 80px); }
       h2 { font-size: clamp(28px, 8vw, 44px); }
       section { padding: 48px 20px; }
@@ -678,6 +681,9 @@
       .sample-scores { grid-template-columns: repeat(2,1fr); }
       .sample-header { flex-direction: column; }
       .leg-card { flex-direction: column; gap: 8px; }
+      #hiw-modal > div > div:first-of-type { padding-left: 20px !important; padding-right: 20px !important; }
+      #hiw-sections { padding-left: 20px !important; padding-right: 20px !important; }
+      .hiw-body > div { padding-left: 28px !important; }
     }
   </style>
 </head>

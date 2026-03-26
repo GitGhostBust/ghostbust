@@ -130,6 +130,10 @@ const STYLE = `
     .cb-filters { gap: 6px; }
     .page-hero { grid-template-columns: 1fr; }
     .cb-hero-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    .cb-new-btn { font-size: 16px; padding: 11px 20px; }
+    .cb-search-input { min-width: 120px; }
+    .cb-modal-inner { padding: 24px 20px; }
+    .cb-detail { padding: 20px 16px; }
   }
 `;
 
