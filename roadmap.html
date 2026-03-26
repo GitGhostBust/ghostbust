@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roadmap — GhostBust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --void: #070709;
+      --surface: #0e0e12;
+      --surface2: #13131a;
+      --paper: #eeeae0;
+      --muted: rgba(238,234,224,0.45);
+      --blood: #d42200;
+      --blood-dim: rgba(212,34,0,0.15);
+      --bile: #c99a00;
+      --bile-dim: rgba(201,154,0,0.15);
+      --signal: #00e67a;
+      --signal-dim: rgba(0,230,122,0.1);
+      --ice: #00c8e6;
+      --ice-dim: rgba(0,200,230,0.1);
+      --border: rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--paper);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 16px;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,7,9,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.6rem;
+      color: var(--paper);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--blood); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--paper); }
+
+    /* ── HERO BANNER ── */
+    .legal-hero {
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .legal-hero::before {
+      content: 'ROADMAP';
+      position: absolute;
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(7rem, 18vw, 16rem);
+      color: rgba(201,154,0,0.04);
+      right: -2rem;
+      bottom: -1rem;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .legal-hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .legal-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--bile);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .legal-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      color: var(--paper);
+      margin-bottom: 1.5rem;
+    }
+
+    .legal-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── LAYOUT ── */
+    .roadmap-layout {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    /* ── PHASE CARD ── */
+    .phase {
+      margin-bottom: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .phase:last-child {
+      border-bottom: none;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+    }
+
+    .phase-label {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.9rem;
+      letter-spacing: 0.04em;
+      color: var(--paper);
+      line-height: 1;
+    }
+
+    .phase-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 3px;
+      line-height: 1.4;
+    }
+
+    .badge-complete {
+      background: var(--signal-dim);
+      color: var(--signal);
+    }
+
+    .badge-progress {
+      background: var(--bile-dim);
+      color: var(--bile);
+    }
+
+    .badge-planned {
+      background: var(--ice-dim);
+      color: var(--ice);
+    }
+
+    .badge-beyond {
+      background: var(--blood-dim);
+      color: var(--blood);
+    }
+
+    .phase-items {
+      margin: 0 0 0 1.5rem;
+    }
+
+    .phase-items li {
+      color: rgba(238,234,224,0.75);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .phase-items li::marker {
+      color: var(--bile);
+    }
+
+    .phase-prose {
+      color: rgba(238,234,224,0.82);
+      font-size: 0.97rem;
+    }
+
+    .phase-divider {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--bile);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* marker colors by phase status */
+    .phase-complete .phase-items li::marker { color: var(--signal); }
+    .phase-progress .phase-items li::marker { color: var(--bile); }
+    .phase-planned .phase-items li::marker { color: var(--ice); }
+
+    /* highlight box */
+    .highlight-box {
+      background: var(--surface);
+      border-left: 3px solid var(--bile);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--paper);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-logo span { color: var(--blood); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--paper); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .roadmap-layout { padding: 2.5rem 1.5rem 4rem; }
+      .phase-header { gap: 10px; }
+    }
+
+    /* ── ENTRANCE ANIMATION ── */
+    .legal-hero-inner, .roadmap-layout {
+      animation: fadeUp 0.6s ease both;
+    }
+    .roadmap-layout { animation-delay: 0.15s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">GHOST<span>BUST</span></a>
+    <ul class="nav-links">
+      <li><a href="/">HOME</a></li>
+      <li><a href="/app.html">APP</a></li>
+      <li><a href="/tos.html">TERMS</a></li>
+      <li><a href="/privacy.html">PRIVACY</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="legal-hero">
+    <div class="legal-hero-inner">
+      <div class="legal-eyebrow">// Product Roadmap</div>
+      <h1 class="legal-title">Where We've Been.<br>Where We're Going.</h1>
+      <div class="legal-meta">GHOSTBUST.US &nbsp;&middot;&nbsp; UPDATED LIVE</div>
+    </div>
+  </div>
+
+  <!-- ROADMAP CONTENT -->
+  <div class="roadmap-layout">
+
+    <!-- PHASE 1 -->
+    <div class="phase phase-complete">
+      <div class="phase-divider">// 01</div>
+      <div class="phase-header">
+        <h2 class="phase-label">Phase 1</h2>
+        <span class="phase-badge badge-complete">Complete</span>
+      </div>
+      <ul class="phase-items">
+        <li>Core ghost job detection via Claude AI</li>
+        <li>Ghost score history</li>
+        <li>Community board</li>
+        <li>User search and profiles</li>
+        <li>Inbox and real-time DMs</li>
+        <li>Career HQ — four AI modes (Resume Review, Job-Specific Analysis, Job Search Advisor, Career Coach)</li>
+        <li>Application Tracker</li>
+        <li>Find Jobs — saved searches, search history, AI refinement</li>
+        <li>Shareable ghost score cards (PNG download + public URL + OG image)</li>
+        <li>Landing page with Founding Member enrollment</li>
+      </ul>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase phase-complete">
+      <div class="phase-divider">// 02</div>
+      <div class="phase-header">
+        <h2 class="phase-label">Phase 2</h2>
+        <span class="phase-badge badge-complete">Complete</span>
+      </div>
+      <ul class="phase-items">
+        <li>Terms of Service and Privacy Policy</li>
+        <li>Onboarding email sequence (Day 0/2/5/14/30)</li>
+        <li>Application outcome nudge emails</li>
+        <li>Resume Advisor PDF export</li>
+        <li>Sentry error tracking</li>
+        <li>API rate limiting and auth security</li>
+        <li>UI overhaul — score display, empty states, loading states, tab bar, profile layout</li>
+        <li>Shareable ghost score cards</li>
+      </ul>
+    </div>
+
+    <!-- PHASE 2.5 -->
+    <div class="phase phase-progress">
+      <div class="phase-divider">// 02.5</div>
+      <div class="phase-header">
+        <h2 class="phase-label">Phase 2.5</h2>
+        <span class="phase-badge badge-progress">In Progress</span>
+      </div>
+      <ul class="phase-items">
+        <li>Organic marketing launch — LinkedIn, TikTok, Twitter/X, Reddit</li>
+        <li>Public roadmap page (this page)</li>
+      </ul>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase phase-planned">
+      <div class="phase-divider">// 03</div>
+      <div class="phase-header">
+        <h2 class="phase-label">Phase 3</h2>
+        <span class="phase-badge badge-planned">Planned</span>
+      </div>
+      <ul class="phase-items">
+        <li>Pro tier ($12/month) via Stripe</li>
+        <li>The GhostBust Monthly newsletter</li>
+        <li>Ghost Job Index — public leaderboard by region and company</li>
+        <li>Chrome extension</li>
+        <li>Ghost score history and trends on profile</li>
+        <li>User Showcase — public portfolio and work display for creatives and professionals, enabling peer networking and discovery within the GhostBust community</li>
+        <li>Programmatic SEO</li>
+        <li>Social auto-posting</li>
+      </ul>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase">
+      <div class="phase-divider">// 04</div>
+      <div class="phase-header">
+        <h2 class="phase-label">Phase 4</h2>
+        <span class="phase-badge badge-beyond">To Infinity and Beyond</span>
+      </div>
+      <div class="highlight-box">
+        <p>GhostBust is just getting started. As the platform grows, so does its intelligence. Phase 4 is where GhostBust evolves from a tool into a living, breathing market signal — smarter detection, deeper insights, and capabilities we're not ready to talk about yet. Stay tuned.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">GHOST<span>BUST</span></div>
+    <ul class="footer-links">
+      <li><a href="/">HOME</a></li>
+      <li><a href="/app.html">APP</a></li>
+      <li><a href="/tos.html">TERMS</a></li>
+      <li><a href="/privacy.html">PRIVACY</a></li>
+      <li><a href="/roadmap.html">ROADMAP</a></li>
+      <li><a href="mailto:ghostbustofficial@gmail.com">CONTACT</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>

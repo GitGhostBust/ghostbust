@@ -197,6 +197,8 @@ export default function CommunityPage() {
           <span className="cp-footer-sep">·</span>
           <a href="/privacy.html">Privacy</a>
           <span className="cp-footer-sep">·</span>
+          <a href="/roadmap.html">Roadmap</a>
+          <span className="cp-footer-sep">·</span>
           <a href="https://mail.google.com/mail/?view=cm&to=ghostbustofficial@gmail.com&su=GhostBust%20Inquiry" target="_blank" rel="noreferrer">ghostbustofficial@gmail.com</a>
         </footer>
       </div>

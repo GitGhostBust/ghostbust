@@ -25,6 +25,7 @@ export default defineConfig({
         tos: './tos.html',
         privacy: './privacy.html',
         score: './score.html',
+        roadmap: './roadmap.html',
       }
     }
   }
