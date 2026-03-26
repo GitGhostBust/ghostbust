@@ -718,6 +718,7 @@
       <div class="hero-cta-row" style="gap:16px;">
         <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">START FREE — NO ACCOUNT REQUIRED →</a>
         <a href="/community.html" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(238,234,224,0.25);color:rgba(238,234,224,0.7);cursor:pointer;padding:14px 32px;transition:all 150ms;text-decoration:none;display:inline-block;" onmouseover="this.style.borderColor='rgba(238,234,224,0.6)';this.style.color='#eeeae0'" onmouseout="this.style.borderColor='rgba(238,234,224,0.25)';this.style.color='rgba(238,234,224,0.7)'">COMMUNITY →</a>
+        <button onclick="document.getElementById('hiw-modal').style.display='flex'" style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;text-transform:uppercase;background:none;border:1px solid rgba(204,34,0,0.5);color:rgba(204,34,0,0.85);cursor:pointer;padding:14px 32px;transition:all 150ms;" onmouseover="this.style.borderColor='#cc2200';this.style.color='#cc2200';this.style.boxShadow='0 0 20px rgba(204,34,0,0.15)'" onmouseout="this.style.borderColor='rgba(204,34,0,0.5)';this.style.color='rgba(204,34,0,0.85)';this.style.boxShadow='none'">HOW IT WORKS</button>
       </div>
       <div style="margin-top:16px;">
         <button onclick="window.gbOpenIntro();" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:none;border:none;color:rgba(238,234,224,0.3);cursor:pointer;padding:0;transition:color 150ms;" onmouseover="this.style.color='rgba(238,234,224,0.65)'" onmouseout="this.style.color='rgba(238,234,224,0.3)'">▶ Watch Intro</button>
@@ -1551,6 +1552,113 @@
     // Intro is opt-in only — never auto-shown. Trigger via window.gbOpenIntro().
     overlay.style.display = 'none';
   })();
+  </script>
+
+  <!-- HOW IT WORKS MODAL -->
+  <div id="hiw-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:linear-gradient(165deg,rgba(18,18,24,0.98) 0%,rgba(10,10,14,0.98) 100%);border:1px solid rgba(255,255,255,0.1);border-radius:16px;max-width:620px;width:100%;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 32px 100px rgba(0,0,0,0.7);">
+      <!-- Close button -->
+      <button onclick="document.getElementById('hiw-modal').style.display='none'" style="position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(238,234,224,0.4);font-size:22px;cursor:pointer;padding:4px 8px;z-index:1;transition:color 0.15s;" onmouseover="this.style.color='#cc2200'" onmouseout="this.style.color='rgba(238,234,224,0.4)'">&times;</button>
+
+      <!-- Header -->
+      <div style="padding:36px 36px 0;">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:#cc2200;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+          <span style="display:inline-block;width:20px;height:1px;background:#cc2200;"></span>
+          THE PLATFORM
+        </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,44px);letter-spacing:0.02em;line-height:0.95;color:#f0ece0;margin-bottom:8px;">How GhostBust Works</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:14px;color:rgba(240,236,224,0.55);line-height:1.7;margin-bottom:28px;">Four tools, one mission: help you stop wasting time on dead-end listings.</div>
+      </div>
+
+      <!-- Accordion sections -->
+      <div style="padding:0 36px 12px;" id="hiw-sections">
+        <!-- GHOST DETECTOR -->
+        <div class="hiw-section" style="border-top:1px solid rgba(255,255,255,0.07);">
+          <button class="hiw-trigger" onclick="toggleHiw(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:none;border:none;cursor:pointer;text-align:left;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(204,34,0,0.3);line-height:1;">01</span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#f0ece0;">Ghost Detector</span>
+            </div>
+            <span class="hiw-arrow" style="font-family:'Space Mono',monospace;font-size:14px;color:rgba(204,34,0,0.6);transition:transform 0.3s;">+</span>
+          </button>
+          <div class="hiw-body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">
+            <div style="padding:0 0 24px 42px;">
+              <p style="font-family:'Libre Baskerville',serif;font-size:14px;color:rgba(240,236,224,0.7);line-height:1.8;">AI scans any job listing for ghost job signals. Paste the full listing, get a score from 0&ndash;100, a verdict, sub-scores for specificity, transparency, process, and confidence, plus every detected red flag explained.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIND JOBS -->
+        <div class="hiw-section" style="border-top:1px solid rgba(255,255,255,0.07);">
+          <button class="hiw-trigger" onclick="toggleHiw(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:none;border:none;cursor:pointer;text-align:left;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(204,34,0,0.3);line-height:1;">02</span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#f0ece0;">Find Jobs</span>
+            </div>
+            <span class="hiw-arrow" style="font-family:'Space Mono',monospace;font-size:14px;color:rgba(204,34,0,0.6);transition:transform 0.3s;">+</span>
+          </button>
+          <div class="hiw-body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">
+            <div style="padding:0 0 24px 42px;">
+              <p style="font-family:'Libre Baskerville',serif;font-size:14px;color:rgba(240,236,224,0.7);line-height:1.8;">Search Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, and SimplyHired simultaneously. Filter by industry, job type, location, and distance. Save searches for one-click reuse.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- APPLICATION TRACKER -->
+        <div class="hiw-section" style="border-top:1px solid rgba(255,255,255,0.07);">
+          <button class="hiw-trigger" onclick="toggleHiw(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:none;border:none;cursor:pointer;text-align:left;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(204,34,0,0.3);line-height:1;">03</span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#f0ece0;">Application Tracker</span>
+            </div>
+            <span class="hiw-arrow" style="font-family:'Space Mono',monospace;font-size:14px;color:rgba(204,34,0,0.6);transition:transform 0.3s;">+</span>
+          </button>
+          <div class="hiw-body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">
+            <div style="padding:0 0 24px 42px;">
+              <p style="font-family:'Libre Baskerville',serif;font-size:14px;color:rgba(240,236,224,0.7);line-height:1.8;">Track every job you're considering or have applied to. Prospects and Applications live in separate tabs. Each job gets a full modal card with notes, follow-up dates, ghost score, and Career HQ integration.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CAREER HQ -->
+        <div class="hiw-section" style="border-top:1px solid rgba(255,255,255,0.07);border-bottom:1px solid rgba(255,255,255,0.07);">
+          <button class="hiw-trigger" onclick="toggleHiw(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:20px 0;background:none;border:none;cursor:pointer;text-align:left;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:rgba(204,34,0,0.3);line-height:1;">04</span>
+              <span style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#f0ece0;">Career HQ</span>
+            </div>
+            <span class="hiw-arrow" style="font-family:'Space Mono',monospace;font-size:14px;color:rgba(204,34,0,0.6);transition:transform 0.3s;">+</span>
+          </button>
+          <div class="hiw-body" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">
+            <div style="padding:0 0 24px 42px;">
+              <p style="font-family:'Libre Baskerville',serif;font-size:14px;color:rgba(240,236,224,0.7);line-height:1.8;">Four AI modes: Resume Review, Job-Specific Analysis, Job Search Advisor, and Interview Prep. Upload your resume, paste a listing, get actionable intelligence tailored to your career.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom CTA -->
+      <div style="padding:20px 36px 32px;text-align:center;">
+        <a href="/app.html" style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.1em;text-transform:uppercase;background:#cc2200;color:#f0ece0;border:none;padding:14px 40px;cursor:pointer;text-decoration:none;display:inline-block;transition:background 0.15s,box-shadow 0.15s;" onmouseover="this.style.background='#e02600';this.style.boxShadow='0 4px 24px rgba(204,34,0,0.35)'" onmouseout="this.style.background='#cc2200';this.style.boxShadow='none'">START FREE &rarr;</a>
+      </div>
+    </div>
+  </div>
+  <script>
+  function toggleHiw(btn) {
+    var section = btn.parentElement;
+    var body = section.querySelector('.hiw-body');
+    var arrow = btn.querySelector('.hiw-arrow');
+    var isOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+    if (isOpen) {
+      body.style.maxHeight = '0px';
+      arrow.textContent = '+';
+      arrow.style.color = 'rgba(204,34,0,0.6)';
+    } else {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      arrow.textContent = '\u2212';
+      arrow.style.color = '#cc2200';
+    }
+  }
   </script>
 
 </body>
