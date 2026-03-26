@@ -833,7 +833,7 @@ export default function App() {
         }
       });
   },[session]);
-  var [tab,setTab] = useState("search");
+  var [tab,setTab] = useState("verify");
   var [prefill,setPrefill] = useState(null);
   var storage = useApplications(session);
 
@@ -944,11 +944,11 @@ export default function App() {
         </div>
 
         <nav className="tabs">
-          <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setPrefill(null);setTab("search");}}>
-            Find Jobs
-          </button>
           <button className={"tab-btn"+(tab==="verify"?" active":"")} onClick={function(){setPrefill(null);setTab("verify");}}>
             Ghost Detector
+          </button>
+          <button className={"tab-btn"+(tab==="search"?" active":"")} onClick={function(){setPrefill(null);setTab("search");}}>
+            Find Jobs
           </button>
           <button className={"tab-btn"+(tab==="tracker"?" active":"")} onClick={function(){setPrefill(null);setTab("tracker");}}>
             Application Tracker
@@ -981,8 +981,8 @@ export default function App() {
               </div>
             </div>
           )}
-          {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
           {tab==="verify"&&<VerifyTab addApp={storage.addApp} onSaved={function(){setTab("tracker");}} session={session} prefill={tab==="verify"?prefill:null} />}
+          {tab==="search"&&<SearchTab session={session} addApp={storage.addApp} />}
           {tab==="tracker"&&<TrackerTab apps={storage.apps} loaded={storage.loaded} onUpdate={storage.updateApp} onDelete={storage.deleteApp} onClear={handleClearAll} addApp={storage.addApp} onNavigate={function(t,pf){setPrefill(pf);setTab(t);}} />}
           {tab==="resume"&&<><div className="tab-intro">Upload your resume. Get <strong>AI-powered analysis, coaching, and career strategy.</strong></div><ResumeAdvisor session={session} onRequestSignIn={function(){setShowAuth(true);}} prefill={tab==="resume"?prefill:null} /></>}
         </div>
