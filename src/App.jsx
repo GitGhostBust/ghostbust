@@ -575,7 +575,97 @@ const TICKER_ITEMS = [
   "Track every application. Miss nothing.",
 ];
 
+const TUTORIAL_STEPS = [
+  {
+    icon: "👋",
+    title: "Welcome to GhostBust",
+    body: "Here's a quick overview of how GhostBust works so you can get the most out of it.",
+    tab: null,
+  },
+  {
+    icon: "👻",
+    title: "Step 1 — Ghost Detector",
+    body: "Found a listing that looks interesting? Before you spend time applying, paste the full text into the Ghost Detector. The AI reads the language and returns a Ghost Score from 0–100, a breakdown of specific signals, and concrete next steps. High score = proceed with caution.",
+    tab: "verify",
+  },
+  {
+    icon: "🔍",
+    title: "Step 2 — Find Jobs",
+    body: "Describe your ideal role in plain English — the AI parses your intent and searches all six major US job boards at once. Or use the advanced filters to search manually.",
+    tab: "search",
+  },
+  {
+    icon: "📋",
+    title: "Step 3 — Application Tracker",
+    body: "Every listing you analyse gets saved here automatically as Researching. Update the status as you go — Applied, Interviewing, Ghosted, Rejected, Offer. Set follow-up dates. Export to CSV anytime. Generate your Ghost Report once you have data.",
+    tab: "tracker",
+  },
+  {
+    icon: "🏁",
+    title: "You're Ready",
+    body: "That's everything. Start with the Ghost Detector, search for jobs with natural language, and track your progress in the Application Tracker. Good luck out there.",
+    tab: null,
+  },
+];
 
+function TutorialOverlay(props) {
+  var onClose = props.onClose;
+  var onTabSwitch = props.onTabSwitch;
+  var [step, setStep] = useState(0);
+  var current = TUTORIAL_STEPS[step];
+  var isLast = step === TUTORIAL_STEPS.length - 1;
+
+  function next() {
+    if (isLast) {
+      onClose();
+    } else {
+      if (TUTORIAL_STEPS[step+1].tab) onTabSwitch(TUTORIAL_STEPS[step+1].tab);
+      setStep(step + 1);
+    }
+  }
+
+  function prev() {
+    if (step > 0) {
+      if (TUTORIAL_STEPS[step-1].tab) onTabSwitch(TUTORIAL_STEPS[step-1].tab);
+      setStep(step - 1);
+    }
+  }
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(7,7,9,0.92)",zIndex:8000,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
+      <div style={{background:"linear-gradient(165deg, rgba(30,30,40,0.95), rgba(22,22,30,0.9))",border:"1px solid var(--border)",borderTop:"4px solid var(--blood)",maxWidth:480,width:"100%",padding:36,position:"relative",borderRadius:16,boxShadow:"0 24px 80px rgba(0,0,0,0.6)",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)"}}>
+
+        {/* Close */}
+        <button onClick={onClose} style={{position:"absolute",top:14,right:16,background:"none",border:"none",color:"var(--ghost)",fontSize:18,cursor:"pointer",fontFamily:"'Space Mono',monospace"}}>✕</button>
+
+        {/* Progress dots */}
+        <div style={{display:"flex",gap:6,marginBottom:24}}>
+          {TUTORIAL_STEPS.map(function(_,i){
+            return <div key={i} style={{width:i===step?24:6,height:6,borderRadius:3,background:i===step?"var(--blood)":"rgba(255,255,255,0.1)",transition:"width 0.3s"}} />;
+          })}
+        </div>
+
+        {/* Icon + title */}
+        <div style={{fontSize:40,marginBottom:12}}>{current.icon}</div>
+        <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:32,letterSpacing:"0.03em",color:"var(--paper)",marginBottom:14,lineHeight:1.1}}>{current.title}</div>
+        <p style={{fontFamily:"'Libre Baskerville',Georgia,serif",fontSize:13,color:"rgba(255,255,255,0.75)",lineHeight:1.85,marginBottom:32}}>{current.body}</p>
+
+        {/* Buttons */}
+        <div style={{display:"flex",gap:12,alignItems:"center"}}>
+          {step > 0 && (
+            <button onClick={prev} style={{fontFamily:"'Space Mono',monospace",fontSize:11,letterSpacing:"0.12em",background:"none",border:"1px solid var(--border)",color:"var(--muted)",padding:"10px 18px",cursor:"pointer",borderRadius:8}}>← BACK</button>
+          )}
+          <button onClick={next} style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:20,letterSpacing:"0.08em",background:"var(--blood)",color:"var(--paper)",border:"none",padding:"12px 28px",cursor:"pointer",flex:1,borderRadius:8}}>
+            {isLast ? "LET'S GO →" : "NEXT →"}
+          </button>
+        </div>
+
+        {/* Step counter */}
+        <div style={{fontFamily:"'Space Mono',monospace",fontSize:10,color:"rgba(255,255,255,0.45)",marginTop:16,letterSpacing:"0.1em"}}>{step+1} of {TUTORIAL_STEPS.length}</div>
+      </div>
+    </div>
+  );
+}
 
 const STORAGE_KEY = "ghostbust-applications";
 
