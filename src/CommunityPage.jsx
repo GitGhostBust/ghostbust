@@ -230,8 +230,7 @@ export default function CommunityPage() {
             <circle cx="20" cy="13" r="2.5" fill="#d42200"/>
           </svg>
         </div>
-        <div className="cp-coming-title">COMMUNITY — <em>COMING SOON.</em></div>
-        <div className="cp-coming-sub">Real Talk. Coming Soon.</div>
+        <div className="cp-coming-title">COMMUNITY. <em>COMING SOON.</em></div>
       </div>
 
       <div className="cp-body">
