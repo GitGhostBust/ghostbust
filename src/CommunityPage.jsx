@@ -47,7 +47,17 @@ const STYLE = `
   .cp-footer a:hover { color: rgba(255,255,255,0.75); }
   .cp-footer-sep { opacity: 0.3; }
 
+  /* COMING SOON OVERLAY */
+  .cp-coming-soon { position: fixed; top: 56px; left: 0; right: 0; bottom: 0; background: var(--void); z-index: 150; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+  .cp-coming-ghost { opacity: 0.18; margin-bottom: 32px; }
+  .cp-coming-title { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: 0.06em; color: var(--paper); text-align: center; line-height: 1.1; margin-bottom: 16px; }
+  .cp-coming-title em { color: var(--blood); font-style: normal; }
+  .cp-coming-sub { font-family: 'Libre Baskerville', Georgia, serif; font-size: 15px; color: rgba(238,234,224,0.45); text-align: center; line-height: 1.7; font-style: italic; }
+
   @media (max-width: 480px) {
+    .cp-coming-soon { top: 56px; }
+    .cp-coming-title { font-size: 32px; }
+    .cp-coming-ghost svg { width: 80px; height: 80px; }
     .cp-nav { padding: 0 16px; gap: 8px; }
     .cp-nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .cp-nav-links::-webkit-scrollbar { display: none; }
@@ -211,6 +221,18 @@ export default function CommunityPage() {
           </button>
         </div>
       </nav>
+
+      <div className="cp-coming-soon">
+        <div className="cp-coming-ghost">
+          <svg width="120" height="120" viewBox="0 0 32 32" fill="none">
+            <path d="M16 3 C9 3 5 8 5 14 L5 28 L8.5 24.5 L12 28 L16 24.5 L20 28 L23.5 24.5 L27 28 L27 14 C27 8 23 3 16 3 Z" fill="#eeeae0"/>
+            <circle cx="12" cy="13" r="2.5" fill="#d42200"/>
+            <circle cx="20" cy="13" r="2.5" fill="#d42200"/>
+          </svg>
+        </div>
+        <div className="cp-coming-title">COMMUNITY — <em>COMING SOON.</em></div>
+        <div className="cp-coming-sub">Real Talk. Coming Soon.</div>
+      </div>
 
       <div className="cp-body">
         <CommunityBoard
