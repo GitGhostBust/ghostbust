@@ -141,10 +141,17 @@ var STYLE = `
   .js-modal-track:hover { background: rgba(255,255,255,0.06); color: var(--paper); }
 
   /* FILTERS */
-  .js-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .js-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: flex-start; }
   .js-filter-select { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; padding: 8px 12px; border-radius: 4px; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a4a60'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; min-width: 140px; }
   .js-filter-select:focus { outline: none; border-color: var(--border-hi); color: var(--paper); }
   .js-filter-select option { background: var(--surface); color: var(--paper); }
+
+  /* BOARD CHIPS */
+  .js-board-wrap { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .js-board-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--ghost); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 2px; white-space: nowrap; }
+  .js-board-chip { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.04em; padding: 5px 10px; border-radius: 3px; border: 1px solid var(--border); background: none; color: var(--ghost); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; white-space: nowrap; }
+  .js-board-chip:hover { color: var(--muted); border-color: var(--border-hi); }
+  .js-board-chip.active { background: var(--blood-dim); border-color: rgba(212,34,0,0.3); color: var(--blood); }
 
   /* EMPTY STATE */
   .js-empty { text-align: center; padding: 48px 24px; }
@@ -172,6 +179,7 @@ var STYLE = `
     .js-modal-actions { flex-direction: column; }
     .js-filters { gap: 8px; }
     .js-filter-select { flex: 1; min-width: 0; }
+    .js-board-wrap { margin-top: 4px; width: 100%; }
   }
 `;
 
@@ -193,7 +201,8 @@ function SearchTab({ session, addApp }) {
   // Filters
   var [jobType, setJobType] = useState("");
   var [datePosted, setDatePosted] = useState("month");
-  var [sortBy, setSortBy] = useState("");
+  var [industry, setIndustry] = useState("");
+  var [selectedBoards, setSelectedBoards] = useState([]);
 
   // Ghost scores: { listingId: { score, flags, scanning } }
   var [scores, setScores] = useState({});
@@ -221,7 +230,9 @@ function SearchTab({ session, addApp }) {
       setLoadingMore(true);
     }
 
-    var body = { query: q.trim(), location: loc.trim(), page: pageNum };
+    var searchQuery = q.trim();
+    if (filters.industry) searchQuery += " " + filters.industry;
+    var body = { query: searchQuery, location: loc.trim(), page: pageNum };
     if (filters.jobType) body.employment_types = filters.jobType;
     if (filters.datePosted) body.date_posted = filters.datePosted;
 
@@ -236,8 +247,15 @@ function SearchTab({ session, addApp }) {
     })
     .then(function(data) {
       var newListings = data.listings || [];
+      // Client-side job board filter
+      if (filters.boards && filters.boards.length > 0) {
+        var boardSet = filters.boards.map(function(b) { return b.toLowerCase(); });
+        newListings = newListings.filter(function(l) {
+          return boardSet.some(function(b) { return (l.job_board || "").toLowerCase().indexOf(b) !== -1; });
+        });
+      }
       setTotalResults(data.total || 0);
-      if (newListings.length === 0) setNoMoreResults(true);
+      if (newListings.length === 0 && (data.listings || []).length === 0) setNoMoreResults(true);
       if (append) {
         setListings(function(prev) { return prev.concat(newListings); });
       } else {
@@ -257,7 +275,14 @@ function SearchTab({ session, addApp }) {
   }, [session]);
 
   function currentFilters() {
-    return { jobType: jobType, datePosted: datePosted };
+    return { jobType: jobType, datePosted: datePosted, industry: industry, boards: selectedBoards };
+  }
+
+  function toggleBoard(board) {
+    setSelectedBoards(function(prev) {
+      if (prev.indexOf(board) !== -1) return prev.filter(function(b) { return b !== board; });
+      return prev.concat([board]);
+    });
   }
 
   function handleSearch() {
@@ -497,6 +522,35 @@ function SearchTab({ session, addApp }) {
             <option value="week">Past Week</option>
             <option value="month">Past Month</option>
           </select>
+          <select className="js-filter-select" value={industry} onChange={function(e) { setIndustry(e.target.value); }}>
+            <option value="">Any Industry</option>
+            <option value="technology">Technology</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="finance">Finance</option>
+            <option value="marketing">Marketing</option>
+            <option value="sales">Sales</option>
+            <option value="education">Education</option>
+            <option value="legal">Legal</option>
+            <option value="engineering">Engineering</option>
+            <option value="creative">Creative</option>
+            <option value="retail">Retail</option>
+            <option value="logistics">Logistics</option>
+            <option value="government">Government</option>
+            <option value="nonprofit">Nonprofit</option>
+            <option value="hospitality">Hospitality</option>
+            <option value="manufacturing">Manufacturing</option>
+          </select>
+          <div className="js-board-wrap">
+            <span className="js-board-label">Boards:</span>
+            {["Indeed", "LinkedIn", "ZipRecruiter", "Glassdoor", "Monster", "SimplyHired"].map(function(board) {
+              var isActive = selectedBoards.indexOf(board) !== -1;
+              return (
+                <button key={board} className={"js-board-chip" + (isActive ? " active" : "")} onClick={function() { toggleBoard(board); }}>
+                  {board}
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="js-search-hint">AI understands natural language — include title, industry, seniority, location, company type. <em>The more detail, the better.</em></div>
         {searchError && <div className="js-search-error">{searchError}</div>}
@@ -526,9 +580,9 @@ function SearchTab({ session, addApp }) {
           <div className="js-results-header">
             <div>
               <div className="js-results-title">Job Listings</div>
-              <div className="js-results-meta">{query.toUpperCase()}{location ? " · " + location.toUpperCase() : ""} · LAST 30 DAYS</div>
+              <div className="js-results-meta">{query.toUpperCase()}{location ? " · " + location.toUpperCase() : ""}{industry ? " · " + industry.toUpperCase() : ""}{selectedBoards.length ? " · " + selectedBoards.join(", ").toUpperCase() : ""}</div>
             </div>
-            <span className="js-results-count">{listings.length} shown{totalResults > listings.length ? " of " + totalResults : ""}</span>
+            <span className="js-results-count">Showing {listings.length} jobs</span>
           </div>
           <div className="js-card-list">
             {listings.map(function(l) {
