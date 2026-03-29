@@ -55,6 +55,8 @@ Configured in `vite.config.js` via `rollupOptions.input`. `index.html` is a self
 
 - **`InboxDrawer.jsx`** — slide-out drawer for conversations/messages. Used only in Profile.jsx.
 
+- **`SearchTab.jsx`** — standalone Find Jobs tab component (used inside App.jsx). Natural language job search powered by JSearch API via `api/jobSearch.js` proxy. Features: search with filters (job type, date posted, industry, job board multi-select), live ghost scoring of results via `api/claude.js`, salary display, save/bookmark jobs to Supabase `saved_jobs` table, Search/Saved view tabs, detail modal with full description and apply link, add-to-tracker integration. Signal flags display as clean rounded pills with human-readable text.
+
 - **`RegionModal.jsx`** — full-screen overlay for first-login job market region setup. Shown when `profiles.region_set = false` and `sessionStorage` doesn't have `gb_region_skipped`.
 
 ---
@@ -134,6 +136,15 @@ User profile data. Created automatically on signup via trigger.
 
 ### `ghost_scans`
 Scan history per user (ghost job scoring results).
+- Original columns: `title`, `company`, `job_board`, `ghost_score`, `signal_flags` (jsonb), `assessment`, `scores`, `confidence`, `summary`, `share_enabled`, `anon_id`, `user_id`
+- Batch scan columns (added via migration): `full_description`, `posting_age_days`, `initiated_by` (`system` | `user`), `job_city`, `job_state`
+- **Important:** The column for job title is `title` (not `job_title`) and for flags is `signal_flags` (not `pattern_flags`). Inserts must use these names.
+
+### `saved_jobs`
+Bookmarked job listings from Find Jobs search.
+- `id`, `user_id`, `job_id` (JSearch job ID), `title`, `company`, `location`, `job_board`, `posted`, `description`, `apply_url`, `job_type`, `salary`, `min_salary`, `max_salary`, `employer_logo`, `ghost_score`, `signal_flags` (jsonb), `saved_at`
+- UNIQUE constraint on `(user_id, job_id)`
+- RLS: users manage own rows only
 
 ### `follows`
 Follower/following relationships.
@@ -167,6 +178,9 @@ All in `supabase/migrations/`. Apply via Supabase SQL editor or `supabase db pus
 - `20260322_resume_admin_delete.sql` — admin RLS for GhostBustOfficial
 - `20260322_resume_analyses_extended.sql` — 12 new columns for comprehensive analysis
 - `20260322_resume_analyses_nullable_job_listing.sql` — drops NOT NULL on job_listing_text
+- `20260327_ghost_scans_batch_columns.sql` — adds batch scan columns + RLS policy
+- `20260328_ghost_scans_location.sql` — adds `job_city`, `job_state` columns
+- `20260328_saved_jobs.sql` — saved_jobs table for Find Jobs bookmarks
 
 ---
 
@@ -197,8 +211,10 @@ Stored in `profiles`. Used to contextualise AI prompts in `ResumeAdvisor.jsx` an
 
 All Claude API calls are proxied through a Vercel serverless function:
 
-- **`api/claude.js`** — POST proxy. Accepts `{ model, max_tokens, messages }`, injects `ANTHROPIC_API_KEY` server-side, forwards to Anthropic, returns response.
-- **`App.jsx`** — ghost job scoring. Calls `POST /api/claude`.
+- **`api/claude.js`** — POST proxy. Accepts `{ model, max_tokens, messages }`, injects `ANTHROPIC_API_KEY` server-side, forwards to Anthropic, returns response. Rate limited: 20 req/hr per user.
+- **`api/jobSearch.js`** — POST proxy for JSearch API (RapidAPI). Accepts `{ query, location, page, employment_types, date_posted }`, injects `RAPIDAPI_KEY` server-side. Returns normalized listing objects with salary data.
+- **`App.jsx`** — ghost job scoring via VerifyTab. Calls `POST /api/claude`.
+- **`SearchTab.jsx`** — background ghost scoring of search results. Calls `POST /api/claude` sequentially with 500ms delay, 15s timeout per call. Rate-limit aware: stops scoring remaining listings on 429.
 - **`ResumeAdvisor.jsx`** — resume analysis and cover letter generation. Calls `POST /api/claude`.
 
 The API key is **never exposed to the browser**. Set `ANTHROPIC_API_KEY` (not `VITE_ANTHROPIC_API_KEY`) in Vercel dashboard environment variables.
@@ -254,8 +270,10 @@ The job tracker stores application data in Supabase (`applications` table). Full
 | `tos.html` | Terms of Service — static, included in Vite build |
 | `privacy.html` | Privacy Policy — static, included in Vite build |
 | `api/subscribe.js` | Vercel serverless function — adds email to Resend audience |
+| `api/jobSearch.js` | Vercel serverless function — proxies JSearch API (RapidAPI) for Find Jobs |
 | `api/cron/onboarding.js` | Vercel cron — sends onboarding email sequence via Resend |
 | `api/emails/templates.js` | HTML email templates for all 5 onboarding emails |
+| `scripts/batchScan.js` | Node.js CLI script — batch ghost-scores jobs from JSearch API, inserts to ghost_scans. 175 job titles across 50 US cities. Run with `node scripts/batchScan.js --limit N` |
 
 ---
 
@@ -361,13 +379,13 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - **Hero heading**: "Built For A Broken Market." — "Broken" chosen over "Rigged" for legal defensibility
 - **Ghost logo placement**: inline with eyebrow text (Option B) — 14px ghost SVG at 70% opacity, left of eyebrow label on both app and community pages
 - **App hero tone**: attitude-oriented (Option C from brainstorming) — compact hero + tab-specific intros
-- **Find Jobs intro line**: "Indeed, LinkedIn, ZipRecruiter, Wellfound, Monster, SimplyHired — searched and saved all at once."
+- **Find Jobs**: Rebuilt from URL-redirect model to full in-app job listing display via JSearch API. Natural language search with filters, live ghost scoring, salary display, job saving, detail modals. Intro line: "Describe your ideal role in plain English. AI searches real listings across job boards and ghost-scores every result in real time."
 - **Application Tracker cards**: upgraded to modal popup windows with editable fields, Ghost Scan integration, Career HQ integration, and job posting URL field
 - **Roadmap is public**: strategic Phase 4 details omitted, User Showcase and Ghost Job Index have fine print asterisks on roadmap.html
 
 ---
 
-## Phase 2 Status (as of 2026-03-26)
+## Phase 2 Status (as of 2026-03-29)
 
 **Completed:**
 - Onboarding email sequence (5 emails: Day 0/2/5/14/30) via Vercel cron + Resend
@@ -438,8 +456,16 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - **CI pipeline** — GitHub Actions runs `npm test` + `npm run build` on every push/PR to main
 - **All 21 migrations confirmed applied** in Supabase (verified 2026-03-26)
 
+- **Find Jobs rebuilt with JSearch API** — `SearchTab.jsx` completely rewritten. Natural language search via `api/jobSearch.js` (proxies JSearch/RapidAPI). Filter controls: Job Type, Date Posted, Industry dropdown, Job Board multi-select chips (Indeed, LinkedIn, ZipRecruiter, Glassdoor, Monster, SimplyHired — client-side filter). Live ghost scoring of results with 15s timeout, rate-limit detection. Salary display on cards and modal. Signal flags as clean rounded pills with human-readable text. Load More pagination. Detail modal with full description + "View on board" fallback link.
+- **Save Job / Bookmarks** — star icon on each job card saves to `saved_jobs` Supabase table. Search/Saved view tabs with badge count. Migration: `20260328_saved_jobs.sql`
+- **Batch ghost scanning script** — `scripts/batchScan.js` fetches from JSearch API, scores with Claude API directly, inserts into `ghost_scans`. 175 job titles across 25 categories, 50 US cities. Uses correct column names (`title`, `signal_flags`).
+- **ghost_scans location columns** — `job_city`, `job_state` added via `20260328_ghost_scans_location.sql`
+- **Landing page stat updates** — replaced duplicate hero stats with fresh data: 53% ghosting rate (Criteria Corp/Fortune), 3x less likely to hear back (Interview Guys), 100-200+ applications per offer (Zippia/BLS)
+- **Public roadmap rewritten** — clean 4-phase structure (removed Phase 2.5)
+
 **Required env vars (Vercel dashboard):**
 - `ANTHROPIC_API_KEY` — for `api/claude.js` proxy
+- `RAPIDAPI_KEY` — for `api/jobSearch.js` (JSearch API)
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — for rate limiting + onboarding cron
 - `VITE_SENTRY_DSN`, `SENTRY_AUTH_TOKEN` — for error tracking
 - `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` — for email capture
