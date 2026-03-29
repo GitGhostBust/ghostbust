@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Service temporarily unavailable." });
   }
 
-  const { query, location, page } = req.body || {};
+  const { query, location, page, employment_types, date_posted } = req.body || {};
   if (!query) {
     return res.status(400).json({ error: "query is required" });
   }
@@ -22,8 +22,9 @@ export default async function handler(req, res) {
       query: location ? `${query} in ${location}` : query,
       page: String(page || 1),
       num_pages: "1",
-      date_posted: "month",
+      date_posted: date_posted || "month",
     });
+    if (employment_types) params.set("employment_types", employment_types);
 
     const response = await fetch(
       `https://jsearch.p.rapidapi.com/search?${params}`,

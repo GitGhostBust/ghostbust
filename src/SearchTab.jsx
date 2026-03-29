@@ -140,6 +140,12 @@ var STYLE = `
   .js-modal-track { flex: 1; padding: 14px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.06em; background: none; border: 1px solid var(--border-hi); color: var(--muted); cursor: pointer; border-radius: 4px; transition: background 0.15s, color 0.15s; }
   .js-modal-track:hover { background: rgba(255,255,255,0.06); color: var(--paper); }
 
+  /* FILTERS */
+  .js-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .js-filter-select { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 11px; padding: 8px 12px; border-radius: 4px; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234a4a60'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; min-width: 140px; }
+  .js-filter-select:focus { outline: none; border-color: var(--border-hi); color: var(--paper); }
+  .js-filter-select option { background: var(--surface); color: var(--paper); }
+
   /* EMPTY STATE */
   .js-empty { text-align: center; padding: 48px 24px; }
   .js-empty-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--ghost); margin-bottom: 8px; }
@@ -164,6 +170,8 @@ var STYLE = `
     .js-score-label, .js-score-scan-label { margin-top: 0; }
     .js-modal { padding: 24px 18px; max-height: 90vh; }
     .js-modal-actions { flex-direction: column; }
+    .js-filters { gap: 8px; }
+    .js-filter-select { flex: 1; min-width: 0; }
   }
 `;
 
@@ -180,6 +188,12 @@ function SearchTab({ session, addApp }) {
   var [page, setPage] = useState(1);
   var [loadingMore, setLoadingMore] = useState(false);
   var [totalResults, setTotalResults] = useState(0);
+  var [noMoreResults, setNoMoreResults] = useState(false);
+
+  // Filters
+  var [jobType, setJobType] = useState("");
+  var [datePosted, setDatePosted] = useState("month");
+  var [sortBy, setSortBy] = useState("");
 
   // Ghost scores: { listingId: { score, flags, scanning } }
   var [scores, setScores] = useState({});
@@ -194,7 +208,7 @@ function SearchTab({ session, addApp }) {
   var abortRef = useRef(null);
 
   // Search function
-  var doSearch = useCallback(function(q, loc, pageNum, append) {
+  var doSearch = useCallback(function(q, loc, pageNum, append, filters) {
     if (!q.trim()) return;
     if (!append) {
       setSearching(true);
@@ -202,14 +216,19 @@ function SearchTab({ session, addApp }) {
       setListings([]);
       setScores({});
       setHasSearched(true);
+      setNoMoreResults(false);
     } else {
       setLoadingMore(true);
     }
 
+    var body = { query: q.trim(), location: loc.trim(), page: pageNum };
+    if (filters.jobType) body.employment_types = filters.jobType;
+    if (filters.datePosted) body.date_posted = filters.datePosted;
+
     fetch("/api/jobSearch", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ query: q.trim(), location: loc.trim(), page: pageNum }),
+      body: JSON.stringify(body),
     })
     .then(function(r) {
       if (!r.ok) throw new Error("Search failed");
@@ -218,6 +237,7 @@ function SearchTab({ session, addApp }) {
     .then(function(data) {
       var newListings = data.listings || [];
       setTotalResults(data.total || 0);
+      if (newListings.length === 0) setNoMoreResults(true);
       if (append) {
         setListings(function(prev) { return prev.concat(newListings); });
       } else {
@@ -227,7 +247,7 @@ function SearchTab({ session, addApp }) {
       setLoadingMore(false);
 
       // Start background ghost scoring
-      scoreListingsInBackground(newListings);
+      if (newListings.length > 0) scoreListingsInBackground(newListings);
     })
     .catch(function(err) {
       setSearchError(err.message);
@@ -236,16 +256,20 @@ function SearchTab({ session, addApp }) {
     });
   }, [session]);
 
+  function currentFilters() {
+    return { jobType: jobType, datePosted: datePosted };
+  }
+
   function handleSearch() {
     if (!query.trim()) return;
     setPage(1);
-    doSearch(query, location, 1, false);
+    doSearch(query, location, 1, false, currentFilters());
   }
 
   function handleLoadMore() {
     var nextPage = page + 1;
     setPage(nextPage);
-    doSearch(query, location, nextPage, true);
+    doSearch(query, location, nextPage, true, currentFilters());
   }
 
   // Background ghost scoring
@@ -263,7 +287,14 @@ function SearchTab({ session, addApp }) {
     newListings.forEach(function(l) { scanningState[l.id] = { scanning: true }; });
     setScores(function(prev) { return Object.assign({}, prev, scanningState); });
 
-    // Score sequentially with delay
+    // Score sequentially with delay and timeout
+    function withTimeout(promise, ms) {
+      return Promise.race([
+        promise,
+        new Promise(function(_, reject) { setTimeout(function() { reject(new Error("TIMEOUT")); }, ms); }),
+      ]);
+    }
+
     (async function() {
       for (var i = 0; i < newListings.length; i++) {
         if (controller.abort) return;
@@ -271,7 +302,7 @@ function SearchTab({ session, addApp }) {
         try {
           var prompt = 'You are a ghost job detection system. Analyze this job listing and determine how likely it is to be a "ghost job" — a listing that is fake, already filled, posted for compliance reasons, or not genuinely open.\n\nJob Title: ' + listing.title + '\nCompany: ' + listing.company + '\nJob Board: ' + listing.job_board + '\nPosted: ' + (listing.posted || "Unknown") + '\nDescription:\n' + (listing.description || "").slice(0, 3000) + '\n\nReturn a JSON object with exactly two keys:\n{"ghost_score": <integer 0-100>, "pattern_flags": ["flag1", "flag2", "flag3"]}\n\nReturn ONLY the JSON object.';
 
-          var text = await apiCall([{ role: "user", content: prompt }], accessToken);
+          var text = await withTimeout(apiCall([{ role: "user", content: prompt }], accessToken), 15000);
           var parsed = parseJSON(text);
           var score = parseInt(parsed.ghost_score, 10) || 0;
           var flags = Array.isArray(parsed.pattern_flags) ? parsed.pattern_flags : [];
@@ -298,12 +329,25 @@ function SearchTab({ session, addApp }) {
             }).then(function() {}).catch(function() {});
           }
         } catch(err) {
-          // Score failed — mark as unknown
+          var failReason = err.message === "RATE_LIMIT" ? "rate_limit" : err.message === "TIMEOUT" ? "timeout" : "error";
           setScores(function(prev) {
             var next = Object.assign({}, prev);
-            next[listing.id] = { score: -1, flags: [], scanning: false };
+            next[listing.id] = { score: -1, flags: [], scanning: false, failReason: failReason };
             return next;
           });
+          // If rate limited, stop scoring remaining listings — mark all as rate limited
+          if (failReason === "rate_limit") {
+            for (var j = i + 1; j < newListings.length; j++) {
+              (function(lid) {
+                setScores(function(prev) {
+                  var next = Object.assign({}, prev);
+                  next[lid] = { score: -1, flags: [], scanning: false, failReason: "rate_limit" };
+                  return next;
+                });
+              })(newListings[j].id);
+            }
+            return;
+          }
         }
 
         // 500ms delay between scoring calls
@@ -350,10 +394,11 @@ function SearchTab({ session, addApp }) {
       );
     }
     if (data.score === -1) {
+      var failLabel = data.failReason === "rate_limit" ? "LIMIT" : data.failReason === "timeout" ? "TIMEOUT" : "N/A";
       return (
         <div className="js-score-badge" style={{ background: "var(--surface2)" }}>
-          <span className="js-score-num" style={{ color: "var(--ghost)", fontSize: 24 }}>?</span>
-          <span className="js-score-label" style={{ color: "var(--ghost)" }}>N/A</span>
+          <span className="js-score-num" style={{ color: "var(--ghost)", fontSize: 24 }}>—</span>
+          <span className="js-score-label" style={{ color: "var(--ghost)" }}>{failLabel}</span>
         </div>
       );
     }
@@ -437,6 +482,22 @@ function SearchTab({ session, addApp }) {
             {searching ? "SEARCHING..." : "SEARCH →"}
           </button>
         </div>
+        <div className="js-filters">
+          <select className="js-filter-select" value={jobType} onChange={function(e) { setJobType(e.target.value); }}>
+            <option value="">Any Job Type</option>
+            <option value="FULLTIME">Full-time</option>
+            <option value="PARTTIME">Part-time</option>
+            <option value="CONTRACTOR">Contract</option>
+            <option value="INTERN">Internship</option>
+          </select>
+          <select className="js-filter-select" value={datePosted} onChange={function(e) { setDatePosted(e.target.value); }}>
+            <option value="all">Any Time</option>
+            <option value="today">Past 24 Hours</option>
+            <option value="3days">Past 3 Days</option>
+            <option value="week">Past Week</option>
+            <option value="month">Past Month</option>
+          </select>
+        </div>
         <div className="js-search-hint">AI understands natural language — include title, industry, seniority, location, company type. <em>The more detail, the better.</em></div>
         {searchError && <div className="js-search-error">{searchError}</div>}
       </div>
@@ -499,7 +560,7 @@ function SearchTab({ session, addApp }) {
             })}
           </div>
 
-          {listings.length < totalResults && (
+          {!noMoreResults && (
             <button className="js-load-more" onClick={handleLoadMore} disabled={loadingMore}>
               {loadingMore ? "Loading..." : "Load More Results"}
             </button>
