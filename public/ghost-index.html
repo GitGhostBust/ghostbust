@@ -147,8 +147,8 @@
       position: absolute;
       right: -60px; top: 50%;
       transform: translateY(-50%);
-      width: 400px; height: 400px;
-      opacity: 0.04;
+      width: 550px; height: 550px;
+      opacity: 0.06;
       pointer-events: none;
     }
     .hero-eyebrow {
@@ -292,10 +292,10 @@
     @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     .stat-lbl {
       font-family: 'Space Mono', monospace;
-      font-size: 9px;
+      font-size: 13px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--ghost);
+      color: #eeeae0;
       margin-top: 8px;
       display: block;
     }
@@ -680,9 +680,9 @@
 <div class="page">
   <section class="hero">
     <svg class="hero-ghost-bg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M16 4 C9 4 6 9 6 15 L6 28 L9.5 24.5 L13 28 L16 24.5 L19 28 L22.5 24.5 L26 28 L26 15 C26 9 23 4 16 4 Z" fill="#eeeae0"/>
-      <circle cx="13" cy="14" r="2.5" fill="#d42200"/>
-      <circle cx="19" cy="14" r="2.5" fill="#d42200"/>
+      <path d="M16 5 C10 5 7 9 7 14 L7 26 L10 23 L13 26 L16 23 L19 26 L22 23 L25 26 L25 14 C25 9 22 5 16 5 Z" fill="#f0ece0"/>
+      <circle cx="13" cy="14" r="2" fill="#d42200"/>
+      <circle cx="19" cy="14" r="2" fill="#d42200"/>
     </svg>
 
     <div class="hero-eyebrow">Know Your Enemy</div>
@@ -715,7 +715,7 @@
       <div class="stat-card">
         <span class="stat-num" style="color:var(--blood);">50%</span>
         <span class="stat-lbl">High Risk Listings</span>
-        <span class="stat-lbl" style="margin-top:2px;font-size:8px;">scored 70 or above</span>
+        <span class="stat-lbl" style="margin-top:2px;">scored 70 or above</span>
       </div>
       <div class="stat-card">
         <span class="stat-num" style="color:var(--blood);font-size:22px;line-height:1.2;padding-top:6px;">Media &amp; Communications</span>
