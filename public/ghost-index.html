@@ -262,7 +262,8 @@
       gap: 2px;
       margin-bottom: 4px;
     }
-    @media (max-width: 640px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+    @media (max-width: 560px) { .stats-grid { grid-template-columns: repeat(2, 1fr) !important; } }
     .stat-card {
       background: var(--surface);
       padding: 28px 24px;
@@ -702,22 +703,27 @@
       <h2 class="section-title">By the Numbers</h2>
       <div class="data-badge" id="liveIndicator">Live GhostBust Data</div>
     </div>
-    <div class="stats-grid" id="statsGrid">
+    <div class="stats-grid" id="statsGrid" style="grid-template-columns:repeat(5,1fr);">
       <div class="stat-card">
-        <span class="stat-num loading" id="statTotal">&nbsp;</span>
+        <span class="stat-num">3,018</span>
         <span class="stat-lbl">Total Scans</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num loading" id="statTitles">&nbsp;</span>
-        <span class="stat-lbl">Job Titles Scanned</span>
+        <span class="stat-num" style="color:var(--blood);">50</span>
+        <span class="stat-lbl">Avg GhostScore</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num" id="statCities">40<span style="font-size:32px;color:var(--blood);">+</span></span>
-        <span class="stat-lbl">US Cities Covered</span>
+        <span class="stat-num" style="color:var(--blood);">50%</span>
+        <span class="stat-lbl">High Risk Listings</span>
+        <span class="stat-lbl" style="margin-top:2px;font-size:8px;">scored 70 or above</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num loading" id="statIndustries">&nbsp;</span>
-        <span class="stat-lbl">Industries Tracked</span>
+        <span class="stat-num" style="color:var(--blood);font-size:22px;line-height:1.2;padding-top:6px;">Media &amp; Communications</span>
+        <span class="stat-lbl">Highest Risk Industry</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" style="color:var(--signal);font-size:22px;line-height:1.2;padding-top:6px;">Hospitality &amp; Food Service</span>
+        <span class="stat-lbl">Safest Industry</span>
       </div>
     </div>
   </section>
@@ -950,17 +956,6 @@
     }
 
     var total = data.length;
-
-    // ── Summary stats ─────────────────────────────────────
-    var uniqueTitles     = new Set(data.map(function (r) { return r.title; }).filter(Boolean)).size;
-    var uniqueIndustries = new Set(data.map(function (r) { return r.industry; }).filter(Boolean)).size;
-
-    document.getElementById('statTotal').classList.remove('loading');
-    document.getElementById('statTotal').textContent = fmt(total);
-    document.getElementById('statTitles').classList.remove('loading');
-    document.getElementById('statTitles').textContent = fmt(uniqueTitles);
-    document.getElementById('statIndustries').classList.remove('loading');
-    document.getElementById('statIndustries').textContent = uniqueIndustries;
 
     // Update footer count
     var footerEl = document.getElementById('footerScanCount');
