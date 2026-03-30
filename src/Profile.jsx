@@ -1295,6 +1295,7 @@ export default function Profile() {
           <a href="/app.html" className="nav-btn">App</a>
           <a href="/community.html" className="nav-btn">Community</a>
           <span className="nav-btn active">Profile</span>
+          <a href="/ghost-index" className="nav-btn">GhostIndex</a>
         </div>
         <UserSearch />
         <div style={{display:"flex",alignItems:"center",gap:4}}>

@@ -1016,6 +1016,7 @@ export default function App() {
           <span className="app-nav-btn active">App</span>
           <a href="/community.html" className="app-nav-btn">Community</a>
           <a href="/profile.html" className="app-nav-btn" onClick={function(e){if(!session){e.preventDefault();setShowProfileModal(true);}}}> Profile</a>
+          <a href="/ghost-index" className="app-nav-btn">GhostIndex</a>
         </div>
         <UserSearch />
         <button className="app-nav-signout" onClick={function(){if(session){supabase.auth.signOut();}else{setShowAuth(true);}}}>{session?"Sign Out":"Sign In"}</button>

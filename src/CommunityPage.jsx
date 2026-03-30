@@ -213,6 +213,7 @@ export default function CommunityPage() {
           <a href="/app.html" className="cp-nav-btn">App</a>
           <span className="cp-nav-btn active">Community</span>
           <a href="/profile.html" className="cp-nav-btn" onClick={function(e){if(!session){e.preventDefault();setShowProfileModal(true);}}}>Profile</a>
+          <a href="/ghost-index" className="cp-nav-btn">GhostIndex</a>
         </div>
         <UserSearch />
         <div className="cp-nav-right">
