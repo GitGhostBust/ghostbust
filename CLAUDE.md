@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+---
+
+## DATA SAFETY — NON-NEGOTIABLE
+
+1. **NEVER run DELETE, DROP, or TRUNCATE** on any Supabase table without first confirming a backup exists or explicitly exporting the data.
+2. **NEVER run destructive SQL operations directly** — always show the statement and require explicit user confirmation first.
+3. **Before any database migration or bulk update**, always run a `SELECT COUNT(*)` first and show the user how many rows will be affected.
+4. **Always suggest Supabase point-in-time recovery or CSV export** before any destructive operation.
+5. **When in doubt, do nothing and ask.**
+
+---
+
 
 ## Commands
 
@@ -273,7 +285,7 @@ The job tracker stores application data in Supabase (`applications` table). Full
 | `api/jobSearch.js` | Vercel serverless function — proxies JSearch API (RapidAPI) for Find Jobs |
 | `api/cron/onboarding.js` | Vercel cron — sends onboarding email sequence via Resend |
 | `api/emails/templates.js` | HTML email templates for all 5 onboarding emails |
-| `scripts/batchScan.js` | Node.js CLI script — batch ghost-scores jobs from JSearch API, inserts to ghost_scans. 175 job titles across 50 US cities. Run with `node scripts/batchScan.js --limit N` |
+| `scripts/batchScan.js` | Node.js CLI script — batch ghost-scores jobs from JSearch API, inserts to ghost_scans. 207 job titles across 50 US cities. Run with `node scripts/batchScan.js --limit N` |
 
 ---
 
@@ -458,7 +470,7 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 
 - **Find Jobs rebuilt with JSearch API** — `SearchTab.jsx` completely rewritten. Natural language search via `api/jobSearch.js` (proxies JSearch/RapidAPI). Filter controls: Job Type, Date Posted, Industry dropdown, Job Board multi-select chips (Indeed, LinkedIn, ZipRecruiter, Glassdoor, Monster, SimplyHired — client-side filter). Live ghost scoring of results with 15s timeout, rate-limit detection. Salary display on cards and modal. Signal flags as clean rounded pills with human-readable text. Load More pagination. Detail modal with full description + "View on board" fallback link.
 - **Save Job / Bookmarks** — star icon on each job card saves to `saved_jobs` Supabase table. Search/Saved view tabs with badge count. Migration: `20260328_saved_jobs.sql`
-- **Batch ghost scanning script** — `scripts/batchScan.js` fetches from JSearch API, scores with Claude API directly, inserts into `ghost_scans`. 175 job titles across 25 categories, 50 US cities. Uses correct column names (`title`, `signal_flags`).
+- **Batch ghost scanning script** — `scripts/batchScan.js` fetches from JSearch API, scores with Claude API directly, inserts into `ghost_scans`. 207 job titles across 22 categories, 50 US cities. Uses correct column names (`title`, `signal_flags`).
 - **ghost_scans location columns** — `job_city`, `job_state` added via `20260328_ghost_scans_location.sql`
 - **Landing page stat updates** — replaced duplicate hero stats with fresh data: 53% ghosting rate (Criteria Corp/Fortune), 3x less likely to hear back (Interview Guys), 100-200+ applications per offer (Zippia/BLS)
 - **Public roadmap rewritten** — clean 4-phase structure (removed Phase 2.5)
