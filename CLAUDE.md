@@ -149,7 +149,7 @@ User profile data. Created automatically on signup via trigger.
 ### `ghost_scans`
 Scan history per user (ghost job scoring results).
 - Original columns: `title`, `company`, `job_board`, `ghost_score`, `signal_flags` (jsonb), `assessment`, `scores`, `confidence`, `summary`, `share_enabled`, `anon_id`, `user_id`
-- Batch scan columns (added via migration): `full_description`, `posting_age_days`, `initiated_by` (`system` | `user`), `job_city`, `job_state`
+- Batch scan columns (added via migration): `full_description`, `posting_age_days`, `initiated_by` (`system` | `user`), `job_city`, `job_state`, `industry`
 - **Important:** The column for job title is `title` (not `job_title`) and for flags is `signal_flags` (not `pattern_flags`). Inserts must use these names.
 
 ### `saved_jobs`
@@ -157,6 +157,11 @@ Bookmarked job listings from Find Jobs search.
 - `id`, `user_id`, `job_id` (JSearch job ID), `title`, `company`, `location`, `job_board`, `posted`, `description`, `apply_url`, `job_type`, `salary`, `min_salary`, `max_salary`, `employer_logo`, `ghost_score`, `signal_flags` (jsonb), `saved_at`
 - UNIQUE constraint on `(user_id, job_id)`
 - RLS: users manage own rows only
+
+### `ghostletter_subscribers`
+Email subscribers for The GhostBust Monthly newsletter, captured via GhostIndex subscribe form.
+- `id`, `email` (unique), `subscribed_at`
+- RLS: anon INSERT allowed; no public SELECT
 
 ### `follows`
 Follower/following relationships.
@@ -193,6 +198,8 @@ All in `supabase/migrations/`. Apply via Supabase SQL editor or `supabase db pus
 - `20260327_ghost_scans_batch_columns.sql` — adds batch scan columns + RLS policy
 - `20260328_ghost_scans_location.sql` — adds `job_city`, `job_state` columns
 - `20260328_saved_jobs.sql` — saved_jobs table for Find Jobs bookmarks
+- `20260329_ghost_scans_industry.sql` — adds `industry` text column to ghost_scans
+- `20260330_ghostletter_subscribers.sql` — ghostletter_subscribers table with unique email + anon INSERT RLS
 
 ---
 
@@ -281,11 +288,15 @@ The job tracker stores application data in Supabase (`applications` table). Full
 |---|---|
 | `tos.html` | Terms of Service — static, included in Vite build |
 | `privacy.html` | Privacy Policy — static, included in Vite build |
+| `public/ghost-index.html` | GhostIndex — standalone static public data dashboard. Live Supabase reads (anon key), bar charts by industry + job title, 5 hardcoded stats, job board cards, posting age breakdown, GhostLetter subscribe form. No React. Clean URL: `/ghost-index` via Vercel rewrite. |
 | `api/subscribe.js` | Vercel serverless function — adds email to Resend audience |
 | `api/jobSearch.js` | Vercel serverless function — proxies JSearch API (RapidAPI) for Find Jobs |
 | `api/cron/onboarding.js` | Vercel cron — sends onboarding email sequence via Resend |
+| `api/cron/scan.js` | Vercel cron — daily 3am UTC batch ghost scanner. Fetches from JSearch, scores with Claude, inserts 10 rows into ghost_scans. Auth: CRON_SECRET Bearer token. Requires RAPIDAPI_KEY in Vercel env. |
 | `api/emails/templates.js` | HTML email templates for all 5 onboarding emails |
 | `scripts/batchScan.js` | Node.js CLI script — batch ghost-scores jobs from JSearch API, inserts to ghost_scans. 207 job titles across 50 US cities. Run with `node scripts/batchScan.js --limit N` |
+| `scripts/helpers/mapIndustry.js` | Shared industry mapping helper. `mapIndustry(title)` returns one of 24 industry strings or `"Other"`. Uses substring matching (longest-needle-first). Used by batchScan.js and api/cron/scan.js. |
+| `scripts/mapIndustries.js` | One-time backfill script — updates `ghost_scans.industry` for rows currently set to `"Other"` with non-null title. Run with `node scripts/mapIndustries.js`. |
 
 ---
 
@@ -397,7 +408,7 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 
 ---
 
-## Phase 2 Status (as of 2026-03-29)
+## Phase 2 Status (as of 2026-04-01)
 
 **Completed:**
 - Onboarding email sequence (5 emails: Day 0/2/5/14/30) via Vercel cron + Resend
@@ -474,10 +485,15 @@ Day 30 splits on activity: users with any row in `ghost_scans` or `resumes` get 
 - **ghost_scans location columns** — `job_city`, `job_state` added via `20260328_ghost_scans_location.sql`
 - **Landing page stat updates** — replaced duplicate hero stats with fresh data: 53% ghosting rate (Criteria Corp/Fortune), 3x less likely to hear back (Interview Guys), 100-200+ applications per offer (Zippia/BLS)
 - **Public roadmap rewritten** — clean 4-phase structure (removed Phase 2.5)
+- **GhostIndex public dashboard** (`public/ghost-index.html`) — standalone static page, no React. Live Supabase reads via anon key (paginated 1000-row batches, client-side aggregation). Bar charts: industry ghost rates + top 20 job titles, color-coded by score threshold (≤35 green, ≤60 gold, >60 red, CSS animated width). 5 hardcoded stats row. Job board cards grid. Posting age 5-bucket breakdown. GhostLetter subscribe form inserts to `ghostletter_subscribers`. Ghost SVG matches index.html design. All Space Mono text ≥10px, color #eeeae0. Clean URL via Vercel rewrite `/ghost-index` → `/ghost-index.html`. GHOSTINDEX nav link added to all pages (index.html, app.html, profile.html, community.html, tos.html, privacy.html, roadmap.html).
+- **Industry classification** — `scripts/helpers/mapIndustry.js` shared helper with 24 industry buckets, substring matching longest-needle-first. Used by `scripts/batchScan.js` and `api/cron/scan.js`. `scripts/mapIndustries.js` backfill script updates existing rows. `ghost_scans.industry` column added via `20260329_ghost_scans_industry.sql`.
+- **Daily scan cron** (`api/cron/scan.js`) — Vercel cron at 3am UTC, inserts 10 ghost-scored listings per day from JSearch + Claude. Added to `vercel.json`. Requires `RAPIDAPI_KEY` in Vercel env vars.
+- **DATA SAFETY rules** added to CLAUDE.md — non-negotiable guardrails for destructive DB operations.
+- **.env gitignored** — `git rm --cached .env` run to untrack; `.env`, `.env.*` added to `.gitignore`.
 
 **Required env vars (Vercel dashboard):**
 - `ANTHROPIC_API_KEY` — for `api/claude.js` proxy
-- `RAPIDAPI_KEY` — for `api/jobSearch.js` (JSearch API)
+- `RAPIDAPI_KEY` — for `api/jobSearch.js` (JSearch API) and `api/cron/scan.js`
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` — for rate limiting + onboarding cron
 - `VITE_SENTRY_DSN`, `SENTRY_AUTH_TOKEN` — for error tracking
 - `RESEND_API_KEY`, `RESEND_AUDIENCE_ID` — for email capture
