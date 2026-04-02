@@ -705,24 +705,24 @@
     </div>
     <div class="stats-grid" id="statsGrid" style="grid-template-columns:repeat(5,1fr);">
       <div class="stat-card">
-        <span class="stat-num">3,018</span>
+        <span class="stat-num" id="statTotalScans">—</span>
         <span class="stat-lbl">Total Scans</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num" style="color:var(--blood);">50</span>
+        <span class="stat-num" id="statAvgScore" style="color:var(--blood);">—</span>
         <span class="stat-lbl">Avg GhostScore</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num" style="color:var(--blood);">50%</span>
+        <span class="stat-num" id="statHighRisk" style="color:var(--blood);">—</span>
         <span class="stat-lbl">High Risk Listings</span>
         <span class="stat-lbl" style="margin-top:2px;">scored 70 or above</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num" style="color:var(--blood);font-size:22px;line-height:1.2;padding-top:6px;">Media &amp; Communications</span>
+        <span class="stat-num" id="statHighestIndustry" style="color:var(--blood);font-size:22px;line-height:1.2;padding-top:6px;">—</span>
         <span class="stat-lbl">Highest Risk Industry</span>
       </div>
       <div class="stat-card">
-        <span class="stat-num" style="color:var(--signal);font-size:22px;line-height:1.2;padding-top:6px;">Hospitality &amp; Food Service</span>
+        <span class="stat-num" id="statSafestIndustry" style="color:var(--signal);font-size:22px;line-height:1.2;padding-top:6px;">—</span>
         <span class="stat-lbl">Safest Industry</span>
       </div>
     </div>
@@ -956,6 +956,33 @@
     }
 
     var total = data.length;
+
+    // ── Update "By the Numbers" stats from live data ──────────
+    var totalEl = document.getElementById('statTotalScans');
+    if (totalEl) totalEl.textContent = fmt(total);
+
+    var scored = data.filter(function (r) { return r.ghost_score != null; });
+    if (scored.length) {
+      var avgScore = Math.round(scored.reduce(function (s, r) { return s + r.ghost_score; }, 0) / scored.length);
+      var avgEl = document.getElementById('statAvgScore');
+      if (avgEl) avgEl.textContent = avgScore;
+
+      var highRiskCount = scored.filter(function (r) { return r.ghost_score >= 70; }).length;
+      var highRiskPct = Math.round((highRiskCount / scored.length) * 100);
+      var hrEl = document.getElementById('statHighRisk');
+      if (hrEl) hrEl.textContent = highRiskPct + '%';
+    }
+
+    // Highest and safest industry (min 5 scans to qualify)
+    var industryGroups = groupBy(data.filter(function (r) { return r.industry; }), 'industry')
+      .filter(function (g) { return g.count >= 5; })
+      .sort(function (a, b) { return b.avg - a.avg; });
+    if (industryGroups.length) {
+      var highIndustryEl = document.getElementById('statHighestIndustry');
+      if (highIndustryEl) highIndustryEl.textContent = industryGroups[0].name;
+      var safeIndustryEl = document.getElementById('statSafestIndustry');
+      if (safeIndustryEl) safeIndustryEl.textContent = industryGroups[industryGroups.length - 1].name;
+    }
 
     // Update footer count
     var footerEl = document.getElementById('footerScanCount');
